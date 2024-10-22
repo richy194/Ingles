@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('formulario_inscripcions', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('email')->unique();
+            $table->string('email')->nullable();
             $table->string('password');
             $table->string('Documento')->unique();
             $table->string('direccion');
