@@ -52,7 +52,7 @@ class FormularioInscripcionResource extends Resource
 
                 Forms\Components\Select::make('role_id')
                     ->relationship('roles', 'name') // Asumiendo que ya tienes una relación con la tabla roles
-                    ->required(),
+                    
             ]);
     }
 
@@ -72,6 +72,10 @@ class FormularioInscripcionResource extends Resource
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('deleted_at') 
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->actions([ 
                 Tables\Actions\EditAction::make(),
@@ -99,7 +103,19 @@ class FormularioInscripcionResource extends Resource
                     ->color('success')
                     ->icon('heroicon-o-check'),
                 Tables\Actions\DeleteAction::make(),
-            ]);
+                Tables\Actions\RestoreAction::make(), 
+            ])
+            ->filters([
+                //
+                Tables\Filters\TrashedFilter::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\RestoreBulkAction::make(),
+                ]),
+            ])
+            ;
     }
 
     public static function getPages(): array

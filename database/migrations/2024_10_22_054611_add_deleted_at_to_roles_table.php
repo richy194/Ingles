@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('roles', function (Blueprint $table) {
             //
-            $table->foreignId('role_id')->nullable()->constrained('roles')->cascadeOnUpdate()->cascadeOnDelete();
         });
     }
 
@@ -22,10 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('roles', function (Blueprint $table) {
             //
-            $table->dropForeign(['role_id']); // Eliminar la clave foránea
-            $table->dropColumn('role_id');
         });
     }
 };

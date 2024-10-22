@@ -33,6 +33,10 @@ class UserResource extends Resource
                     ->email()
                     ->required()
                     ->maxLength(255),
+                Forms\Components\TextInput::make('password')
+                    ->password()
+                    ->hiddenOn('edit')
+                    ->required(),
                 Forms\Components\Select::make('role_id')
                     ->relationship('roles', 'name') 
                     ->required()
@@ -45,14 +49,20 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('id'),
                 TextColumn::make('name'),
                 TextColumn::make('email'),
                 TextColumn::make('email_verified_at'),
                 TextColumn::make('roles.name')->label('Confirmar Rol'),
+                Tables\Columns\TextColumn::make('deleted_at') 
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
 
             ])
             ->filters([
                 //
+                Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -74,6 +84,7 @@ class UserResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\RestoreBulkAction::make(),
                 ]),
             ]);
     }

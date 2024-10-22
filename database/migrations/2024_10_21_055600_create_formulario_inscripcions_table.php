@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('direccion');
             $table->string('telefono')->nullable();
             $table->foreignId('role_id')->constrained('roles')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->softDeletes();
             $table->timestamps();
         });
     } 

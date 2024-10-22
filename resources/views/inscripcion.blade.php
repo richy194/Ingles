@@ -165,8 +165,8 @@
 
         <!-- Campo Role ID -->
         <div class="form-group">
-            <label for="role_id">Rol</label>
-            <select name="role_id" class="form-control" required>
+            <label for="role_id">Role</label>
+            <select name="role_id" class="form-control" >
                 @foreach ($roles as $role)
                     <option value="{{ $role->id }}">{{ $role->name }}</option>
                 @endforeach
