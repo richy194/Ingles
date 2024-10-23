@@ -15,6 +15,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Hash;
 
 class UserResource extends Resource
 {
@@ -36,12 +37,9 @@ class UserResource extends Resource
                 Forms\Components\TextInput::make('password')
                     ->password()
                     ->hiddenOn('edit')
-                    ->required(),
-                Forms\Components\Select::make('role_id')
-                    ->relationship('roles', 'name') 
                     ->required()
-                    ->label('Rol Asignado'),
-                //Select::make('roles')->multiple()->relationship('roles','name'),
+                    ->dehydrateStateUsing(fn ($state) => Hash::make($state)),
+                Select::make('roles')->multiple()->relationship('roles','name'),
             ]);
     }
 

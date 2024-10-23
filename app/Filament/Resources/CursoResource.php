@@ -9,6 +9,8 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use App\Models\Semestre;
+use App\Models\Theacher;                          
 
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -29,20 +31,36 @@ class CursoResource extends Resource
                     ->maxLength(255),
                 Forms\Components\TextInput::make('codigo')
                     ->required()
-                    ->numeric(),
+                    ->maxLength(255),
                 Forms\Components\TextInput::make('descripcion')
                     ->required()
                     ->maxLength(255),
+                    Forms\Components\Select::make('nivel_curso')
+                    ->required()
+                    ->options([
+                        1 => 'I',
+                        2 => 'II',
+                        3 => 'III',
+                        4 => 'IV',
+                    ])
+                    ->default(1) // Establecer un valor predeterminado, si es necesario
+                    ->reactive() // Opcional
+                    ->label('Nivel del Curso'), // Etiqueta para el campo
                 Forms\Components\DatePicker::make('fecha_inicio')
                     ->required(),
                 Forms\Components\DatePicker::make('fecha_fin')
-                    ->required(),
-                Forms\Components\TextInput::make('semestre_id')
+                    ,
+                    Forms\Components\Select::make('semestre_id')
                     ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('teacher_id')
-                    ->required()
-                    ->numeric(),
+                    ->options(Semestre::all()->pluck('nombre', 'id')) // Usa 'nombre' para mostrar en el select
+                    ->label('Semestre')
+                    ->placeholder('Selecciona un semestre'), // Texto que se muestra cuando no hay selección
+                    // Opcional, si necesitas que el select afecte otros campos
+                    Forms\Components\Select::make('teacher_id')
+                    ->required() // Opcional, según tus necesidades
+                    ->options(Theacher::all()->pluck('nombre', 'id')) // Usa 'nombre' para el select
+                    ->label('Profesor')
+                    ->placeholder('Selecciona un profesor'),
             ]);
     }
 
@@ -56,9 +74,10 @@ class CursoResource extends Resource
                 Tables\Columns\TextColumn::make('nombre')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('codigo')
-                    ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('descripcion')
+                    ->searchable(),
+                 Tables\Columns\TextColumn::make('nivel_curso')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('fecha_inicio')
                     ->date()
@@ -87,13 +106,18 @@ class CursoResource extends Resource
             ])
             ->filters([
                 //
+                Tables\Filters\TrashedFilter::make(),
+
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\RestoreAction::make(), 
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\RestoreBulkAction::make(),
                 ]),
             ]);
     }

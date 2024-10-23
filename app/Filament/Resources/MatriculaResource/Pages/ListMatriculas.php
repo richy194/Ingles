@@ -14,6 +14,8 @@ class ListMatriculas extends ListRecords
     {
         return [
             Actions\CreateAction::make(),
+            \EightyNine\ExcelImport\ExcelImportAction::make()
+                ->color("primary"),
         ];
     }
 }

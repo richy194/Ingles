@@ -25,17 +25,21 @@ class TheacherResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('nombre')
                     ->required()
+                    ->nullable()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('email')
                     ->email()
                     ->required()
+                    ->nullable()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('telefono')
                     ->tel()
                     ->required()
+                    ->nullable()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('direccion')
                     ->required()
+                     ->nullable()
                     ->maxLength(255),
             ]);
     }

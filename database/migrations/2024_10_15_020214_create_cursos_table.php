@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('nombre');
             $table->integer('codigo');
             $table->string('descripcion');
+            $table->string('nivel_curso');
             $table->date('fecha_inicio');
             $table->date('fecha_fin');
             $table->foreignId('semestre_id')->constrained('semestres')->cascadeOnUpdate()->cascadeOnDelete();

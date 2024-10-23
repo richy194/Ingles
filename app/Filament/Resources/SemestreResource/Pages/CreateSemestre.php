@@ -9,4 +9,9 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateSemestre extends CreateRecord
 {
     protected static string $resource = SemestreResource::class;
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
 }

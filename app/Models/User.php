@@ -11,6 +11,8 @@ use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasMany ;
+use Illuminate\Database\Eloquent\Relations\hasOne ;
 
 class User extends Authenticatable
 {
@@ -63,12 +65,17 @@ class User extends Authenticatable
         'profile_photo_url',
     ];
 
-    public function student()
+    public function student():hasOne
     {
         return $this->hasOne(Student::class);
     }
 
-    public function teacher()
+    public function matriculas():hasMany
+    {
+        return $this->hasMany(Matricula::class);
+    }
+
+    public function teacher():hasOne
     {
         return $this->hasOne(Theacher::class);
     }

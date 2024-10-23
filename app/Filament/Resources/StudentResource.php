@@ -64,7 +64,6 @@ class StudentResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('id')
                 ->searchable(),
-
                 Tables\Columns\TextColumn::make('Documento')
                 ->searchable(),
 

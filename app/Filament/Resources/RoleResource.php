@@ -27,7 +27,6 @@ class RoleResource extends Resource
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('guard_name')
-                    ->required()
                     ->maxLength(255),
             ]);
     }
