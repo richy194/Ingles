@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\belongsTo ;
 class Matricula extends Model
 {
     use HasFactory, SoftDeletes;
-    protected $fillable = ['fecha_matricula','fecha_matricula_final', 'estado','aplazado', 'nota_final', 'estudiante_id', 'teacher_id', 'grupo_id'];
+    protected $fillable = ['fecha_matricula','fecha_matricula_final', 'estado','aplazado', 'nota_final', 'estudiante_id', 'teacher_id', 'grupo_id' , 'user_id'];
 
     public function student():belongsTo
     {

@@ -70,11 +70,6 @@ class User extends Authenticatable
         return $this->hasOne(Student::class);
     }
 
-    public function matriculas():hasMany
-    {
-        return $this->hasMany(Matricula::class);
-    }
-
     public function teacher():hasOne
     {
         return $this->hasOne(Theacher::class);

@@ -91,9 +91,9 @@ class MatriculaResource extends Resource
                 Tables\Columns\TextColumn::make('nota_final')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('user.name')
+                Tables\Columns\TextColumn::make('student.Documento')
                     ->numeric()
-                    ->label('estudiante')
+                    ->label('documento')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('teacher.nombre')
                     ->numeric()
