@@ -36,7 +36,6 @@ class UserResource extends Resource
                     ->maxLength(255),
                 Forms\Components\TextInput::make('password')
                     ->password()
-                    ->hiddenOn('edit')
                     ->required()
                     ->dehydrateStateUsing(fn ($state) => Hash::make($state)),
                 Select::make('roles')->multiple()->relationship('roles','name'),

@@ -37,4 +37,11 @@ class RouteServiceProvider extends ServiceProvider
                 ->group(base_path('routes/web.php'));
         });
     }
+
+
+    public function redirectTo()
+{
+    return '/dashboard'; // La ruta de tu dashboard personalizada
+}
+
 }

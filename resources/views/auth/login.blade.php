@@ -1,115 +1,124 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="es">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Iniciar Sesión</title>
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - Zenthic</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            background-color: #f0f4f8;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            font-family: 'Arial', sans-serif;
+            background: url('/img/pastel.jpg') no-repeat center center fixed;
+            background-size: cover;
             margin: 0;
-            font-family: Arial, sans-serif;
+            padding: 0;
         }
-
-        .container {
-            background-color: white;
-            padding: 40px; /* Espacio interno mayor */
-            border-radius: 12px; /* Bordes más redondeados */
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Sombra más profunda */
-            width: 400px; /* Ancho más amplio */
-            transition: all 0.3s; /* Transición suave para hover */
+        .login-container {
+            max-width: 450px;
+            margin: 100px auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
         }
-
-        .container:hover {
-            transform: translateY(-5px); /* Efecto de elevación al pasar el mouse */
+        .logo-container img {
+            width: 120px;
+            display: block;
+            margin: 0 auto 20px;
         }
-
-        h2 {
-            margin-bottom: 30px; /* Más espacio debajo del título */
-            text-align: center; /* Alineación centrada del título */
-            color: #333; /* Color de texto más oscuro */
-            font-size: 24px; /* Tamaño de fuente más grande */
+        .login-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #0056b3;
+            margin-bottom: 20px;
         }
-
-        .form-group {
-            margin-bottom: 20px; /* Más espacio entre grupos de formulario */
-        }
-
-        label {
-            display: block; /* Asegura que la etiqueta ocupe toda la línea */
-            margin-bottom: 5px; /* Espacio entre etiqueta y campo */
-            color: #555; /* Color más suave para las etiquetas */
-            font-weight: 600; /* Negrita para mejor legibilidad */
-        }
-
         .form-control {
-            width: 100%;
-            padding: 12px; /* Padding mayor para mayor comodidad */
-            border: 1px solid #ccc; /* Borde más claro */
-            border-radius: 6px; /* Bordes redondeados */
-            box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
-            font-size: 16px; /* Tamaño de fuente más grande para mejor visibilidad */
-            transition: border-color 0.3s; /* Transición para el cambio de borde */
+            height: 45px;
+            border-radius: 8px;
         }
-
-        .form-control:focus {
-            border-color: #007bff; /* Cambio de color al hacer foco */
-            outline: none; /* Elimina el contorno */
-            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Sombra al enfocar */
-        }
-
-        .btn {
-            width: 100%;
-            padding: 12px; /* Padding mayor para mayor comodidad */
-            background-color: #007bff; /* Color primario */
-            color: white;
+        .btn-primary {
+            background-color: #0056b3;
             border: none;
-            border-radius: 6px; /* Bordes redondeados */
-            cursor: pointer;
-            margin-top: 15px; /* Espacio entre botones */
-            font-size: 18px; /* Tamaño de fuente más grande */
-            transition: background-color 0.3s; /* Transición suave para el hover */
+            font-weight: bold;
+            height: 45px;
+            border-radius: 8px;
         }
-
-        .btn-secondary {
-            background-color: #6c757d; /* Color secundario */
-            margin-top: 20px; /* Mayor espacio entre el botón de inicio de sesión y los botones secundarios */
+        .btn-primary:hover {
+            background-color: #003d82;
         }
-
-        .btn:hover {
-            background-color: #0056b3; /* Cambio de color al pasar el mouse */
+        .footer-text {
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            margin-top: 20px;
         }
-
-        .btn-secondary:hover {
-            background-color: #5a6268; /* Cambio de color al pasar el mouse */
+        .footer-text a {
+            color: #0056b3;
+            text-decoration: none;
+        }
+        .footer-text a:hover {
+            text-decoration: underline;
+        }
+        .info-box {
+            background: #f7f9fc;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #0056b3;
         }
     </style>
 </head>
 <body>
-<div class="container">
-    <h2>Iniciar Sesión</h2>
-    <form action="{{ route('login.store') }}" method="POST">
-        @csrf
-        <div class="form-group">
-            <label for="email">Correo Electrónico</label>
-            <input type="email" name="email" class="form-control" required>
-        </div>
-        <div class="form-group">
-            <label for="password">Contraseña</label>
-            <input type="password" name="password" class="form-control" required>
-        </div>
-        <button type="submit" class="btn">Iniciar Sesión</button>
-        <a href="{{ route('register') }}" class="btn btn-secondary">Registrarse</a>
-        <a href="{{ route('inscripcion.create') }}" class="btn btn-secondary">Formulario</a>
-    </form>
-</div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="login-container">
+                    <!-- Logo de UTS -->
+                    <div class="logo-container">
+                        <img src="/img/uteis.png" ">
+                    </div>
+                    <h2 class="login-title">Zenthic</h2>
+                    
+                    
 
-<script src="{{ asset('js/app.js') }}"></script>
+                    <!-- Formulario de login -->
+                    <form  method="POST" action="{{ route('login') }}">
+                        @csrf
+                        <!-- Campo Usuario -->
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Correo</label>
+                            <input type="email" name="email" id="email" class="form-control" placeholder="Ingresa tu correo" required>
+                        </div>
+                        <!-- Campo Contraseña -->
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Contraseña</label>
+                            <input type="password" name="password" id="password" class="form-control" placeholder="Ingresa tu contraseña" required>
+                        </div>
+                        <!-- Botón de Inicio -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+                        </div>
+                    </form>
+
+                    <!-- Enlace Olvidaste tu Contraseña -->
+                    <div class="text-center mt-3">
+                        <a href="#" class="text-secondary">¿Olvidaste tu contraseña?</a>
+                    </div>
+
+                    <!-- Pie de página -->
+                    <div class="footer-text">
+                        <p>© 2024 richy corp - quiero la chamba. Todos los derechos reservados.</p>
+                        <p><a href="#">Política de privacidad</a> | <a href="#">Términos de uso</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

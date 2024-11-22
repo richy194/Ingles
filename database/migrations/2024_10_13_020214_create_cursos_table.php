@@ -11,16 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('matriculas', function (Blueprint $table) {
+        Schema::create('cursos', function (Blueprint $table) {
             $table->id();
-            $table->date('fecha_matricula');
-            $table->date('fecha_matricula_final');
-            $table->string('estado');
-            $table->string('aplazado');
-            $table->integer('nota_final');
-            $table->foreignId('estudiante_id')->constrained('students')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->string('nombre');
+            $table->integer('codigo');
+            $table->string('descripcion');
+            $table->string('nivel_curso');
+            $table->date('fecha_inicio');
+            $table->date('fecha_fin');
+            $table->string('requisito');
+            $table->string('modalidad');
+            $table->foreignId('semestre_id')->constrained('semestres')->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('teacher_id')->constrained('theachers')->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignId('grupo_id')->constrained('cursos')->cascadeOnUpdate()->cascadeOnDelete();
             $table->softDeletes();
             $table->timestamps();
         });
@@ -31,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('matriculas');
+        Schema::dropIfExists('cursos');
     }
 };

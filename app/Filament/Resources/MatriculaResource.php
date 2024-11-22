@@ -27,10 +27,26 @@ class MatriculaResource extends Resource
     {
         return $form
             ->schema([
+                Forms\Components\TextInput::make('name')
+                ->required()
+                ->maxLength(255),
+                Forms\Components\TextInput::make('email')
+                ->required()
+                ->maxLength(255),
+                Forms\Components\TextInput::make('Documento')
+                ->required()
+                ->maxLength(255),
+                Forms\Components\TextInput::make('direccion')
+                ->required()
+                ->maxLength(255),
+                Forms\Components\TextInput::make('telefono')
+                ->required()
+                ->maxLength(255),
+                
                 Forms\Components\DatePicker::make('fecha_matricula')
                     ->required(),
-                Forms\Components\DatePicker::make('fecha_matricula_final')
-                    ->required(),
+               
+
                     Forms\Components\Select::make('estado')
                     ->required()
                     ->options([
@@ -42,22 +58,12 @@ class MatriculaResource extends Resource
                     ->default('cursando') // Opcional
                     ->reactive() // Opcional
                     ->label('estado'),
-                Forms\Components\Select::make('aplazado')
-                ->required()
-                ->options([
-                    'si' => 'si',
-                    'no' => 'no',
-                    
-                ])
-                ->default('no') // Opcional
-                ->label('Aplazado'),
+               
+                
                 Forms\Components\TextInput::make('nota_final')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('estudiante_id')
-                    ->required()
-                    ->label('estudiante'),
-                   
+               
                     Forms\Components\Select::make('teacher_id')
                     ->required() // Opcional, según tus necesidades
                     ->options(Theacher::all()->pluck('nombre', 'id')) // Usa 'nombre' para el select
@@ -78,23 +84,32 @@ class MatriculaResource extends Resource
                 Tables\Columns\TextColumn::make('id')
                     
                     ->sortable(),
+                Tables\Columns\TextColumn::make('name')
+                    
+                ->sortable(),
+                Tables\Columns\TextColumn::make('email')
+                    
+                ->sortable(),
+                Tables\Columns\TextColumn::make('Documento')
+                    
+                ->sortable(),
+                Tables\Columns\TextColumn::make('direccion')
+                    
+                ->sortable(),
+                Tables\Columns\TextColumn::make('telefono')
+                    
+                ->sortable(),
+               
                 Tables\Columns\TextColumn::make('fecha_matricula')
                     ->date()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('fecha_matricula_final')
-                    ->date()
-                    ->sortable(),
+               
                 Tables\Columns\TextColumn::make('estado')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('aplazado')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('nota_final')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('student.Documento')
-                    ->numeric()
-                    ->label('documento')
-                    ->sortable(),
+              
                 Tables\Columns\TextColumn::make('teacher.nombre')
                     ->numeric()
                     ->label('Profesor')

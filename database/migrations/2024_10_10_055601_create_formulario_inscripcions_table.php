@@ -15,11 +15,14 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->nullable();
-            $table->string('password');
             $table->string('Documento')->unique();
             $table->string('direccion');
             $table->string('telefono')->nullable();
-            $table->foreignId('role_id')->constrained('roles')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->date('fecha_matricula')->requireed();
+            $table->string('estado');
+            $table->integer('nota_final');
+            $table->foreignId('teacher_id')->constrained('theachers')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('grupo_id')->constrained('cursos')->cascadeOnUpdate()->cascadeOnDelete();
             $table->softDeletes();
             $table->timestamps();
         });

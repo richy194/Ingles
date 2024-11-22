@@ -15,12 +15,19 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FormularioInscripcionController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\CursoController;
+use App\Http\Controllers\GrupoController;
+use App\Http\Controllers\MatriculaController;
+use App\Http\Controllers\UsuarioController;
+use App\Http\Controllers\PeriodoAcademicoController;
+use App\Http\Controllers\FormularioController;
 
 // Mostrar el formulario de inscripción
 Route::get('/inscripcion', [FormularioInscripcionController::class, 'create'])->name('inscripcion.create');
 
 // Procesar el formulario de inscripción
-Route::post('/inscripcion', [FormularioInscripcionController::class, 'store'])->name('inscripcion.store');
+Route::post('/inscripcion', [FormularioInscripcionController::class, 'store'])->name('matricula.store');
 
 // Ruta para login
 Route::get('/login', function () {
@@ -42,12 +49,37 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+
+Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+    // Ruta para cursos
+    Route::get('/cursos', [CursoController::class, 'index'])->name('cursos.index');
+    
+    // Ruta para grupos
+    Route::get('/grupos', [GrupoController::class, 'index'])->name('grupos.index');
+    
+    // Ruta para matrículas
+    Route::get('/matriculas', [MatriculaController::class, 'index'])->name('matriculas.index');
+    
+    // Ruta para usuarios
+    Route::get('/usuarios', [UsuarioController::class, 'index'])->name('usuarios.index');
+
+    Route::get('/periodos', [PeriodoAcademicoController::class,'index'])->name('periodos.index');
+    Route::get('/formularios',[ FormularioController::class,'index'])->name('formularios.index');
 });
+
+Route::resource('cursos', CursoController::class)->middleware('auth');
+Route::resource('grupos', GrupoController::class)->middleware('auth');
+Route::resource('matriculas', MatriculaController::class)->middleware('auth');
+Route::resource('periodos', PeriodoAcademicoController::class)->middleware('auth');
+Route::resource('formularios', FormularioController::class)->middleware('auth');
+
+Route::get('/', function () {
+    return redirect('login');
+});
+
+
+
+

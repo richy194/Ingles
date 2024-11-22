@@ -28,7 +28,7 @@ class AuthenticatedSessionController extends Controller
             $request->session()->regenerate();
 
             // Redirigir al panel de administración de Filament
-            return redirect()->route('filament.admin.pages.dashboard'); // Cambia esto si tienes una ruta diferente
+            return redirect()->route('dashboard'); // Cambia esto si tienes una ruta diferente
         }
 
         // Si las credenciales son incorrectas

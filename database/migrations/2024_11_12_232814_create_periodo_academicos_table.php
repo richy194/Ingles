@@ -11,9 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('matriculas', function (Blueprint $table) {
-            //
-            $table->foreignId('user_id')->constrained('users')->cascadeOnUpdate()->cascadeOnDelete()->nullable();
+        Schema::create('periodo_academicos', function (Blueprint $table) {
+            $table->id();
+            $table->string('año');
+            $table->string('nombre');
+            $table->integer('periodo');
+            $table->string('descripcion');
+            $table->timestamps();
         });
     }
 
@@ -22,8 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('matriculas', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('periodo_academicos');
     }
 };

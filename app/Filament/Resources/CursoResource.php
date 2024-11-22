@@ -38,10 +38,12 @@ class CursoResource extends Resource
                     Forms\Components\Select::make('nivel_curso')
                     ->required()
                     ->options([
-                        1 => 'I',
-                        2 => 'II',
-                        3 => 'III',
-                        4 => 'IV',
+                        'A1' => 'A1',
+                        'A2' => 'A2',
+                        'B1' => 'B1',
+                        'B2' => 'B2',
+                        'C1' => 'C1',
+                        'C2' => 'C2',
                     ])
                     ->default(1) // Establecer un valor predeterminado, si es necesario
                     ->reactive() // Opcional
@@ -50,6 +52,17 @@ class CursoResource extends Resource
                     ->required(),
                 Forms\Components\DatePicker::make('fecha_fin')
                     ,
+                    Forms\Components\TextInput::make('requisito')
+                    ->required()
+                    ->maxLength(255),
+                    Forms\Components\Select::make('modalidad')
+                    ->required()
+                    ->options([
+                        'presencial' => 'presencial',
+                        'virtual' => 'virtual',
+                     
+                    ]),
+
                     Forms\Components\Select::make('semestre_id')
                     ->required()
                     ->options(Semestre::all()->pluck('nombre', 'id')) // Usa 'nombre' para mostrar en el select
@@ -85,6 +98,10 @@ class CursoResource extends Resource
                 Tables\Columns\TextColumn::make('fecha_fin')
                     ->date()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('requisito')
+                    ->searchable(),
+                 Tables\Columns\TextColumn::make('modalidad')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('semestre.nombre')
                     ->numeric()
                     ->sortable(),

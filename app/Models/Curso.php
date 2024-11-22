@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\hasMany ;
 class Curso extends Model
 {
     use HasFactory, SoftDeletes;
-    protected $fillable = ['nombre', 'codigo', 'descripcion','nivel_curso', 'fecha_inicio', 'fecha_fin', 'semestre_id', 'teacher_id'];
+    protected $fillable = ['nombre', 'codigo', 'descripcion','nivel_curso', 'fecha_inicio', 'fecha_fin','requisito','modalidad', 'semestre_id', 'teacher_id'];
 
     public function semestre():belongsTo
     {
@@ -25,5 +25,11 @@ class Curso extends Model
     public function matriculas():hasMany
     {
         return $this->hasMany(Matricula::class, 'grupo_id');
+    }
+
+    public function groups():hasMany
+    {
+// Suggested code may be subject to a license. Learn more: ~LicenseLog:876070114.
+        return $this->hasMany(group::class´, 'curso_id');
     }
 }

@@ -11,6 +11,9 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use App\Models\User;
 use App\Models\Student;
+use App\Models\Theacher;
+use App\Models\Curso;
+use App\Models\Matricula;
 use Illuminate\Support\Facades\Hash;
 
 class FormularioInscripcionResource extends Resource
@@ -33,9 +36,6 @@ class FormularioInscripcionResource extends Resource
                     ->required()
                     ->maxLength(255),
 
-                Forms\Components\TextInput::make('password')
-                    ->required()
-                    ->password(),
 
                 Forms\Components\TextInput::make('Documento')
                     ->required()
@@ -49,9 +49,30 @@ class FormularioInscripcionResource extends Resource
                     ->tel()
                     ->maxLength(255)
                     ->nullable(),
-
-                Forms\Components\Select::make('role_id')
-                    ->relationship('roles', 'name') // Asumiendo que ya tienes una relación con la tabla roles
+                    
+                Forms\Components\DatePicker::make('fecha_matricula')
+                ->required(),
+                Forms\Components\Select::make('estado')
+                    ->required()
+                    ->options([
+                        'aprobado' => 'aprobado',
+                        'habilitacion' => 'habilitacion',
+                        'inscrito' => 'inscrito',
+                        'cursando' => 'cursando ',
+                    ]),
+                    Forms\Components\TextInput::make('nota_final')
+                    ->required()
+                    ->numeric(),
+                    Forms\Components\Select::make('teacher_id')
+                    ->required() // Opcional, según tus necesidades
+                    ->options(Theacher::all()->pluck('nombre', 'id')) // Usa 'nombre' para el select
+                    ->label('Profesor')
+                    ->placeholder('Selecciona un profesor'),
+                    Forms\Components\Select::make('grupo_id')
+                    ->required()
+                    ->options(Curso::all()->pluck('nombre', 'id')) // Usa 'name' para el select
+                    ->label('curso')
+                    ->placeholder('Selecciona tu curso '),
                     
             ]);
     }
@@ -65,7 +86,22 @@ class FormularioInscripcionResource extends Resource
                 Tables\Columns\TextColumn::make('Documento'),
                 Tables\Columns\TextColumn::make('direccion'),
                 Tables\Columns\TextColumn::make('telefono'),
-                Tables\Columns\TextColumn::make('roles.name'), // Asegúrate de tener la relación correcta
+                Tables\Columns\TextColumn::make('fecha_matricula'),
+                Tables\Columns\TextColumn::make('estado'),
+                Tables\Columns\TextColumn::make('nota_final'),
+                Tables\Columns\TextColumn::make('theacher.nombre')
+                    ->numeric()
+                    ->label('Profesor')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('curso.nombre')
+                    ->numeric()
+                    ->label('curso')
+                    ->sortable(),
+                    Tables\Columns\TextColumn::make('curso.nivel_curso')
+                    ->numeric()
+                    ->label('nivel del curso')
+                    ->sortable(),
+                 // Asegúrate de tener la relación correcta
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable(),
@@ -89,12 +125,17 @@ class FormularioInscripcionResource extends Resource
                             'role_id' => $record->role_id, // Asigna el rol
                         ]);
                         // Crear el estudiante
-                        Student::create([
+                        Matricula::create([
+                            'name'=> $record->name,
+                            'email'=> $record->email,
                             'Documento' => $record->Documento, // Asegúrate de que este campo está en el formulario
-                            'user_id' => $user->id, // Asigna el ID del usuario creado
                             'direccion' => $record->direccion,
-                            'correo' => $record->email, // Cambia si es necesario
                             'telefono' => $record->telefono,
+                            'fecha_matricula'=> $record->fecha_matricula,
+                             'estado'=> $record->estado,
+                             'nota_final'=> $record->nota_final,
+                             'teacher_id'=> $record->teacher_id,
+                            'grupo_id'=> $record->grupo_id,
                         ]);
 
                         // Puedes añadir lógica adicional aquí, como redirigir o mostrar un mensaje.
@@ -107,12 +148,10 @@ class FormularioInscripcionResource extends Resource
             ])
             ->filters([
                 //
-                Tables\Filters\TrashedFilter::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
                 ]),
             ])
             ;
