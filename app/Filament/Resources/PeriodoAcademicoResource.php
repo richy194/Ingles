@@ -29,9 +29,16 @@ class PeriodoAcademicoResource extends Resource
                 Forms\Components\TextInput::make('nombre')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('periodo')
+                    Forms\Components\Select::make('periodo')
                     ->required()
-                    ->numeric(),
+                    ->options([
+                        'SEMESTRE-1' => 'SEMESTRE-1',
+                        'SEMESTRE-2' => 'SEMESTRE-2',
+                        'TRIMESTRE-1' => 'TRIMESTRE-1',
+                        'TRIMESTRE-2' => 'TRIMESTRE-2',
+                        'TRIMESTRE-3' => 'TRIMESTRE-3',
+                        'TRIMESTRE-4' => 'TRIMESTRE-4',
+                    ]),
                 Forms\Components\TextInput::make('descripcion')
                     ->required()
                     ->maxLength(255),

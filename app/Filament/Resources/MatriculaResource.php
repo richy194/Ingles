@@ -51,9 +51,9 @@ class MatriculaResource extends Resource
                     ->required()
                     ->options([
                         'aprobado' => 'aprobado',
-                        'habilitacion' => 'habilitacion',
-                        'inscrito' => 'inscrito',
-                        'cursando' => 'cursando ',
+                        'desaprobado' => 'desaprobado',
+                        'cancelado' => 'cancelado',
+                        'no aprobado' => 'no aprobado ',
                     ])
                     ->default('cursando') // Opcional
                     ->reactive() // Opcional

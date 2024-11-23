@@ -48,9 +48,16 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="nivel_curso">Nivel</label>
-                        <input type="text" name="nivel_curso" id="nivel_curso" class="form-control" value="{{ old('nivel_curso', $curso->nivel_curso) }}" required>
-                    </div>
+                   <label for="nivel_curso">Nivel del Curso</label>
+                  <select name="nivel_curso" id="nivel_curso" class="form-control" required>
+                 <option value="A1" {{ old('nivel_curso') == 'A1' ? 'selected' : '' }}>A1</option>
+                 <option value="A2" {{ old('nivel_curso') == 'A2' ? 'selected' : '' }}>A2</option>
+                 <option value="B1" {{ old('nivel_curso') == 'B1' ? 'selected' : '' }}>B1</option>
+                 <option value="B2" {{ old('nivel_curso') == 'B2' ? 'selected' : '' }}>B2</option>
+                 <option value="C1" {{ old('nivel_curso') == 'C1' ? 'selected' : '' }}>C1</option>
+                 <option value="C2" {{ old('nivel_curso') == 'C2' ? 'selected' : '' }}>C2</option>
+                </select>
+                 </div>
 
                     <div class="form-group">
                         <label for="fecha_inicio">Fecha de Inicio</label>
@@ -93,6 +100,7 @@
                     </select>
 
                     <button type="submit" class="btn btn-warning">Actualizar Curso</button>
+                    <a href="{{ route('cursos.index') }}" class="btn btn-secondary mt-3">Cancelar</a>
                 </form>
             </div>
         </div>

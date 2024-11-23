@@ -3,45 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ver Matrícula</title>
+    <title>Detalles de Matrícula</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fc;
+        }
+        .card {
+            margin-top: 50px;
+        }
+        .btn {
+            margin-top: 10px;
+            background-color: #a8e6cf;
+            color: #fff;
+        }
+        .btn:hover {
+            background-color: #80e0bb;
+        }
+    </style>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ asset('js/custom.js') }}"></script>
 </head>
 <body>
     <div class="container">
-        <h1 class="my-4">Detalles de Matrícula</h1>
+        <div class="card">
+            <div class="card-header">
+                <h3>Detalles de la Matrícula</h3>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="name">Nombre</label>
+                    <p>{{ $matricula->name }}</p>
+                </div>
 
-        <table class="table table-bordered">
-            <tr>
-                <th>ID</th>
-                <td>{{ $matricula->id }}</td>
-            </tr>
-            <tr>
-                <th>Nombre</th>
-                <td>{{ $matricula->name }}</td>
-            </tr>
-            <tr>
-                <th>Correo</th>
-                <td>{{ $matricula->email }}</td>
-            </tr>
-            <tr>
-                <th>Curso</th>
-                <td>{{ $matricula->curso->name }}</td>
-            </tr>
-            <tr>
-                <th>Profesor</th>
-                <td>{{ $matricula->teacher->name }}</td>
-            </tr>
-            <tr>
-                <th>Estado</th>
-                <td>{{ $matricula->estado }}</td>
-            </tr>
-        </table>
+                <div class="form-group">
+                    <label for="email">Correo Electrónico</label>
+                    <p>{{ $matricula->email }}</p>
+                </div>
 
-        <a href="{{ route('matriculas.index') }}" class="btn btn-secondary">Volver</a>
+                <div class="form-group">
+                    <label for="Documento">Documento</label>
+                    <p>{{ $matricula->Documento }}</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="direccion">Dirección</label>
+                    <p>{{ $matricula->direccion }}</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="telefono">Teléfono</label>
+                    <p>{{ $matricula->telefono }}</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="fecha_matricula">Fecha de Matrícula</label>
+                    <p>{{ $matricula->fecha_matricula }}</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="estado">Estado</label>
+                    <p>{{ $matricula->estado }}</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="nota_final">Nota Final</label>
+                    <p>{{ $matricula->nota_final }}</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="grupo_id">Curso</label>
+                    <p>{{ $matricula->curso->nombre }}</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="teacher_id">Profesor</label>
+                    <p>{{ $matricula->teacher->nombre }}</p>
+                </div>
+
+                <div class="form-group">
+                    <a href="{{ route('matriculas.index') }}" class="btn btn-primary">Volver al Listado</a>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 </html>

@@ -2,16 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
 use App\Http\Controllers\FormularioInscripcionController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
@@ -22,6 +12,10 @@ use App\Http\Controllers\MatriculaController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\PeriodoAcademicoController;
 use App\Http\Controllers\FormularioController;
+use App\Exports\MatriculaExport;
+use App\Imports\MatriculaImport ;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 // Mostrar el formulario de inscripción
 Route::get('/inscripcion', [FormularioInscripcionController::class, 'create'])->name('inscripcion.create');
@@ -49,9 +43,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     // Ruta para cursos
@@ -62,6 +54,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     
     // Ruta para matrículas
     Route::get('/matriculas', [MatriculaController::class, 'index'])->name('matriculas.index');
+    // No es necesario definir una ruta para almacenar matrículas, ya está en Route::resource
     
     // Ruta para usuarios
     Route::get('/usuarios', [UsuarioController::class, 'index'])->name('usuarios.index');
@@ -80,6 +73,16 @@ Route::get('/', function () {
     return redirect('login');
 });
 
+Route::post('/formularios/inscribir/{formulario}', [FormularioController::class, 'inscribir'])->name('formularios.inscribir');
 
+Route::get('matriculas/export', [MatriculaController::class, 'export'])->name('matriculas.export');
+Route::post('matriculas/import', [MatriculaController::class, 'import'])->name('matriculas.import');
 
+Route::get('/export', function () {
+    return Excel::download(new MatriculaExport, 'users.xlsx');
+});
 
+Route::post('/import', function () {
+    Excel::import(new MatriculaImport, request()->file('file'));
+    return redirect('/')->with('success', 'Archivo importado exitosamente');
+}); 

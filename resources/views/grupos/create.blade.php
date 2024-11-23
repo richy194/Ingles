@@ -6,18 +6,51 @@
     <title>Crear Grupo</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
+       body {
             font-family: Arial, sans-serif;
             background-color: #f4f7fc;
         }
         .card {
             margin-top: 50px;
-        }
-        .btn {
-            margin-top: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
         }
         .form-group label {
             font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+        }
+        .btn-primario {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+        }
+        .btn-primario:hover {
+            background-color: #0056b3;
+        }
+        .btn-secundario {
+            background-color: #6c757d;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+        }
+        .btn-secundario:hover {
+            background-color: #5a6268;
+        }
+        .form-buttons {
+            display: flex;
+            gap: 10px;
         }
     </style>
 </head>
@@ -72,6 +105,7 @@
                     </div>
 
                     <button type="submit" class="btn btn-success">crear grupo</button>
+                    <a href="{{ route('grupos.index') }}" class="btn-secundario">Cancelar</a>
                 </form>
             </div>
         </div>

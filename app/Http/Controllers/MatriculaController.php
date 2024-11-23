@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Matricula;
 use App\Models\Curso;
 use App\Models\Theacher;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\MatriculasExport;
+use App\Imports\MatriculasImport;
 use Illuminate\Http\Request;
 
 class MatriculaController extends Controller
@@ -99,4 +102,30 @@ class MatriculaController extends Controller
         $matricula->delete(); // Elimina la matrícula
         return redirect()->route('matriculas.index'); // Redirige al índice de matrículas
     }
+
+    public function export()
+{
+    try {
+        return Excel::download(new MatriculasExport, 'matriculas.xlsx');
+    } catch (\Exception $e) {
+        return back()->with('error', 'Error al exportar los datos: ' . $e->getMessage());
+    }
+}
+
+
+    public function import(Request $request)
+{
+    // Validar que el archivo sea un archivo Excel
+    $request->validate([
+        'file' => 'required|file|mimes:xlsx,xls',  // Se valida que sea un archivo .xlsx o .xls
+    ]);
+
+    try {
+        // Importar los datos del archivo
+        Excel::import(new MatriculasImport, $request->file('file'));
+        return redirect()->route('matriculas.index')->with('success', 'Matrículas importadas correctamente.');
+    } catch (\Exception $e) {
+        return redirect()->route('matriculas.index')->with('error', 'Error al importar los datos: ' . $e->getMessage());
+    }
+}
 }

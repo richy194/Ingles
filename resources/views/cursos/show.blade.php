@@ -15,8 +15,14 @@
         }
         .btn {
             margin-top: 10px;
+            background-color: #a8e6cf;
+            color: #fff;
+        }
+        .btn:hover {
+            background-color: #80e0bb;
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
     <div class="container">

@@ -9,6 +9,8 @@ use App\Policies\GrupoPolicy;
  use Illuminate\Support\Facades\Gate;
 use App\Models\Matricula;
 use App\Policies\MatriculaPolicy;
+use App\Models\PeriodoAcademico;
+use App\Policies\periodoPolicy;
 class AuthServiceProvider extends ServiceProvider
 {
     /**
@@ -19,6 +21,7 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         Group::class => GrupoPolicy::class,
         Matricula::class => MatriculaPolicy::class, // Registro de la política
+        PeriodoAcademico::class => periodoPolicy::class, // Registro de la política
     ];
 
     /**

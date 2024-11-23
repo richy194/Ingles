@@ -72,6 +72,7 @@
                     </div>
 
                     <button type="submit" class="btn btn-warning">Actualizar Grupo</button>
+                    <a href="{{ route('grupos.index') }}" class="btn btn-secondary mt-3">Cancelar</a>
                 </form>
             </div>
         </div>

@@ -28,4 +28,9 @@ class Group extends Model
     {
         return $this->belongsTo(PeriodoAcademico::class, 'periodo_id');
     }
+   
+    public function formularios()
+    {
+        return $this->hasMany(FormularioInscripcion::class);
+    }
 }

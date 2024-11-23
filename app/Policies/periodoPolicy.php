@@ -13,7 +13,7 @@ class periodoPolicy
      */
     public function viewAny(User $user): bool
     {
-        //
+        return $user->can('view_any_periodo::academico');
     }
 
     /**
@@ -21,7 +21,7 @@ class periodoPolicy
      */
     public function view(User $user, periodoAcademico $periodoAcademico): bool
     {
-        //
+        return $user->can('view_periodo::academico');
     }
 
     /**
@@ -29,7 +29,7 @@ class periodoPolicy
      */
     public function create(User $user): bool
     {
-        //
+        return $user->can('create_periodo::academico');
     }
 
     /**
@@ -37,7 +37,7 @@ class periodoPolicy
      */
     public function update(User $user, periodoAcademico $periodoAcademico): bool
     {
-        //
+        return $user->can('update_periodo::academico');
     }
 
     /**
@@ -45,7 +45,7 @@ class periodoPolicy
      */
     public function delete(User $user, periodoAcademico $periodoAcademico): bool
     {
-        //
+        return $user->can('delete_periodo::academico');
     }
 
     /**
@@ -53,7 +53,7 @@ class periodoPolicy
      */
     public function restore(User $user, periodoAcademico $periodoAcademico): bool
     {
-        //
+        return $user->can('restore_periodo::academico');
     }
 
     /**
@@ -61,6 +61,6 @@ class periodoPolicy
      */
     public function forceDelete(User $user, periodoAcademico $periodoAcademico): bool
     {
-        //
+        return $user->can('force_delete_periodo::academico');
     }
 }

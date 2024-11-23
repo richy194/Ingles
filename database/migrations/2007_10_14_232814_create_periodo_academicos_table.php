@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('año');
             $table->string('nombre');
-            $table->integer('periodo');
+            $table->string('periodo');
             $table->string('descripcion');
             $table->timestamps();
         });

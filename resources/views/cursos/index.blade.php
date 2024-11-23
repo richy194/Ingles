@@ -19,27 +19,26 @@
             margin-top: 10px;
         }
 
-        /* Estilo personalizado para el botón de regresar */
         .btn-regresar {
-            background-color: #28a745; /* Verde brillante */
-            color: #fff; /* Texto blanco */
+            background-color: #28a745;
+            color: #fff;
             border: none;
             padding: 10px 20px;
             font-size: 1rem;
             font-weight: bold;
             border-radius: 5px;
             transition: background-color 0.3s ease, transform 0.3s ease;
-            margin-right: 10px; /* Espacio a la derecha */
+            margin-right: 10px;
         }
 
         .btn-regresar:hover {
-            background-color: #218838; /* Verde más oscuro al pasar el mouse */
-            transform: scale(1.05); /* Efecto de zoom */
-            text-decoration: none; /* Elimina subrayado al pasar el mouse */
+            background-color: #218838;
+            transform: scale(1.05);
+            text-decoration: none;
         }
 
         .btn-regresar:focus {
-            outline: none; /* Elimina el borde de enfoque */
+            outline: none;
         }
     </style>
 </head>
@@ -48,7 +47,6 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h3>Lista de Cursos</h3>
-                <!-- Botones "Regresar" y "Crear Curso" juntos en la misma fila -->
                 <div class="d-flex">
                     <a href="/dashboard" class="btn btn-regresar">Regresar</a>
                     @can('create', App\Models\Curso::class)
@@ -64,6 +62,13 @@
                             <th>Nombre</th>
                             <th>Código</th>
                             <th>Descripción</th>
+                            <th>Nivel</th>
+                            <th>Fecha Inicio</th>
+                            <th>Fecha Fin</th>
+                            <th>Requisitos</th>
+                            <th>Modalidad</th>
+                            <th>Semestre</th>
+                            <th>Docente</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -74,6 +79,13 @@
                                 <td>{{ $curso->nombre }}</td>
                                 <td>{{ $curso->codigo }}</td>
                                 <td>{{ $curso->descripcion }}</td>
+                                <td>{{ $curso->nivel_curso }}</td>
+                                <td>{{ $curso->fecha_inicio }}</td>
+                                <td>{{ $curso->fecha_fin }}</td>
+                                <td>{{ $curso->requisito }}</td>
+                                <td>{{ $curso->modalidad }}</td>
+                                <td>{{ $curso->semestre->nombre ?? 'N/A' }}</td>
+                                <td>{{ $curso->teacher->nombre ?? 'N/A' }}</td>
                                 <td>
                                     @can('view', $curso)
                                         <a href="{{ route('cursos.show', $curso->id) }}" class="btn btn-info btn-sm">Ver</a>
@@ -92,7 +104,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="text-center">No hay cursos disponibles</td>
+                                <td colspan="12" class="text-center">No hay cursos disponibles</td>
                             </tr>
                         @endforelse
                     </tbody>

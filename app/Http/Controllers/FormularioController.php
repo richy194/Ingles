@@ -3,16 +3,30 @@
 namespace App\Http\Controllers;
 
 use App\Models\FormularioInscripcion;
+use App\Http\Requests\FormularioInscripcionRequest;
+use App\Models\User;
+use App\Models\Matricula;
 use App\Models\Theacher;
 use App\Models\Curso;
+use App\Models\Group;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
-class FormularioInscripcionController extends Controller
+class FormularioController extends Controller
 {
     public function index()
     {
         $formularios = FormularioInscripcion::with(['teacher', 'curso'])->get();
-        return view('formularios.index', compact('formularios'));
+        $teachers = Theacher::all();
+        $grupos = Group::all();
+        return view('formularios.index', compact('formularios', 'teachers', 'grupos'));
+    }
+
+
+    public function show($id)
+    {
+        $formulario = FormularioInscripcion::with(['curso', 'teacher'])->findOrFail($id); // Encuentra la matrícula por ID con las relaciones
+        return view('formularios.show', compact('formulario')); // Muestra la vista para ver la matrícula
     }
 
     public function create()
@@ -68,4 +82,55 @@ class FormularioInscripcionController extends Controller
 
         return redirect()->route('formularios.index')->with('success', 'Formulario actualizado correctamente.');
     }
+
+
+    public function inscribir(FormularioInscripcion $formulario)
+{
+    // Crear la matrícula utilizando el formulario
+    Matricula::create([
+        'name' => $formulario->name,  
+        'email' => $formulario->email,
+        'Documento' => $formulario->Documento,
+        'direccion' => $formulario->direccion,
+        'telefono' => $formulario->telefono,
+        'fecha_matricula' => $formulario->fecha_matricula,
+        'estado' => $formulario->estado,
+        'nota_final' => $formulario->nota_final,
+        'teacher_id' => $formulario->teacher_id, 
+        'grupo_id' => $formulario->grupo_id,
+    ]);
+
+    // Redirigir con mensaje de éxito
+    return redirect()->route('formularios.index')->with('success', 'Matrícula creada correctamente.');
 }
+
+public function destroy($id)
+    {
+        
+        $formulario = FormularioInscripcion::findOrFail($id); // Encuentra la matrícula por ID
+        $formulario->delete(); // Elimina la matrícula
+        return redirect()->route('formularios.index'); // Redirige al índice de matrículas
+    }
+
+
+
+
+
+    
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

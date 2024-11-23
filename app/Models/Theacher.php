@@ -28,4 +28,9 @@ class Theacher extends Model
     {
         return $this->hasMany(Matricula::class, 'teacher_id');
     }
+
+    public function formularios()
+    {
+        return $this->hasMany(FormularioInscripcion::class);
+    }
 }
