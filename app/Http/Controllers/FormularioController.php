@@ -40,7 +40,7 @@ class FormularioController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:formulario_inscripcions,email',
+            'email' => 'required|email:formulario_inscripcions,email',
             'Documento' => 'required|string|max:20',
             'direccion' => 'nullable|string|max:255',
             'telefono' => 'nullable|string|max:15',
@@ -67,7 +67,7 @@ class FormularioController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:formulario_inscripcions,email,' . $formulario->id,
+            'email' => 'required|email:formulario_inscripcions,email,' . $formulario->id,
             'Documento' => 'required|string|max:20',
             'direccion' => 'nullable|string|max:255',
             'telefono' => 'nullable|string|max:15',

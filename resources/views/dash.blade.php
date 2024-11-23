@@ -151,7 +151,12 @@
                                         <strong>Código:</strong> {{ $grupo->codigo }}<br>
                                         <strong>Cantidad:</strong> {{ $grupo->cantidad }}<br>
                                         <strong>Docente:</strong> {{ $grupo->pofe->nombre }}<br>
-                                        <strong>Curso:</strong> {{ $grupo->curso->nombre }}<br>
+                                        <strong>Curso:</strong> 
+                                        @if( $grupo->curso) 
+                                        {{$grupo->curso->nombre}}
+                                                @else 
+                                            No asignado 
+                                        @endif     <br>
                                         <strong>Periodo Académico:</strong> 
                                         @if ($grupo->periodo_academicos) 
                                             {{ $grupo->periodo_academicos->nombre }} 

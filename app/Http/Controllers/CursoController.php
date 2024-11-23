@@ -49,7 +49,7 @@ class CursoController extends Controller
         // Validación de la entrada
         $validated = $request->validate([
             'nombre' => 'required|string',
-            'codigo' => 'required|integer',
+            'codigo' => 'required|string',
             'descripcion' => 'required|string',
             'nivel_curso' => 'required|string',
             'fecha_inicio' => 'required|date',
@@ -83,7 +83,7 @@ class CursoController extends Controller
     {
         $validated = $request->validate([
             'nombre' => 'required|string',
-            'codigo' => 'required|integer',
+            'codigo' => 'required|string',
             'descripcion' => 'required|string',
             'nivel_curso' => 'required|string',
             'fecha_inicio' => 'required|date',

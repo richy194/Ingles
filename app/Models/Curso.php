@@ -30,6 +30,6 @@ class Curso extends Model
     public function groups():hasMany
     {
 // Suggested code may be subject to a license. Learn more: ~LicenseLog:876070114.
-        return $this->hasMany(group::class´, 'curso_id');
+        return $this->hasMany(group::class, 'curso_id');
     }
 }
