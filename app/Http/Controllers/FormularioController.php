@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\FormularioInscripcion;
-use App\Http\Requests\FormularioInscripcionRequest;
-use App\Models\User;
+use App\Models\Student;
 use App\Models\Matricula;
 use App\Models\Theacher;
 use App\Models\Curso;
 use App\Models\Group;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class FormularioController extends Controller
 {
@@ -22,11 +22,10 @@ class FormularioController extends Controller
         return view('formularios.index', compact('formularios', 'teachers', 'grupos'));
     }
 
-
     public function show($id)
     {
-        $formulario = FormularioInscripcion::with(['curso', 'teacher'])->findOrFail($id); // Encuentra la matrícula por ID con las relaciones
-        return view('formularios.show', compact('formulario')); // Muestra la vista para ver la matrícula
+        $formulario = FormularioInscripcion::with(['curso', 'teacher'])->findOrFail($id);
+        return view('formularios.show', compact('formulario'));
     }
 
     public function create()
@@ -40,15 +39,15 @@ class FormularioController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email:formulario_inscripcions,email',
-            'Documento' => 'required|string|max:20',
+            'email' => 'required|email|unique:formulario_inscripcions,email',
+            'Documento' => 'required|string|max:255|unique:formulario_inscripcions,Documento',
             'direccion' => 'nullable|string|max:255',
-            'telefono' => 'nullable|string|max:15',
+            'telefono' => 'nullable|string|max:255',
             'fecha_matricula' => 'nullable|date',
-            'estado' => 'required|string|max:50',
+            'estado' => 'nullable|string|max:255',
             'nota_final' => 'nullable|numeric|min:0|max:100',
             'teacher_id' => 'nullable|exists:theachers,id',
-            'grupo_id' => 'nullable|exists:cursos,id',
+            'grupo_id' => 'nullable|exists:groups,id',  // Se asume que `groups` es la tabla correcta
         ]);
 
         FormularioInscripcion::create($request->all());
@@ -67,15 +66,15 @@ class FormularioController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email:formulario_inscripcions,email,' . $formulario->id,
-            'Documento' => 'required|string|max:20',
+            'email' => 'required|email|unique:formulario_inscripcions,email,' . $formulario->id,
+            'Documento' => 'required|string|max:255|unique:formulario_inscripcions,Documento,' . $formulario->id,
             'direccion' => 'nullable|string|max:255',
-            'telefono' => 'nullable|string|max:15',
+            'telefono' => 'nullable|string|max:255',
             'fecha_matricula' => 'nullable|date',
-            'estado' => 'required|string|max:50',
+            'estado' => 'nullable|string|max:255',
             'nota_final' => 'nullable|numeric|min:0|max:100',
             'teacher_id' => 'nullable|exists:theachers,id',
-            'grupo_id' => 'nullable|exists:cursos,id',
+            'grupo_id' => 'nullable|exists:groups,id',
         ]);
 
         $formulario->update($request->all());
@@ -83,42 +82,79 @@ class FormularioController extends Controller
         return redirect()->route('formularios.index')->with('success', 'Formulario actualizado correctamente.');
     }
 
-
-    public function inscribir(FormularioInscripcion $formulario)
-{
-    // Crear la matrícula utilizando el formulario
-    Matricula::create([
-        'name' => $formulario->name,  
-        'email' => $formulario->email,
-        'Documento' => $formulario->Documento,
-        'direccion' => $formulario->direccion,
-        'telefono' => $formulario->telefono,
-        'fecha_matricula' => $formulario->fecha_matricula,
-        'estado' => $formulario->estado,
-        'nota_final' => $formulario->nota_final,
-        'teacher_id' => $formulario->teacher_id, 
-        'grupo_id' => $formulario->grupo_id,
-    ]);
-
-    // Redirigir con mensaje de éxito
-    return redirect()->route('formularios.index')->with('success', 'Matrícula creada correctamente.');
-}
-
-public function destroy($id)
+    public function inscribir($id)
     {
-        
-        $formulario = FormularioInscripcion::findOrFail($id); // Encuentra la matrícula por ID
-        $formulario->delete(); // Elimina la matrícula
-        return redirect()->route('formularios.index'); // Redirige al índice de matrículas
+        DB::beginTransaction();
+    
+        try {
+            // Buscar el formulario por ID
+            $formulario = FormularioInscripcion::find($id);
+    
+            if (!$formulario) {
+                return redirect()->route('formularios.index')->with('error', 'El formulario no fue encontrado.');
+            }
+    
+            // Imprime el contenido del formulario para depuración
+            Log::info('Datos del formulario:', $formulario->toArray());
+    
+            // Crear o encontrar al estudiante
+            $student = Student::firstOrCreate(
+                ['Documento' => $formulario->Documento],
+                [
+                    'nombre' => $formulario->name,
+                    'email' => $formulario->email,
+                    'direccion' => $formulario->direccion,
+                    'telefono' => $formulario->telefono,
+                ]
+            );
+    
+            Log::info('Estudiante creado o encontrado:', $student->toArray());
+    
+            // Crear matrícula asociada al estudiante
+            $matricula = $student->matriculas()->create([
+                'fecha_matricula' => $formulario->fecha_matricula,
+                'estado' => $formulario->estado ?? null, // Permitir null si no está definido
+                'nota_final' => $formulario->nota_final ?? 0, // Valor predeterminado si no se proporciona
+                'teacher_id' => $formulario->teacher_id,
+                'grupo_id' => $formulario->grupo_id,
+            ]);
+    
+            Log::info('Matrícula creada:', $matricula->toArray());
+    
+            DB::commit();
+    
+            return redirect()->route('formularios.index')->with('success', 'Estudiante y matrícula registrados correctamente.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+    
+            // Registro del error para depuración
+            Log::error('Error al inscribir estudiante: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+    
+            return redirect()->route('formularios.index')->with('error', 'Ocurrió un error al procesar la inscripción: ' . $e->getMessage());
+        }
     }
-
-
-
-
+    
 
     
-    
+
+    public function destroy($id)
+    {
+        $formulario = FormularioInscripcion::findOrFail($id);
+        $formulario->delete();
+
+        return redirect()->route('formularios.index');
+    }
 }
+
+
+
+
+
+    
+    
+
 
 
 

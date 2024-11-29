@@ -21,68 +21,87 @@
         .btn:hover {
             background-color: #80e0bb;
         }
+        .details-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        .details-value {
+            margin-bottom: 20px;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
     <div class="container">
         <div class="card">
-            <div class="card-header">
+            <div class="card-header text-center">
                 <h3>Detalles de la Matrícula</h3>
             </div>
             <div class="card-body">
                 <div class="form-group">
-                    <label for="name">Nombre</label>
-                    <p>{{ $matricula->name }}</p>
+                    <label class="details-label">Estudiante:</label>
+                    <p class="details-value">{{ $matricula->student->nombre }}</p>
+                </div>
+                <div class="form-group">
+                    <label class="details-label">nombre :</label>
+                    <p class="details-value">{{ $matricula->student->nombre }}</p>
+                </div>
+                <div class="form-group">
+                    <label class="details-label">correo estudiantil:</label>
+                    <p class="details-value">{{ $matricula->student->email }}</p>
+                </div>
+                <div class="form-group">
+                    <label class="details-label">Documento :</label>
+                    <p class="details-value">{{ $matricula->student->Documento }}</p>
+                </div> 
+              
+                <div class="form-group">
+                    <label class="details-label">direccion:</label>
+                    <p class="details-value">{{ $matricula->student->direccion }}</p>
+                </div>
+                <div class="form-group">
+                    <label class="details-label">telefono:</label>
+                    <p class="details-value">{{ $matricula->student->telefono }}</p>
                 </div>
 
                 <div class="form-group">
-                    <label for="email">Correo Electrónico</label>
-                    <p>{{ $matricula->email }}</p>
+                    <label class="details-label">curso:</label>
+                    <p class="details-value">{{ $matricula->curso->nombre ?? 'Sin asignar' }}</p>
                 </div>
 
                 <div class="form-group">
-                    <label for="Documento">Documento</label>
-                    <p>{{ $matricula->Documento }}</p>
+                    <label class="details-label">Profesor:</label>
+                    <p class="details-value">{{ $matricula->teacher->nombre ?? 'Sin asignar' }}</p>
                 </div>
 
                 <div class="form-group">
-                    <label for="direccion">Dirección</label>
-                    <p>{{ $matricula->direccion }}</p>
+                    <label class="details-label">Fecha de Matrícula:</label>
+                    <p class="details-value">{{ $matricula->fecha_matricula }}</p>
                 </div>
 
                 <div class="form-group">
-                    <label for="telefono">Teléfono</label>
-                    <p>{{ $matricula->telefono }}</p>
+                    <label class="details-label">Estado:</label>
+                    <p class="details-value">{{ $matricula->estado }}</p>
                 </div>
 
                 <div class="form-group">
-                    <label for="fecha_matricula">Fecha de Matrícula</label>
-                    <p>{{ $matricula->fecha_matricula }}</p>
+                    <label class="details-label">Nota Final:</label>
+                    <p class="details-value">{{ $matricula->nota_final ?? 'No asignada' }}</p>
                 </div>
 
-                <div class="form-group">
-                    <label for="estado">Estado</label>
-                    <p>{{ $matricula->estado }}</p>
-                </div>
-
-                <div class="form-group">
-                    <label for="nota_final">Nota Final</label>
-                    <p>{{ $matricula->nota_final }}</p>
-                </div>
-
-                <div class="form-group">
-                    <label for="grupo_id">Curso</label>
-                    <p>{{ $matricula->curso->nombre }}</p>
-                </div>
-
-                <div class="form-group">
-                    <label for="teacher_id">Profesor</label>
-                    <p>{{ $matricula->teacher->nombre }}</p>
-                </div>
-
-                <div class="form-group">
+                <div class="form-group text-center">
                     <a href="{{ route('matriculas.index') }}" class="btn btn-primary">Volver al Listado</a>
+                    @can('update', $matricula)
+                        <a href="{{ route('matriculas.edit', $matricula->id) }}" class="btn btn-warning">Editar Matrícula</a>
+                    @endcan
+                    @can('delete', $matricula)
+                        <form action="{{ route('matriculas.destroy', $matricula->id) }}" method="POST" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('¿Deseas eliminar esta matrícula?')">Eliminar</button>
+                        </form>
+                    @endcan
                 </div>
             </div>
         </div>

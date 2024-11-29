@@ -114,11 +114,11 @@
                                             </form>
                                         @endcan
                                         @can('inscribir', $formulario)
-                                            <form action="{{ route('formularios.inscribir', $formulario->id) }}" method="POST" style="display:inline;">
-                                                @csrf
-                                                <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('¿Inscribir al estudiante?')">Inscribir</button>
-                                            </form>
-                                        @endcan
+    <form action="{{ route('formularios.inscribir', $formulario->id) }}" method="POST" style="display:inline;">
+        @csrf
+        <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('¿Inscribir al estudiante?')">Inscribir</button>
+    </form>
+@endcan
                                     </td>
                                 </tr>
                             @endforeach

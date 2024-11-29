@@ -20,7 +20,7 @@ class FormularioInscripcionController extends Controller
        
         $teachers = \App\Models\Theacher::all();
         $grupos =   \App\Models\Curso::all();
-
+        
         // Mostrar la vista con los roles
         return view('inscripcion', compact( 'teachers', 'grupos'));
     }
@@ -38,7 +38,7 @@ class FormularioInscripcionController extends Controller
     'direccion' => 'required|string|max:255', // La dirección es obligatoria, debe ser texto y tiene un máximo de 255 caracteres.
     'telefono' => 'nullable|string|max:255', // El teléfono es opcional, debe ser texto y tiene un máximo de 255 caracteres.
     'fecha_matricula' => 'required|date', // La fecha de matrícula es obligatoria y debe ser una fecha válida.
-    'estado' => 'required|in:activo,inactivo', // El estado es obligatorio y debe ser "activo" o "inactivo".
+    'estado' => 'nullable|in:aprobado,desaprobado,cancelado,no aprobado', // El estado es obligatorio y debe ser "activo" o "inactivo".
     'nota_final' => 'nullable|numeric|min:0|max:100', // La nota final es opcional, debe ser numérica y estar entre 0 y 100.
     'teacher_id' => 'required|exists:theachers,id', // El ID del profesor es obligatorio y debe existir en la tabla "theachers".
     'grupo_id' => 'nullable|exists:cursos,id', //

@@ -31,13 +31,16 @@
 
         /* Secciones (tarjetas) */
         .card {
-            background-color: #ffffff;
+            background-color: #fffff5;
             color: #495057;
             border: none;
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             margin-bottom: 30px;
+            height: 100%; /* Asegura que todas las tarjetas tengan la misma altura */
+            display: flex;
+            flex-direction: column;
         }
 
         .card:hover {
@@ -58,10 +61,13 @@
 
         .card-body {
             padding: 20px;
+            flex-grow: 1; /* Esto hace que el cuerpo de la tarjeta ocupe el espacio restante */
+            overflow-y: auto; /* Añade desplazamiento si el contenido excede */
+            max-height: 300px; /* Limita la altura de las listas */
         }
 
         .btn-link {
-            color: #28a745;
+            color: #28a74w;
             font-weight: bold;
         }
 
@@ -100,9 +106,44 @@
         }
 
         .logo img {
-            width: 150px;
+            width: 200px;
             height: auto;
         }
+
+        /* Estilo de los íconos y detalles dentro de las tarjetas */
+        .card-body ul li {
+            background-color: #f8f9f2;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            padding: 20px;
+        }
+
+        .card-body ul li:hover {
+            background-color: #e2e6ea;
+        }
+
+        /* Color del botón en las tarjetas */
+        .btn-outline-success {
+    background-color: #28a745;
+    color: white;
+    border-color: #28a745;
+    display: block; /* Esto hará que el botón ocupe el 100% de su contenedor */
+    margin: 0 auto; /* Centrará el botón horizontalmente */
+}
+
+        .btn-outline-success:hover {
+            background-color: #218838;
+            border-color: #1e7e31;
+        }
+
+        .row {
+    margin-bottom: 30px; /* Espacio entre las filas */
+}
+
+/* Si prefieres ajustar el margen entre las tarjetas dentro de cada columna */
+.card {
+    margin-bottom: 20px; /* Ajustar el espacio entre tarjetas */
+}
     </style>
 </head>
 <body>
@@ -116,7 +157,7 @@
         <div class="container">
             <div class="row">
                 <!-- Sección Cursos -->
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="card">
                         <div class="card-header">
                             <i class="fas fa-book"></i> Cursos
@@ -139,7 +180,7 @@
                 </div>
 
                 <!-- Sección Grupos -->
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="card">
                         <div class="card-header">
                             <i class="fas fa-users"></i> Grupos
@@ -150,13 +191,21 @@
                                     <li>
                                         <strong>Código:</strong> {{ $grupo->codigo }}<br>
                                         <strong>Cantidad:</strong> {{ $grupo->cantidad }}<br>
-                                        <strong>Docente:</strong> {{ $grupo->pofe->nombre }}<br>
+                                        <strong>Docente:</strong> 
+                                        @if($grupo->pofe)  
+                                        {{ $grupo->pofe->nombre }}
+                                        @else
+                                          No asignado
+                                        @endif
+                                        <br>
+
                                         <strong>Curso:</strong> 
-                                        @if( $grupo->curso) 
-                                        {{$grupo->curso->nombre}}
-                                                @else 
-                                            No asignado 
-                                        @endif     <br>
+                                        @if($grupo->curso) 
+                                        {{ $grupo->curso->nombre }}
+                                        @else 
+                                              No asignado 
+                                        @endif
+                                        <br>
                                         <strong>Periodo Académico:</strong> 
                                         @if ($grupo->periodo_academicos) 
                                             {{ $grupo->periodo_academicos->nombre }} 
@@ -174,7 +223,7 @@
                 </div>
 
                 <!-- Sección Matrículas -->
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="card">
                         <div class="card-header">
                             <i class="fas fa-clipboard-list"></i> Matrículas
@@ -183,8 +232,8 @@
                             <ul>
                                 @foreach ($matriculas as $matricula)
                                     <li>
-                                        <strong>Nombre:</strong> {{ $matricula->name }}<br>
-                                        <strong>Documento:</strong> {{ $matricula->Documento }}<br>
+                                        <strong>Nombre:</strong> {{ $matricula->student->nombre }}<br>
+                                        <strong>Documento:</strong> {{ $matricula->student->Documento }}<br>
                                         <strong>Estado:</strong> {{ $matricula->estado }}<br>
                                         <strong>Promedio:</strong> {{ $matricula->nota_final }}
                                     </li>
@@ -196,11 +245,9 @@
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="row">
                 <!-- Sección Períodos Académicos -->
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="card">
                         <div class="card-header">
                             <i class="fas fa-calendar-alt"></i> Períodos Académicos
@@ -222,9 +269,11 @@
                         </div>
                     </div>
                 </div>
+            </div>
 
+            <div class="row">
                 <!-- Sección Formularios de Inscripción -->
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="card">
                         <div class="card-header">
                             <i class="fas fa-file-alt"></i> Formularios de Inscripción
@@ -248,14 +297,58 @@
                 </div>
 
                 <!-- Sección Inscripciones -->
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="card">
                         <div class="card-header">
                             <i class="fas fa-user-plus"></i> Inscripciones
                         </div>
                         <div class="card-body text-center">
                             <p>Realiza inscripciones rápidamente.</p>
-                            <a href="/inscripcion" class="btn btn-success">Ir al formulario</a>
+                            <a href="/inscripcion" class="btn btn-outline-success">Inscribir</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección Profesores -->
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="fas fa-chalkboard-teacher"></i> Profesores
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                @foreach ($profesores as $profesor)
+                                    <li>
+                                        <strong>Nombre:</strong> {{ $profesor->nombre }}<br>
+                                        <strong>Email:</strong> {{ $profesor->email }}<br>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        <div class="card-footer text-center">
+                        <a href="{{ route('profesores.index') }}" class="btn btn-link">Ver más</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección Estudiantes -->
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="fas fa-graduation-cap"></i> Estudiantes
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                @foreach ($estudiantes as $estudiante)
+                                    <li>
+                                        <strong>Nombre:</strong> {{ $estudiante->nombre }}<br>
+                                        <strong>Email:</strong> {{ $estudiante->email }}<br>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        <div class="card-footer text-center">
+                            <a href="{{ route('estudiantes.index') }}" class="btn btn-link">Ver más</a>
                         </div>
                     </div>
                 </div>
@@ -265,13 +358,12 @@
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2024 Zenthic & rompe mesas. Todos los derechos reservados.</p>
-        <a href="mailto:zenvic.contacto@gmail.com">pofe quiero la chamba</a>
-        <span class="footer-link">|</span>
-        <a href="/terminos-y-condiciones">soy el indicado </a>
+        <p>&copy; 2024 UTS - Todos los derechos reservados por el rompe mesas .</p>
     </footer>
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 </body>
 </html>
+

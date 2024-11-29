@@ -24,29 +24,17 @@ class StudentResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('Documento')
+                Forms\Components\TextInput::make('nombre')
                     ->required()
                     ->maxLength(255),
-
-                // Selector para elegir el nombre del usuario, que automáticamente rellena el correo
-                Forms\Components\Select::make('user_id')
-                    ->label('Nombre')
-                    ->relationship('users', 'name')
-                    ->searchable()
-                    ->required()
-                    ->reactive()
-                    ->afterStateUpdated(function ($state, callable $set) {
-                        $user = \App\Models\User::find($state);
-                        if ($user) {
-                            $set('email', $user->email);  // Autocompletar el email
-                        }
-                    }),
 
                 Forms\Components\TextInput::make('email')
                     ->label('Correo electrónico')
                     ->email() 
-                    ->disabled()
                     ->required(),
+                    Forms\Components\TextInput::make('Documento')
+                    ->required()
+                    ->maxLength(255),
 
                 Forms\Components\TextInput::make('direccion')
                     ->required()
@@ -65,17 +53,17 @@ class StudentResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('id')
                 ->searchable(),
-                Tables\Columns\TextColumn::make('Documento')
+                Tables\Columns\TextColumn::make('nombre')
                 ->searchable(),
 
-            Tables\Columns\TextColumn::make('users.name')
+            Tables\Columns\TextColumn::make('email')
                 ->label('Nombre')
                 ->sortable(),
 
-            Tables\Columns\TextColumn::make('direccion')
+            Tables\Columns\TextColumn::make('Documento')
                 ->searchable(),
 
-            Tables\Columns\TextColumn::make('users.email')
+            Tables\Columns\TextColumn::make('direccion')
                 ->label('Correo Electrónico')
                 ->sortable(),
 

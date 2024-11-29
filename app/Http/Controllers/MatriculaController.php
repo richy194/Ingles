@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Matricula;
 use App\Models\Curso;
 use App\Models\Theacher;
+use App\Models\Student; // Importamos el modelo de estudiantes
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\MatriculasExport;
 use App\Imports\MatriculasImport;
@@ -15,117 +16,122 @@ class MatriculaController extends Controller
     // Muestra todas las matrículas
     public function index()
     {
-        $matriculas = Matricula::with(['curso', 'teacher'])->get(); // Obtén todas las matrículas con las relaciones de curso y teacher
-        return view('matriculas.index', compact('matriculas')); // Pasa las matrículas a la vista
+        $matriculas = Matricula::with(['student', 'curso', 'teacher'])->get();
+        return view('matriculas.index', compact('matriculas'));
     }
 
     // Muestra una matrícula específica
     public function show($id)
     {
-        $matricula = Matricula::with(['curso', 'teacher'])->findOrFail($id); // Encuentra la matrícula por ID con las relaciones
-        return view('matriculas.show', compact('matricula')); // Muestra la vista para ver la matrícula
+        $matricula = Matricula::with(['curso', 'teacher'])->findOrFail($id); // Incluimos relaciones
+        return view('matriculas.show', compact('matricula'));
     }
 
-    // Crea una nueva matrícula (solo para admins)
+    // Crea una nueva matrícula (vista para admins)
     public function create()
     {
-        $this->authorize('create', Matricula::class); // Verifica que el usuario tenga permisos
+        $this->authorize('create', Matricula::class); // Verifica permisos
 
-        // Obtén los cursos y profesores para la creación
         $cursos = Curso::all();
         $teachers = Theacher::all();
+        $students = Student::all(); // Obtenemos los estudiantes registrados previamente
         
-        return view('matriculas.create', compact('cursos', 'teachers')); // Pasa cursos y profesores a la vista
+        return view('matriculas.create', compact('cursos', 'teachers', 'students')); // Pasamos los datos a la vista
     }
 
     // Guarda una nueva matrícula
     public function store(Request $request)
     {
-        $this->authorize('create', Matricula::class); // Verifica que el usuario tenga permisos
+        $this->authorize('create', Matricula::class); // Verifica permisos
 
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'Documento' => 'required|string|max:255',
-            'direccion' => 'required|string|max:255',
-            'telefono' => 'required|string|max:255',
             'fecha_matricula' => 'required|date',
-            'estado' => 'required|string|max:255',
+            'estado' => 'nullable|string|max:255',
             'nota_final' => 'nullable|numeric',
-            'teacher_id' => 'required|exists:theachers,id', // Asegura que el teacher exista
-            'grupo_id' => 'required|exists:groups,id', // Asegura que el grupo exista
+            'teacher_id' => 'required|exists:theachers,id', // Valida que el teacher exista
+            'grupo_id' => 'required|exists:groups,id', // Valida que el grupo exista
+            'student_id' => 'required|exists:students,id',
         ]);
 
-        Matricula::create($validated); // Crea la matrícula
-        return redirect()->route('matriculas.index'); // Redirige al índice de matrículas
+        Matricula::create($validated); // Creamos la matrícula
+        return redirect()->route('matriculas.index')->with('success', 'Matrícula creada correctamente.');
     }
 
-    // Edita una matrícula (solo para admins)
+    // Edita una matrícula (vista para admins)
     public function edit($id)
     {
+        $matricula = Matricula::findOrFail($id); // Encuentra la matrícula
+        $cursos = Curso::all(); 
+        $teachers = Theacher::all();
+        $students = Student::all(); // Obtenemos los estudiantes registrados previamente
         
-        $matricula = Matricula::findOrFail($id); // Encuentra la matrícula por ID
-        $cursos = Curso::all(); // Obtén todos los cursos
-        $teachers = Theacher::all(); // Obtén todos los profesores
-        
-        return view('matriculas.edit', compact('matricula', 'cursos', 'teachers')); // Muestra la vista para editar la matrícula
+        return view('matriculas.edit', compact('matricula', 'cursos', 'teachers', 'students'));
     }
 
     // Actualiza una matrícula
     public function update(Request $request, $id)
     {
-        
-
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'Documento' => 'required|string|max:255',
-            'direccion' => 'required|string|max:255',
-            'telefono' => 'required|string|max:255',
+            'student_id' => 'required|exists:students,id', // Validamos el estudiante relacionado
             'fecha_matricula' => 'required|date',
-            'estado' => 'required|string|max:255',
+            'estado' => 'nullable|string|max:255',
             'nota_final' => 'nullable|numeric',
-            'teacher_id' => 'required|exists:theachers,id', // Asegura que el teacher exista
-            'grupo_id' => 'required|exists:groups,id', // Asegura que el grupo exista
+            'teacher_id' => 'required|exists:theachers,id',
+            'grupo_id' => 'required|exists:groups,id',
         ]);
 
-        $matricula = Matricula::findOrFail($id); // Encuentra la matrícula por ID
-        $matricula->update($validated); // Actualiza los campos
-        return redirect()->route('matriculas.index'); // Redirige al índice de matrículas
+        $matricula = Matricula::findOrFail($id);
+        $matricula->update($validated);
+
+        return redirect()->route('matriculas.index')->with('success', 'Matrícula actualizada correctamente.');
     }
 
-    // Elimina una matrícula (solo para admins)
+    // Elimina una matrícula
     public function destroy($id)
     {
-        
-        $matricula = Matricula::findOrFail($id); // Encuentra la matrícula por ID
-        $matricula->delete(); // Elimina la matrícula
-        return redirect()->route('matriculas.index'); // Redirige al índice de matrículas
+        $matricula = Matricula::findOrFail($id);
+        $matricula->delete();
+        return redirect()->route('matriculas.index')->with('success', 'Matrícula eliminada correctamente.');
     }
 
+    // Exporta las matrículas a un archivo Excel
     public function export()
-{
-    try {
-        return Excel::download(new MatriculasExport, 'matriculas.xlsx');
-    } catch (\Exception $e) {
-        return back()->with('error', 'Error al exportar los datos: ' . $e->getMessage());
+    {
+        try {
+            return Excel::download(new MatriculasExport, 'matriculas.xlsx');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error al exportar los datos: ' . $e->getMessage());
+        }
     }
-}
 
-
+    // Importa matrículas desde un archivo Excel
     public function import(Request $request)
-{
-    // Validar que el archivo sea un archivo Excel
-    $request->validate([
-        'file' => 'required|file|mimes:xlsx,xls',  // Se valida que sea un archivo .xlsx o .xls
-    ]);
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,xls',
+        ]);
 
-    try {
-        // Importar los datos del archivo
-        Excel::import(new MatriculasImport, $request->file('file'));
-        return redirect()->route('matriculas.index')->with('success', 'Matrículas importadas correctamente.');
-    } catch (\Exception $e) {
-        return redirect()->route('matriculas.index')->with('error', 'Error al importar los datos: ' . $e->getMessage());
+        try {
+            Excel::import(new MatriculasImport, $request->file('file'));
+            return redirect()->route('matriculas.index')->with('success', 'Matrículas importadas correctamente.');
+        } catch (\Exception $e) {
+            return redirect()->route('matriculas.index')->with('error', 'Error al importar los datos: ' . $e->getMessage());
+        }
     }
-}
+
+    // Método para obtener los datos del estudiante
+    public function getStudentDataForMatricula($id)
+    {
+        // Encuentra al estudiante por ID
+        $student = Student::findOrFail($id);
+
+        // Devuelve los datos del estudiante en formato JSON
+        return response()->json([
+            'nombre' => $student->nombre,
+            'email' => $student->email,
+            'documento' => $student->Documento,
+            'direccion' => $student->direccion,
+            'telefono' => $student->telefono
+        ]);
+    }
 }

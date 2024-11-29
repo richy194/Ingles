@@ -11,13 +11,10 @@ use Illuminate\Database\Eloquent\Relations\belongsTo ;
 class Theacher extends Model
 {
 
-    protected $fillable = ['nombre', 'email', 'telefono', 'user_id' , 'direccion'];
+    protected $fillable = ['nombre','email', 'Documento', 'telefono',  'direccion'];
     use HasFactory, SoftDeletes;
 
-    public function user():belongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
+   
 
     public function cursos():hasMany
     {

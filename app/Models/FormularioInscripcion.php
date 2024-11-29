@@ -23,8 +23,9 @@ class FormularioInscripcion extends Model
         'teacher_id',
         'grupo_id',
         
+        
     ];
-
+   
 
     public function teacher()
     {

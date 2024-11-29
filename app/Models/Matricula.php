@@ -10,20 +10,21 @@ class Matricula extends Model
 {
     use HasFactory, SoftDeletes;
     protected $fillable = [
-        'name',
-        'email',
-        'Documento',
-        'direccion',
-        'telefono',
+        
+       
         'fecha_matricula',
         'estado',
         'nota_final',
         'teacher_id',
         'grupo_id',
+        'student_id',
         
     ];
 
-   
+    public function student():belongsTo
+    {
+        return $this->belongsTo(Student::class,'student_id');
+    }
 
     public function curso():belongsTo
     {

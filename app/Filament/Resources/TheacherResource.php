@@ -25,22 +25,24 @@ class TheacherResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('nombre')
                     ->required()
-                    ->nullable()
                     ->maxLength(255),
+
                 Forms\Components\TextInput::make('email')
-                    ->email()
+                    ->label('Correo electrónico')
+                    ->email() 
+                    ->required(),
+                    Forms\Components\TextInput::make('Documento')
                     ->required()
-                    ->nullable()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('telefono')
-                    ->tel()
-                    ->required()
-                    ->nullable()
-                    ->maxLength(255),
+
                 Forms\Components\TextInput::make('direccion')
                     ->required()
-                     ->nullable()
                     ->maxLength(255),
+
+                Forms\Components\TextInput::make('telefono')
+                    ->tel()
+                    ->maxLength(255)
+                    ->nullable(),
             ]);
     }
 
@@ -53,6 +55,8 @@ class TheacherResource extends Resource
                 Tables\Columns\TextColumn::make('nombre')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
+                    ->searchable(),
+                    Tables\Columns\TextColumn::make('Documento')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('telefono')
                     ->searchable(),

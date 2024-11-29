@@ -60,15 +60,14 @@
 
                     <div class="form-group">
     <label for="estado">Estado</label>
-    <select class="form-control" id="estado" name="estado" required>
-        <option value="">Seleccionar Estado</option>
-        <option value="aprobado" {{ old('estado') == 'aprobado' ? 'selected' : '' }}>Aprobado</option>
-        <option value="desaprobado" {{ old('estado') == 'desaprobado' ? 'selected' : '' }}>Desaprobado</option>
-        <option value="cancelado" {{ old('estado') == 'cancelado' ? 'selected' : '' }}>Cancelado</option>
-        <option value="no aprobado" {{ old('estado') == 'no aprobado' ? 'selected' : '' }}>No aprobado</option>
+    <select class="form-control" id="estado" name="estado">
+        <option value="" {{ old('estado', $formularioInscripcion->estado ?? '') == '' ? 'selected' : '' }}>Seleccionar Estado</option>
+        <option value="aprobado" {{ old('estado', $formularioInscripcion->estado ?? '') == 'aprobado' ? 'selected' : '' }}>Aprobado</option>
+        <option value="desaprobado" {{ old('estado', $formularioInscripcion->estado ?? '') == 'desaprobado' ? 'selected' : '' }}>Desaprobado</option>
+        <option value="cancelado" {{ old('estado', $formularioInscripcion->estado ?? '') == 'cancelado' ? 'selected' : '' }}>Cancelado</option>
+        <option value="no aprobado" {{ old('estado', $formularioInscripcion->estado ?? '') == 'no aprobado' ? 'selected' : '' }}>No aprobado</option>
     </select>
 </div>
-
 
                     <div class="form-group">
                         <label for="nota_final">Nota Final</label>

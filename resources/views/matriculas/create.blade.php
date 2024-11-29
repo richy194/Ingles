@@ -12,47 +12,17 @@
         }
         .card {
             margin-top: 50px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
         }
-        .form-group label {
-            font-weight: bold;
-            margin-bottom: 5px;
+        .btn {
+            margin-top: 10px;
+            background-color: #a8e6cf;
+            color: #fff;
         }
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 15px;
-            border: 1px solid #ced4da;
-            border-radius: 4px;
-        }
-        .btn-primario {
-            background-color: #007bff;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-        }
-        .btn-primario:hover {
-            background-color: #0056b3;
-        }
-        .btn-secundario {
-            background-color: #6c757d;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-        }
-        .btn-secundario:hover {
-            background-color: #5a6268;
-        }
-        .form-buttons {
-            display: flex;
-            gap: 10px;
+        .btn:hover {
+            background-color: #80e0bb;
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -64,81 +34,98 @@
                 <form action="{{ route('matriculas.store') }}" method="POST">
                     @csrf
                     <div class="form-group">
-                        <label for="name">Nombre</label>
-                        <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" required>
+                        <label for="student_id">Estudiante</label>
+                        <select id="student_id" name="student_id" class="form-control" required onchange="autoFillStudentData()">
+                            <option value="">Seleccionar Estudiante</option>
+                            @foreach ($students as $student)
+                                <option value="{{ $student->id }}">{{ $student->nombre }}</option>
+                            @endforeach
+                        </select>
                     </div>
 
-                    <div class="form-group">
-                        <label for="email">Correo Electrónico</label>
-                        <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="Documento">Documento</label>
-                        <input type="text" class="form-control" id="Documento" name="Documento" value="{{ old('Documento') }}" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="direccion">Dirección</label>
-                        <input type="text" class="form-control" id="direccion" name="direccion" value="{{ old('direccion') }}">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="telefono">Teléfono</label>
-                        <input type="text" class="form-control" id="telefono" name="telefono" value="{{ old('telefono') }}">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="fecha_matricula">Fecha de Matrícula</label>
-                        <input type="date" class="form-control" id="fecha_matricula" name="fecha_matricula" value="{{ old('fecha_matricula') }}">
-                    </div>
-
-                    <div class="form-group">
-    <label for="estado">Estado</label>
-    <select class="form-control" id="estado" name="estado" required>
-        <option value="">Seleccionar Estado</option>
-        <option value="aprobado" {{ old('estado') == 'aprobado' ? 'selected' : '' }}>Aprobado</option>
-        <option value="desaprobado" {{ old('estado') == 'desaprobado' ? 'selected' : '' }}>Desaprobado</option>
-        <option value="cancelado" {{ old('estado') == 'cancelado' ? 'selected' : '' }}>Cancelado</option>
-        <option value="no aprobado" {{ old('estado') == 'no aprobado' ? 'selected' : '' }}>No aprobado</option>
-    </select>
-</div>
-
-
-                    <div class="form-group">
-                        <label for="nota_final">Nota Final</label>
-                        <input type="number" step="0.01" class="form-control" id="nota_final" name="nota_final" value="{{ old('nota_final') }}">
-                    </div>
-
+                   
                     <div class="form-group">
                         <label for="grupo_id">Curso</label>
-                        <select class="form-control" id="grupo_id" name="grupo_id" required>
-                            <option value="">Seleccionar Curso</option>
+                        <select id="grupo_id" name="grupo_id" class="form-control" required>
+                            <option value="">Seleccionar Grupo</option>
                             @foreach ($cursos as $curso)
-                                <option value="{{ $curso->id }}" {{ old('grupo_id') == $curso->id ? 'selected' : '' }}>
-                                    {{ $curso->nombre }}
-                                </option>
+                                <option value="{{ $curso->id }}">{{ $curso->nombre }}</option>
                             @endforeach
                         </select>
                     </div>
 
                     <div class="form-group">
                         <label for="teacher_id">Profesor</label>
-                        <select class="form-control" id="teacher_id" name="teacher_id" required>
+                        <select id="teacher_id" name="teacher_id" class="form-control" required>
                             <option value="">Seleccionar Profesor</option>
                             @foreach ($teachers as $teacher)
-                                <option value="{{ $teacher->id }}" {{ old('teacher_id') == $teacher->id ? 'selected' : '' }}>
-                                    {{ $teacher->nombre }}
-                                </option>
+                                <option value="{{ $teacher->id }}">{{ $teacher->nombre }}</option>
                             @endforeach
                         </select>
                     </div>
 
-                    <button type="submit" class="btn btn-success mt-3">Crear Matrícula</button>
-                    <a href="{{ route('matriculas.index') }}" class="btn-secundario">Cancelar</a>
+                    <div class="form-group">
+                        <label for="fecha_matricula">Fecha de Matrícula</label>
+                        <input type="date" id="fecha_matricula" name="fecha_matricula" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="estado">Estado</label>
+                        <select id="estado" name="estado" class="form-control" required>
+                            <option value="Activo">Activo</option>
+                            <option value="Inactivo">Inactivo</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nota_final">Nota Final</label>
+                        <input type="number" id="nota_final" name="nota_final" class="form-control" step="0.01" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Guardar Matrícula</button>
                 </form>
             </div>
         </div>
     </div>
+
+    <script>
+    function autoFillStudentData() {
+        const studentId = document.getElementById('student_id').value;
+        if (studentId) {
+            // Solicitud a la API para obtener los datos del estudiante
+            fetch(`/student-data/${studentId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error al obtener los datos del estudiante');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Rellenar los campos del formulario con los datos recibidos
+                    document.getElementById('name').value = data.nombre;
+                    document.getElementById('email').value = data.email;
+                    document.getElementById('Documento').value = data.Documento;
+                    document.getElementById('direccion').value = data.direccion;
+                    document.getElementById('telefono').value = data.telefono;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // Opcional: Limpiar los campos si ocurre un error
+                    document.getElementById('name').value = '';
+                    document.getElementById('email').value = '';
+                    document.getElementById('Documento').value = '';
+                    document.getElementById('direccion').value = '';
+                    document.getElementById('telefono').value = '';
+                });
+        } else {
+            // Limpiar los campos si no hay un estudiante seleccionado
+            document.getElementById('name').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('Documento').value = '';
+            document.getElementById('direccion').value = '';
+            document.getElementById('telefono').value = '';
+        }
+    }
+</script>
 </body>
 </html>

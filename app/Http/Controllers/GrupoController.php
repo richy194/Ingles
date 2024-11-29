@@ -30,7 +30,7 @@ class GrupoController extends Controller
         $cursos = Curso::all();
         $periodos = PeriodoAcademico::all();
         $teachers = Theacher::all();
-        return view('grupos.create', compact('cursos', 'periodos','teachers'));
+        return view('grupos.create', compact('cursos', 'periodos','profesores'));
     }
 
     // Guardar un nuevo grupo
