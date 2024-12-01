@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Matrículas</title>
-    
+    <title>matriculas</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -33,6 +32,45 @@
         .card-header h1 {
             font-size: 1.8rem;
             margin: 0;
+        }
+
+        .custom-file-input {
+            position: relative;
+            width: 100%;
+            height: 50px;
+            margin-bottom: 15px;
+           
+           
+            background-color: #f9f9f7;
+            text-align: center;
+            cursor: pointer;
+            font-size: 16px;
+            color: #4CAF50;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .custom-file-input:hover {
+            background-color: #e8f5e9;
+            border-color: #388E3C;
+            color: #388E3C;
+        }
+
+        .custom-file-input input[type="file"] {
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            cursor: pointer;
+        }
+
+        .custom-file-label {
+            display: inline-block;
+            padding: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
         }
 
         .btn {
@@ -88,8 +126,7 @@
             background: #fff;
         }
 
-        .table th,
-        .table td {
+        .table th, .table td {
             padding: 12px 15px;
             text-align: center;
             border: 1px solid #ddd;
@@ -109,68 +146,136 @@
         form {
             display: inline;
         }
+
+        /* Estilos para el buscador */
+        .search-form {
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: space-between;
+        }
+
+        .search-form input {
+            flex: 1;
+            min-width: 200px;
+            padding: 8px 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .search-form button {
+            padding: 8px 20px;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            border: none;
+        }
+
+        .search-form button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
 <div class="container">
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h1>Gestión de Matrículas</h1>
+            <h1>listado de matriculas </h1>
+
             <div class="d-flex">
+                <form action="{{ route('matriculas.import') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <label class="custom-file-input">
+                        <input type="file" name="file">
+                        <span class="btn btn-regresar">Seleccionar archivo</span>
+                    </label>
+                    <br>
+                    <button class="btn btn-regresar"><i class="fa fa-file"></i> Importar</button>
+                </form>
                 <a href="/dashboard" class="btn btn-regresar">Regresar</a>
+                <a href="{{ route('matriculas.export') }}" class="btn btn-regresar">Exportar</a>
+
                 @can('create', App\Models\Matricula::class)
-                    <a href="{{ route('matriculas.create') }}" class="btn btn-primary ms-2">Crear matrícula</a>
+                    <a href="{{ route('matriculas.create') }}" class="btn btn-primary ms-2">Crear matricula</a>
                 @endcan
             </div>
         </div>
 
-        <!-- Tabla de Matrículas -->
-        <h2>Lista de Matrículas</h2>
-        <div class="table-responsive">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Estudiante</th>
-                        <th>Grupo</th>
-                        <th>Profesor</th>
-                        <th>Fecha</th>
-                        <th>Estado</th>
-                        <th>Nota</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($matriculas as $matricula)
+        <!-- Formulario de búsqueda -->
+        <form action="{{ route('matriculas.index') }}" method="GET" class="search-form">
+            <input type="text" name="query" placeholder="Buscar por nombre o documento" value="{{ request('query') }}" class="form-control" />
+            <button type="submit" class="btn btn-primary">Buscar</button>
+        </form>
+
+        <!-- Formulario de eliminación múltiple -->
+        <form action="{{ route('matriculas.destroyMultiple') }}" method="POST">
+            @csrf
+            @method('DELETE')
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
                         <tr>
-                            <td>{{ $matricula->id }}</td>
-                            <td>{{ $matricula->student->nombre }}</td>
-                            <td>{{ $matricula->curso->nombre ?? '-' }}</td>
-                            <td>{{ $matricula->teacher->nombre ?? '-' }}</td>
-                            <td>{{ $matricula->fecha_matricula }}</td>
-                            <td>{{ $matricula->estado }}</td>
-                            <td>{{ $matricula->nota_final }}</td>
-                            <td class="acciones">
-                                @can('view', $matricula)
-                                    <a href="{{ route('matriculas.show', $matricula->id) }}" class="btn btn-primary">Ver</a>
-                                @endcan
-                                @can('update', $matricula)
-                                    <a href="{{ route('matriculas.edit', $matricula->id) }}" class="btn btn-warning">Editar</a>
-                                @endcan
-                                @can('delete', $matricula)
-                                    <form action="{{ route('matriculas.destroy', $matricula->id) }}" method="POST">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger" onclick="return confirm('¿Eliminar?')">Eliminar</button>
-                                    </form>
-                                @endcan
-                            </td>
+                            <th><input type="checkbox" id="select-all"></th>
+                            <th>#</th>
+                            <th>Nombre</th>
+                            <th>documento</th>
+                            <th>fecha matricula</th>
+                            <th>curso</th>
+                            <th>profesor</th>
+                            <th>estado</th>
+                            <th>nota final</th>
+                            <th>Acciones</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+                    <tbody>
+                        @foreach ($matriculas as $matricula)
+                            <tr>
+                                <td><input type="checkbox" name="ids[]" value="{{ $matricula->id }}"></td>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $matricula->student->nombre?? 'No asignado' }}</td>
+                                <td>{{ $matricula->student->documento?? 'No asignado' }}</td>
+                                <td>{{ $matricula->fecha_matricula }}</td>
+                                <td>{{ $matricula->curso->nombre ?? 'No asignado' }}</td>
+                                <td>{{ $matricula->teacher->nombre ?? 'No asignado' }}</td>
+                                <td>{{ $matricula->estado }}</td>
+                                <td>{{ $matricula->nota_final }}</td>
+                                
+                                <td class="acciones">
+                                    @can('view', $matricula)
+                                        <a href="{{ route('matriculas.show', $matricula->id) }}" class="btn btn-primary">Ver</a>
+                                    @endcan
+                                    @can('update', $matricula)
+                                        <a href="{{ route('matriculas.edit', $matricula->id) }}" class="btn btn-warning">Editar</a>
+                                    @endcan
+                                    @can('delete', $matricula)
+                                        <form action="{{ route('matriculas.destroy', $matricula->id) }}" method="POST" style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger" onclick="return confirm('¿Eliminar esta matricula?')">Eliminar</button>
+                                        </form>
+                                    @endcan
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            <button type="submit" class="btn btn-danger">Eliminar seleccionados</button>
+        </form>
     </div>
 </div>
+
+<script>
+    document.getElementById('select-all').addEventListener('change', function() {
+        const checkboxes = document.querySelectorAll('input[name="ids[]"]');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = this.checked;
+        });
+    });
+</script>
 </body>
 </html>
+

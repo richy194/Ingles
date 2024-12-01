@@ -1,17 +1,25 @@
-<?php
+<?
 
 namespace App\Http\Controllers;
 
 use App\Models\Student;
 use Illuminate\Http\Request;
+use App\Exports\StudentsExport;
+use App\Imports\StudentsImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class StudentController extends Controller
 {
-    // Muestra todos los estudiantes
-    public function index()
+    // Muestra todos los estudiantes con la posibilidad de filtrarlos por nombre y documento
+    public function index(Request $request)
     {
-        $estudiantes = Student::all(); // Obtén todos los estudiantes
-        return view('estudiantes.index', compact('estudiantes')); // Pasa los estudiantes a la vista
+        $query = $request->get('query');
+        $estudiantes = Student::when($query, function($queryBuilder) use ($query) {
+            return $queryBuilder->where('nombre', 'like', '%' . $query . '%')
+                                ->orWhere('documento', 'like', '%' . $query . '%');
+        })->get();
+    
+        return view('estudiantes.index', compact('estudiantes'));
     }
 
     // Muestra un estudiante específico
@@ -33,7 +41,7 @@ class StudentController extends Controller
         $validated = $request->validate([
             'nombre' => 'required|string|max:255',
             'email' => 'required|email|max:255',
-            'Documento' => 'required|string|max:255',
+            'documento' => 'required|string|max:255',
             'direccion' => 'required|string|max:255',
             'telefono' => 'required|string|max:255',
         ]);
@@ -55,7 +63,7 @@ class StudentController extends Controller
         $validated = $request->validate([
             'nombre' => 'required|string|max:255',
             'email' => 'required|email|max:255',
-            'Documento' => 'required|string|max:255',
+            'documento' => 'required|string|max:255',
             'direccion' => 'required|string|max:255',
             'telefono' => 'required|string|max:255',
         ]);
@@ -73,4 +81,40 @@ class StudentController extends Controller
         return redirect()->route('estudiantes.index'); // Redirige al índice de estudiantes
     }
 
+    public function export()
+    {
+        // Utilizamos el método download de Excel para exportar los datos.
+        return Excel::download(new StudentsExport, 'students.xlsx');
+    }
+
+    public function import(Request $request)
+    {
+        // Validación de archivo
+        $request->validate([
+            'file' => 'required|mimes:xlsx,csv',
+        ]);
+
+        // Importar los datos del archivo Excel
+        Excel::import(new StudentsImport, $request->file('file'));
+
+        // Redirigir con mensaje de éxito
+        return redirect()->back()->with('success', 'Estudiantes importados correctamente.');
+    }
+
+    public function destroyMultiple(Request $request)
+{
+    // Validar que se han enviado IDs
+    $request->validate([
+        'ids' => 'required|array|min:1',
+        'ids.*' => 'exists:students,id',
+    ]);
+
+    // Eliminar los estudiantes seleccionados
+    Student::whereIn('id', $request->ids)->delete();
+
+    return redirect()->route('estudiantes.index')->with('success', 'Estudiantes eliminados correctamente.');
 }
+}
+
+
+

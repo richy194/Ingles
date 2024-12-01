@@ -73,8 +73,8 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="Documento">Documento</label>
-                        <input type="text" name="Documento" id="Documento" class="form-control" required>
+                        <label for="documento">Documento</label>
+                        <input type="text" name="documento" id="documento" class="form-control" required>
                     </div>
 
                     <div class="form-group">

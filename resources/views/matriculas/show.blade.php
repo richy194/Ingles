@@ -53,7 +53,7 @@
                 </div>
                 <div class="form-group">
                     <label class="details-label">Documento :</label>
-                    <p class="details-value">{{ $matricula->student->Documento }}</p>
+                    <p class="details-value">{{ $matricula->student->documento }}</p>
                 </div> 
               
                 <div class="form-group">

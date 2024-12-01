@@ -33,7 +33,7 @@
             <div class="card-body">
                 <p><strong>Nombre:</strong> {{ $estudiante->nombre }}</p>
                 <p><strong>Email:</strong> {{ $estudiante->email }}</p>
-                <p><strong>Documento:</strong> {{ $estudiante->Documento }}</p>
+                <p><strong>Documento:</strong> {{ $estudiante->documento }}</p>
                 <p><strong>Dirección:</strong> {{ $estudiante->direccion }}</p>
                 <p><strong>Teléfono:</strong> {{ $estudiante->telefono }}</p>
 

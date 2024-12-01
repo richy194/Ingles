@@ -88,10 +88,14 @@
                         <input type="text" class="form-control" id="telefono" name="telefono" value="{{ old('telefono') }}">
                     </div>
 
-                    <div class="form-group">
-                        <label for="fecha_matricula">Fecha de Matrícula</label>
-                        <input type="date" class="form-control" id="fecha_matricula" name="fecha_matricula" value="{{ old('fecha_matricula') }}">
-                    </div>
+                    <label for="fecha_matricula">Fecha de Matrícula</label>
+        <input 
+        type="date" 
+        name="fecha_matricula" 
+        class="form-control" 
+        value="{{ date('Y-m-d') }}" 
+        required 
+        readonly>
 
                     <div class="form-group">
     <label for="estado">Estado</label>

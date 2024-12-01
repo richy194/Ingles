@@ -83,59 +83,64 @@ class FormularioController extends Controller
     }
 
     public function inscribir($id)
-    {
-        DB::beginTransaction();
-    
-        try {
-            // Buscar el formulario por ID
-            $formulario = FormularioInscripcion::find($id);
-    
-            if (!$formulario) {
-                return redirect()->route('formularios.index')->with('error', 'El formulario no fue encontrado.');
-            }
-    
-            // Imprime el contenido del formulario para depuración
-            Log::info('Datos del formulario:', $formulario->toArray());
-    
-            // Crear o encontrar al estudiante
-            $student = Student::firstOrCreate(
-                ['Documento' => $formulario->Documento],
-                [
-                    'nombre' => $formulario->name,
-                    'email' => $formulario->email,
-                    'direccion' => $formulario->direccion,
-                    'telefono' => $formulario->telefono,
-                ]
-            );
-    
-            Log::info('Estudiante creado o encontrado:', $student->toArray());
-    
-            // Crear matrícula asociada al estudiante
-            $matricula = $student->matriculas()->create([
-                'fecha_matricula' => $formulario->fecha_matricula,
-                'estado' => $formulario->estado ?? null, // Permitir null si no está definido
-                'nota_final' => $formulario->nota_final ?? 0, // Valor predeterminado si no se proporciona
-                'teacher_id' => $formulario->teacher_id,
-                'grupo_id' => $formulario->grupo_id,
-            ]);
-    
-            Log::info('Matrícula creada:', $matricula->toArray());
-    
-            DB::commit();
-    
-            return redirect()->route('formularios.index')->with('success', 'Estudiante y matrícula registrados correctamente.');
-        } catch (\Exception $e) {
-            DB::rollBack();
-    
-            // Registro del error para depuración
-            Log::error('Error al inscribir estudiante: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-            ]);
-    
-            return redirect()->route('formularios.index')->with('error', 'Ocurrió un error al procesar la inscripción: ' . $e->getMessage());
+{
+    DB::beginTransaction();
+
+    try {
+        // Buscar el formulario por ID
+        $formulario = FormularioInscripcion::find($id);
+
+        if (!$formulario) {
+            return redirect()->route('formularios.index')->with('error', 'El formulario no fue encontrado.');
         }
+
+        // Imprime el contenido del formulario para depuración
+        Log::info('Datos del formulario:', $formulario->toArray());
+
+        // Crear o encontrar al estudiante
+        $student = Student::firstOrCreate(
+            ['documento' => $formulario->Documento],
+            [
+                'nombre' => $formulario->name,
+                'email' => $formulario->email,
+                'direccion' => $formulario->direccion,
+                'telefono' => $formulario->telefono,
+            ]
+        );
+
+        Log::info('Estudiante creado o encontrado:', $student->toArray());
+
+        // Crear matrícula asociada al estudiante
+        $matricula = $student->matriculas()->create([
+            'fecha_matricula' => $formulario->fecha_matricula,
+            'estado' => $formulario->estado ?? null, // Permitir null si no está definido
+            'nota_final' => $formulario->nota_final ?? 0, // Valor predeterminado si no se proporciona
+            'teacher_id' => $formulario->teacher_id,
+            'grupo_id' => $formulario->grupo_id,
+        ]);
+
+        Log::info('Matrícula creada:', $matricula->toArray());
+
+        // Eliminar el formulario
+        $formulario->delete();
+
+        Log::info('Formulario eliminado:', ['id' => $id]);
+
+        DB::commit();
+
+        return redirect()->route('formularios.index')->with('success', 'Estudiante y matrícula registrados correctamente. El formulario ha sido eliminado.');
+    } catch (\Exception $e) {
+        DB::rollBack();
+
+        // Registro del error para depuración
+        Log::error('Error al inscribir estudiante: ' . $e->getMessage(), [
+            'trace' => $e->getTraceAsString(),
+        ]);
+
+        return redirect()->route('formularios.index')->with('error', 'Ocurrió un error al procesar la inscripción: ' . $e->getMessage());
     }
-    
+}
+
 
     
 

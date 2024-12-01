@@ -5,18 +5,29 @@ namespace App\Http\Controllers;
 use App\Models\Matricula;
 use App\Models\Curso;
 use App\Models\Theacher;
-use App\Models\Student; // Importamos el modelo de estudiantes
+use App\Models\Student; 
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Http\Request;
 use App\Exports\MatriculasExport;
 use App\Imports\MatriculasImport;
-use Illuminate\Http\Request;
+
 
 class MatriculaController extends Controller
 {
     // Muestra todas las matrículas
-    public function index()
+    public function index(Request $request)
     {
-        $matriculas = Matricula::with(['student', 'curso', 'teacher'])->get();
+        $query = $request->get('query');
+    
+        $matriculas = Matricula::with(['student', 'curso', 'teacher']) // Carga relaciones necesarias
+            ->when($query, function ($queryBuilder) use ($query) {
+                return $queryBuilder->whereHas('student', function ($subQuery) use ($query) {
+                    $subQuery->where('nombre', 'like', '%' . $query . '%')
+                             ->orWhere('documento', 'like', '%' . $query . '%');
+                });
+            })
+            ->get();
+    
         return view('matriculas.index', compact('matriculas'));
     }
 
@@ -95,29 +106,25 @@ class MatriculaController extends Controller
     }
 
     // Exporta las matrículas a un archivo Excel
-    public function export()
+    public function export() 
     {
-        try {
-            return Excel::download(new MatriculasExport, 'matriculas.xlsx');
-        } catch (\Exception $e) {
-            return back()->with('error', 'Error al exportar los datos: ' . $e->getMessage());
-        }
+        return Excel::download(new MatriculasExport, 'matriculas.xlsx'); // Exporta como archivo Excel
     }
 
     // Importa matrículas desde un archivo Excel
     public function import(Request $request)
-    {
-        $request->validate([
-            'file' => 'required|file|mimes:xlsx,xls',
-        ]);
+{
+    $request->validate([
+        'file' => 'required|mimes:xlsx,csv'
+    ]);
 
-        try {
-            Excel::import(new MatriculasImport, $request->file('file'));
-            return redirect()->route('matriculas.index')->with('success', 'Matrículas importadas correctamente.');
-        } catch (\Exception $e) {
-            return redirect()->route('matriculas.index')->with('error', 'Error al importar los datos: ' . $e->getMessage());
-        }
-    }
+    Excel::import(new MatriculasImport, $request->file('file'));
+
+    return back()->with('success', 'Matrículas importadas exitosamente.');
+}
+
+
+
 
     // Método para obtener los datos del estudiante
     public function getStudentDataForMatricula($id)
@@ -133,5 +140,19 @@ class MatriculaController extends Controller
             'direccion' => $student->direccion,
             'telefono' => $student->telefono
         ]);
+    }
+
+    public function destroyMultiple(Request $request)
+    {
+        // Validar que se han enviado IDs
+        $request->validate([
+            'ids' => 'required|array|min:1',
+            'ids.*' => 'exists:students,id',
+        ]);
+    
+        // Eliminar los estudiantes seleccionados
+        Matricula::whereIn('id', $request->ids)->delete();
+    
+        return redirect()->route('matriculas.index')->with('success', 'matriculas  eliminados correctamente.');
     }
 }

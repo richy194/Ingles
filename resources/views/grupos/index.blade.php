@@ -62,7 +62,8 @@
                         <tr>
                             <th>#</th>
                             <th>Código</th>
-                            <th>Curso</th>
+                            <th>nombre curso</th>
+                            <th>codigo curso</th>
                             <th>Periodo</th>
                             <th>Cantidad</th>
                             <th>Docente</th>
@@ -75,6 +76,7 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $group->codigo }}</td>
                                 <td>{{ $group->curso->nombre ?? 'No disponible' }}</td>
+                                <td>{{ $group->curso->codigo ?? 'No disponible' }}</td>
                                 <td>{{ $group->periodo_academicos->nombre ?? 'No disponible' }}</td>
                                 <td>{{ $group->cantidad }}</td>
                                 <td>{{ $group->pofe->nombre }}</td>

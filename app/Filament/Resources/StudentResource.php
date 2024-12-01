@@ -32,7 +32,7 @@ class StudentResource extends Resource
                     ->label('Correo electrónico')
                     ->email() 
                     ->required(),
-                    Forms\Components\TextInput::make('Documento')
+                    Forms\Components\TextInput::make('documento')
                     ->required()
                     ->maxLength(255),
 
@@ -51,20 +51,18 @@ class StudentResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
-                ->searchable(),
                 Tables\Columns\TextColumn::make('nombre')
                 ->searchable(),
 
             Tables\Columns\TextColumn::make('email')
-                ->label('Nombre')
+                ->label('email')
                 ->sortable(),
 
-            Tables\Columns\TextColumn::make('Documento')
+            Tables\Columns\TextColumn::make('documento')
                 ->searchable(),
 
             Tables\Columns\TextColumn::make('direccion')
-                ->label('Correo Electrónico')
+                ->label('direccion')
                 ->sortable(),
 
             Tables\Columns\TextColumn::make('telefono')

@@ -11,7 +11,7 @@ class Student extends Model
 {
     use HasFactory, SoftDeletes; 
 
-    protected $fillable = ['nombre', 'email','Documento', 'direccion' ,'telefono'];
+    protected $fillable = ['nombre', 'email','documento', 'direccion' ,'telefono'];
     
     public function matriculas():hasMany
     {

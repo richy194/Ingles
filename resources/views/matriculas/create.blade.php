@@ -64,23 +64,35 @@
                         </select>
                     </div>
 
-                    <div class="form-group">
-                        <label for="fecha_matricula">Fecha de Matrícula</label>
-                        <input type="date" id="fecha_matricula" name="fecha_matricula" class="form-control" required>
-                    </div>
+                    <label for="fecha_matricula">Fecha de Matrícula</label>
+        <input 
+        type="date" 
+        name="fecha_matricula" 
+        class="form-control" 
+        value="{{ date('Y-m-d') }}" 
+        required 
+        readonly>
 
-                    <div class="form-group">
-                        <label for="estado">Estado</label>
-                        <select id="estado" name="estado" class="form-control" required>
-                            <option value="Activo">Activo</option>
-                            <option value="Inactivo">Inactivo</option>
-                        </select>
-                    </div>
+                    <label for="estado">Estado</label>
+    <select class="form-control" id="estado" name="estado">
+        <option value="" {{ old('estado', $formularioInscripcion->estado ?? '') == '' ? 'selected' : '' }}>Seleccionar Estado</option>
+        <option value="aprobado" {{ old('estado', $formularioInscripcion->estado ?? '') == 'aprobado' ? 'selected' : '' }}>Aprobado</option>
+        <option value="desaprobado" {{ old('estado', $formularioInscripcion->estado ?? '') == 'desaprobado' ? 'selected' : '' }}>Desaprobado</option>
+        <option value="cancelado" {{ old('estado', $formularioInscripcion->estado ?? '') == 'cancelado' ? 'selected' : '' }}>Cancelado</option>
+        <option value="no aprobado" {{ old('estado', $formularioInscripcion->estado ?? '') == 'no aprobado' ? 'selected' : '' }}>No aprobado</option>
+    </select>
 
-                    <div class="form-group">
-                        <label for="nota_final">Nota Final</label>
-                        <input type="number" id="nota_final" name="nota_final" class="form-control" step="0.01" required>
-                    </div>
+    <div class="form-group">
+    <label for="nota_final">Nota Final</label>
+    <input type="number" 
+           id="nota_final" 
+           name="nota_final" 
+           class="form-control" 
+           value="{{ $matricula->nota_final ?? '' }}" 
+           step="0.01" 
+           placeholder="No asignado" 
+           >
+</div>
 
                     <button type="submit" class="btn btn-primary">Guardar Matrícula</button>
                 </form>
@@ -104,7 +116,7 @@
                     // Rellenar los campos del formulario con los datos recibidos
                     document.getElementById('name').value = data.nombre;
                     document.getElementById('email').value = data.email;
-                    document.getElementById('Documento').value = data.Documento;
+                    document.getElementById('documento').value = data.documento;
                     document.getElementById('direccion').value = data.direccion;
                     document.getElementById('telefono').value = data.telefono;
                 })
@@ -113,7 +125,7 @@
                     // Opcional: Limpiar los campos si ocurre un error
                     document.getElementById('name').value = '';
                     document.getElementById('email').value = '';
-                    document.getElementById('Documento').value = '';
+                    document.getElementById('documento').value = '';
                     document.getElementById('direccion').value = '';
                     document.getElementById('telefono').value = '';
                 });
@@ -121,7 +133,7 @@
             // Limpiar los campos si no hay un estudiante seleccionado
             document.getElementById('name').value = '';
             document.getElementById('email').value = '';
-            document.getElementById('Documento').value = '';
+            document.getElementById('documento').value = '';
             document.getElementById('direccion').value = '';
             document.getElementById('telefono').value = '';
         }

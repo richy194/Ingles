@@ -117,6 +117,10 @@
             margin-bottom: 10px;
             padding: 20px;
         }
+        .card-body ul li {
+    max-height: 250px;
+    overflow-y: auto;
+}
 
         .card-body ul li:hover {
             background-color: #e2e6ea;
@@ -232,10 +236,10 @@
                             <ul>
                                 @foreach ($matriculas as $matricula)
                                     <li>
-                                        <strong>Nombre:</strong> {{ $matricula->student->nombre }}<br>
-                                        <strong>Documento:</strong> {{ $matricula->student->Documento }}<br>
-                                        <strong>Estado:</strong> {{ $matricula->estado }}<br>
-                                        <strong>Promedio:</strong> {{ $matricula->nota_final }}
+                                        <strong>Nombre:</strong> {{ $matricula->student->nombre ?? 'No asignado' }}<br>
+                                        <strong>Documento:</strong> {{ $matricula->student->documento ?? 'No asignado' }}<br>
+                                        <strong>Estado:</strong> {{ $matricula->estado ?? 'No asignado' }}<br>
+                                        <strong>Promedio:</strong> {{ $matricula->nota_final ?? 'No asignado' }}
                                     </li>
                                 @endforeach
                             </ul>
@@ -364,6 +368,9 @@
     <!-- Bootstrap JS and dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
 </body>
 </html>
 

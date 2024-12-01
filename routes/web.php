@@ -49,29 +49,25 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::resource('usuarios', UsuarioController::class);
     Route::resource('periodos', PeriodoAcademicoController::class);
    
-
-    
-
+   
+   
+   
 });
 
-// Rutas de exportación e importación
-Route::get('matriculas/export', [MatriculaController::class, 'export'])->name('matriculas.export');
-Route::post('matriculas/import', [MatriculaController::class, 'import'])->name('matriculas.import');
-Route::get('/export', function () {
-    return Excel::download(new MatriculaExport, 'users.xlsx');
-});
-Route::post('/import', function () {
-    Excel::import(new MatriculaImport, request()->file('file'));
-    return redirect('/')->with('success', 'Archivo importado exitosamente');
-});
- 
+ Route::get('matriculas-export', [MatriculaController::class, 'export'])->name('matriculas.export');
+
+ Route::post('matriculas-import', [MatriculaController::class, 'import'])->name('matriculas.import');
+ Route::get('estudiantes-export', [StudentController::class, 'export'])->name('estudiantes.export');
+ Route::post('estudiantes-import', [StudentController::class, 'import'])->name('estudiantes.import');
+
+
+
 
 Route::resource('profesores', TheacherController::class);
 Route::resource('estudiantes', StudentController::class);
  Route::resource('formularios', FormularioController::class);
  
-Route::get('/students/{id}', [StudentController::class, 'getEstudiante']);
-Route::get('/students/{id}', [StudentController::class, 'show'])->name('students.show');
+
 
 Route::post('/formularios/inscribir/{id}', [FormularioController::class, 'inscribir'])->name('formularios.inscribir');
 
@@ -82,6 +78,5 @@ Route::get('/', function () {
 });
 
 Route::get('/student-data/{id}', [MatriculaController::class, 'getStudentDataForMatricula']);
-
-
-
+Route::delete('estudiantes-destroy-multiple', [StudentController::class, 'destroyMultiple'])->name('estudiantes.destroyMultiple');
+Route::delete('matriculas-destroy-multiple', [MatriculaController::class, 'destroyMultiple'])->name('matriculas.destroyMultiple');

@@ -43,8 +43,8 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="Documento">Documento</label>
-                        <input type="text" name="Documento" id="Documento" class="form-control" value="{{ old('Documento', $estudiante->Documento) }}" required>
+                        <label for="documento">Documento</label>
+                        <input type="text" name="documento" id="documento" class="form-control" value="{{ old('documento', $estudiante->documento) }}" required>
                     </div>
 
                     <div class="form-group">
