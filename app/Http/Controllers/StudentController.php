@@ -50,12 +50,21 @@ class StudentController extends Controller
         return redirect()->route('estudiantes.index'); // Redirige al índice de estudiantes
     }
 
-    // Edita un estudiante
     public function edit($id)
-    {
-        $estudiante = Student::findOrFail($id); // Encuentra al estudiante por ID
-        return view('estudiantes.edit', compact('estudiante')); // Muestra la vista para editar al estudiante
+{
+    // Intenta encontrar el estudiante con el ID proporcionado
+    $estudiante = Student::find($id);
+
+    // Verifica si el estudiante existe
+    if (!$estudiante) {
+        return redirect()->route('estudiantes.index')->with('error', 'Estudiante no encontrado.');
     }
+
+    // Retorna la vista con los datos del estudiante
+    return view('estudiantes.edit', compact('estudiante'));
+}
+
+
 
     // Actualiza un estudiante
     public function update(Request $request, $id)
@@ -68,7 +77,8 @@ class StudentController extends Controller
             'telefono' => 'required|string|max:255',
         ]);
 
-        $estudiante = Student::findOrFail($id); // Encuentra al estudiante por ID
+        $estudiante = Student::findOrFail($id);
+         // Encuentra al estudiante por ID
         $estudiante->update($validated); // Actualiza los campos
         return redirect()->route('estudiantes.index'); // Redirige al índice de estudiantes
     }

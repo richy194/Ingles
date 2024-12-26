@@ -6,51 +6,24 @@
     <title>Crear Curso</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
+          body {
             font-family: Arial, sans-serif;
             background-color: #f4f7fc;
         }
         .card {
             margin-top: 50px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
         }
-        .form-group label {
-            font-weight: bold;
-            margin-bottom: 5px;
+        .btn {
+            margin-top: 10px;
+            background-color: #a8e6cf;
+            color: #fff;
         }
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 15px;
-            border: 1px solid #ced4da;
-            border-radius: 4px;
-        }
-        .btn-primario {
-            background-color: #007bff;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-        }
-        .btn-primario:hover {
-            background-color: #0056b3;
-        }
-        .btn-secundario {
-            background-color: #6c757d;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-        }
-        .btn-secundario:hover {
-            background-color: #5a6268;
-        }
-        .form-buttons {
-            display: flex;
-            gap: 10px;
+        select[multiple] {
+    height: auto;
+    min-height: 100px;
+}
+        .btn:hover {
+            background-color: #80e0bb;
         }
     </style>
 </head>
@@ -58,7 +31,7 @@
     <div class="container">
         <div class="card">
             <div class="card-header">
-                <h3>Crear Nuevo Curso</h3>
+                <h3> Nuevo Curso</h3>
             </div>
             <div class="card-body">
                 <form action="{{ route('cursos.store') }}" method="POST">
@@ -113,17 +86,32 @@
                      </select>
                       </div>
 
-                    <!-- Campo para Semestre -->
+                    <!-- Campo para periodo academico -->
                     <div class="form-group">
-                        <label for="semestre_id">Semestre</label>
-                        <select name="semestre_id" id="semestre_id" class="form-control" required>
-                            @foreach ($semestres as $semestre)
-                                <option value="{{ $semestre->id }}" {{ old('semestre_id') == $semestre->id ? 'selected' : '' }}>
-                                    {{ $semestre->nombre }}
-                                </option>
+                        <label for="periodo_id">Periodo Académico</label>
+                        <select id="periodo_id" name="periodo_id" class="form-control" required>
+                            <option value="">Seleccione un periodo</option>
+                            @foreach($periodos as $periodo)
+                                <option value="{{ $periodo->id }}">{{ $periodo->nombre }}</option>
                             @endforeach
                         </select>
                     </div>
+
+<div class="form-group">
+    <label for="grupo_id">Grupos</label>
+    <select id="grupo_id" name="grupo_id[]" class="form-control" multiple required>
+        <option value="">Seleccione uno o más grupos</option>
+        @foreach($grupos as $grupo)
+            <option value="{{ $grupo->id }}" 
+                @if(in_array($grupo->id, old('grupo_id', [])))
+                    selected
+                @endif
+            >
+                {{ $grupo->nombre }}
+            </option>
+        @endforeach
+    </select>
+</div>
 
                     <!-- Campo para Docente -->
                     <div class="form-group">
@@ -137,8 +125,8 @@
                         </select>
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Crear Curso</button>
-                    <a href="{{ route('cursos.index') }}" class="btn-secundario">Cancelar</a>
+                    <button type="submit" class="btn btn-primary">crear curso</button>
+                    <a href="{{ route('cursos.index') }}" class="btn btn-primary">Volver </a>
                 </form>
             </div>
         </div>

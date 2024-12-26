@@ -1,10 +1,10 @@
-<?php
-
+<?
 namespace App\Http\Controllers;
 
 use App\Models\Curso;
-use App\Models\Semestre;
+use App\Models\PeriodoAcademico;
 use App\Models\Theacher;
+use App\Models\Group;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -33,14 +33,14 @@ class CursoController extends Controller
     // Mostrar el formulario para crear un nuevo curso
     public function create()
     {
-        // Solo los administradores pueden crear cursos
-        $this->authorize('create', Curso::class);
+        $this->authorize('create', Curso::class); // Asegura que el usuario tenga permiso de crear cursos
 
-        // Obtener todos los semestres y docentes para los campos select
-        $semestres = Semestre::all();
+        // Obtener todos los semestres, docentes y grupos para los campos select
+        $periodos = PeriodoAcademico::all();
         $teachers = Theacher::all();
+        $grupos = Group::all(); // Obtener todos los grupos
 
-        return view('cursos.create', compact('semestres', 'teachers'));
+        return view('cursos.create', compact('periodos', 'teachers', 'grupos'));
     }
 
     // Guardar un nuevo curso
@@ -56,12 +56,22 @@ class CursoController extends Controller
             'fecha_fin' => 'required|date',
             'requisito' => 'required|string',
             'modalidad' => 'required|string',
-            'semestre_id' => 'required|exists:semestres,id',
+            'periodo_id' => 'required|exists:periodo_academicos,id',
             'teacher_id' => 'required|exists:theachers,id',
+            'grupo_id' => 'required|array|min:1',
+            'grupo_id.*' => 'exists:groups,id',  // Asegurándonos de que los IDs son válidos
         ]);
 
         // Crear el curso con los datos validados
-        Curso::create($validated);
+        $curso = Curso::create($validated);
+
+        // Asociar los grupos seleccionados al curso
+        $grupoIds = $request->grupo_id;  // Obtener los IDs de los grupos seleccionados
+        foreach ($grupoIds as $grupoId) {
+            $grupo = Group::find($grupoId);
+            $curso->grupos()->save($grupo);  // Asociar cada grupo al curso
+        }
+
         return redirect()->route('cursos.index');
     }
 
@@ -70,18 +80,20 @@ class CursoController extends Controller
     {
         $curso = Curso::findOrFail($id);
         $this->authorize('update', $curso); // Solo el dueño o un admin puede editar
-        
-        // Obtener todos los semestres y docentes para los campos select
-        $semestres = Semestre::all();
-        $teachers = Theacher::all();
 
-        return view('cursos.edit', compact('curso', 'semestres', 'teachers'));
+        // Obtener todos los semestres, docentes y grupos para los campos select
+        $periodos = PeriodoAcademico::all();
+        $teachers = Theacher::all();
+        $grupos = Group::all(); // Obtener todos los grupos
+
+        return view('cursos.edit', compact('curso', 'periodos', 'teachers', 'grupos'));
     }
 
     // Actualizar un curso
     public function update(Request $request, $id)
     {
-        $validated = $request->validate([
+         // Validación de la entrada
+         $validated = $request->validate([
             'nombre' => 'required|string',
             'codigo' => 'required|string',
             'descripcion' => 'required|string',
@@ -90,14 +102,27 @@ class CursoController extends Controller
             'fecha_fin' => 'required|date',
             'requisito' => 'required|string',
             'modalidad' => 'required|string',
-            'semestre_id' => 'required|exists:semestres,id',
+            'periodo_id' => 'required|exists:periodo_academicos,id',
             'teacher_id' => 'required|exists:theachers,id',
+            'grupo_id' => 'required|array|min:1',
+            'grupo_id.*' => 'exists:groups,id',  // Asegurándonos de que los IDs son válidos
         ]);
 
-        $curso = Curso::findOrFail($id);
-        $curso->update($validated);
-        return redirect()->route('cursos.index');
+        // Buscar el curso por ID
+    // Buscar el curso
+    $curso = Curso::findOrFail($id);
+
+    // Actualizar los datos del curso
+    $curso->update($validated);
+
+    $grupoIds = $request->grupo_id;  // Obtener los IDs de los grupos seleccionados
+    foreach ($grupoIds as $grupoId) {
+        $grupo = Group::find($grupoId);
+        $curso->grupos()->save($grupo);  // Asociar cada grupo al curso
     }
+
+    return redirect()->route('cursos.index');
+}
 
     // Eliminar un curso
     public function destroy($id)

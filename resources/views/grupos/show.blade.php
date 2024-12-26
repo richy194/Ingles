@@ -31,15 +31,19 @@
                 <h3>Detalles del Grupo</h3>
             </div>
             <div class="card-body">
-                <p><strong>Código:</strong> {{ $grupo->codigo }}</p>
-                <p><strong>Curso:</strong> {{ $grupo->curso->nombre }}</p>
-                <p><strong>Periodo Académico:</strong> {{ $grupo->periodo_academicos->nombre }}</p>
-                <p><strong>Cantidad:</strong> {{ $grupo->cantidad }}</p>
-                <p><strong>Docente:</strong> {{ $grupo->pofe->nombre }}</p>
-
-                <a href="{{ route('grupos.index') }}" class="btn">Volver a la lista</a>
+                <ul class="list-group">
+                    <li class="list-group-item"><strong>Curso:</strong> {{ $grupo->curso->nombre }}</li>
+                    <li class="list-group-item"><strong>codigo del curso:</strong> {{ $grupo->curso->codigo }}</li>
+                    <li class="list-group-item"><strong>Nombre:</strong> {{ $grupo->nombre }}</li>
+                    <li class="list-group-item"><strong>Periodo Académico:</strong> {{ $grupo->periodo_academicos->nombre }}</li>
+                    <li class="list-group-item"><strong>Profesor:</strong> {{ $grupo->pofe->nombre }}</li>
+                    <li class="list-group-item"><strong>Cantidad:</strong> {{ $grupo->cantidad }}</li>
+                    <li class="list-group-item"><strong>Horario:</strong> {{ $grupo->horario }}</li>
+                </ul>
+                <a href="{{ route('grupos.index') }}" class="btn btn-secondary">Volver</a>
             </div>
         </div>
     </div>
 </body>
 </html>
+

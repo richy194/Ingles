@@ -6,7 +6,7 @@
     <title>Editar Estudiante</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
+          body {
             font-family: Arial, sans-serif;
             background-color: #f4f7fc;
         }
@@ -15,11 +15,13 @@
         }
         .btn {
             margin-top: 10px;
+            background-color: #a8e6cf;
+            color: #fff;
         }
-        .form-group label {
-            font-weight: bold;
+        .btn:hover {
+            background-color: #80e0bb;
         }
-    </style>
+        </style>
 </head>
 <body>
     <div class="container">
@@ -38,7 +40,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="email">Correo Electrónico</label>
+                        <label for="email">email</label>
                         <input type="email" name="email" id="email" class="form-control" value="{{ old('email', $estudiante->email) }}" required>
                     </div>
 

@@ -75,16 +75,17 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="grupo_id">Curso</label>
-                        <select class="form-control" id="grupo_id" name="grupo_id" required>
-                            <option value="">Seleccionar Curso</option>
-                            @foreach ($cursos as $curso)
-                                <option value="{{ $curso->id }}" {{ old('grupo_id', $formulario->grupo_id) == $curso->id ? 'selected' : '' }}>
-                                    {{ $curso->nombre }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
+    <label for="grupo_id">Curso</label>
+    <select id="grupo_id" name="grupo_id" class="form-control" required>
+        <option value="">Seleccionar curso</option>
+        @foreach ($cursos as $curso)
+            <option value="{{ $curso->id }}" 
+                @if (old('grupo_id', $formulario->grupo_id) == $curso->id) selected @endif>
+                {{ $curso->nombre }}
+            </option>
+        @endforeach
+    </select>
+</div>
 
                     <div class="form-group">
                         <label for="teacher_id">Profesor</label>

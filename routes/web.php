@@ -80,3 +80,5 @@ Route::get('/', function () {
 Route::get('/student-data/{id}', [MatriculaController::class, 'getStudentDataForMatricula']);
 Route::delete('estudiantes-destroy-multiple', [StudentController::class, 'destroyMultiple'])->name('estudiantes.destroyMultiple');
 Route::delete('matriculas-destroy-multiple', [MatriculaController::class, 'destroyMultiple'])->name('matriculas.destroyMultiple');
+
+Route::get('/estudiantes/{id}/edit', [StudentController::class, 'edit'])->name('estudiantes.edit');

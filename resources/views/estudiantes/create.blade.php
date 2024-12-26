@@ -57,7 +57,7 @@
     <div class="container">
         <div class="card">
             <div class="card-header">
-                <h3>Crear Nuevo Estudiante</h3>
+                <h3> Nuevo Estudiante</h3>
             </div>
             <div class="card-body">
                 <form action="{{ route('estudiantes.store') }}" method="POST">
@@ -88,8 +88,8 @@
                     </div>
 
                     
-                    <button type="submit" class="btn btn-primary">Crear Estudiante</button>
-                    <a href="{{ route('estudiantes.index') }}" class="btn-secundario">Cancelar</a>
+                    <button type="submit" class="btn btn-primary">Guardar estudiante</button>
+                    <a href="{{ route('estudiantes.index') }}" class="btn btn-primary">Volver </a>
                 </form>
             </div>
         </div>

@@ -31,21 +31,28 @@
                 <h3>Detalles del Curso</h3>
             </div>
             <div class="card-body">
-                <p><strong>Nombre:</strong> {{ $curso->nombre }}</p>
-                <p><strong>Código:</strong> {{ $curso->codigo }}</p>
-                <p><strong>Descripción:</strong> {{ $curso->descripcion }}</p>
-                <p><strong>Nivel:</strong> {{ $curso->nivel_curso }}</p>
-                <p><strong>Fecha de Inicio:</strong> {{ $curso->fecha_inicio }}</p>
-                <p><strong>Fecha de Fin:</strong> {{ $curso->fecha_fin }}</p>
-                <p><strong>Requisitos:</strong> {{ $curso->requisito }}</p>
-                <p><strong>Modalidad:</strong> {{ $curso->modalidad }}</p>
-
+                <ul class="list-group">
+                    <li class="list-group-item"><strong>Nombre:</strong> {{ $curso->nombre }}</li>
+                    <li class="list-group-item"><strong>Código del curso:</strong> {{ $curso->codigo }}</li>
+                    <li class="list-group-item"><strong>Descripción:</strong> {{ $curso->descripcion }}</li>
+                    <li class="list-group-item"><strong>Nivel:</strong> {{ $curso->nivel_curso }}</li>
+                    <li class="list-group-item"><strong>Grupos:</strong>
+                        @if($curso->grupos->isNotEmpty())
+                            {{ $curso->grupos->pluck('nombre')->join(', ') }}
+                        @else
+                            No asignado
+                        @endif
+                    </li>
+                    <li class="list-group-item"><strong>Periodo:</strong> {{ $curso->periodo->nombre }}</li>
+                    <li class="list-group-item"><strong>Fecha de Inicio:</strong> {{ $curso->fecha_inicio }}</li>
+                    <li class="list-group-item"><strong>Fecha de Fin:</strong> {{ $curso->fecha_fin }}</li>
+                    <li class="list-group-item"><strong>Requisitos:</strong> {{ $curso->requisito }}</li>
+                    <li class="list-group-item"><strong>Modalidad:</strong> {{ $curso->modalidad }}</li>
+                    <li class="list-group-item"><strong>Profesor:</strong> {{ $curso->teacher->nombre }}</li>
+                </ul>
                 <a href="{{ route('cursos.index') }}" class="btn btn-secondary">Volver a la lista</a>
             </div>
         </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-

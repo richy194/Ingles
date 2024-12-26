@@ -12,11 +12,25 @@
         }
         .card {
             margin-top: 50px;
+            padding: 30px;
         }
-        .form-group label {
+        .btn {
+            margin-top: 10px;
+            background-color: #a8e6cf;
+            color: #fff;
+        }
+        .btn:hover {
+            background-color: #80e0bb;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
             font-weight: bold;
+            margin-bottom: 5px;
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -25,21 +39,36 @@
                 <h3>Editar Periodo Académico</h3>
             </div>
             <div class="card-body">
-                <form action="{{ route('periodos.update', $periodo->id) }}" method="POST">
+                <form action="{{ route('periodos.update', $periodo->id ) }}" method="POST">
                     @csrf
                     @method('PUT')
-                    <div class="form-group">
-                        <label for="año">Año</label>
-                        <input type="number" class="form-control" id="año" name="año" value="{{ old('año', $periodo->año) }}" required>
-                    </div>
 
                     <div class="form-group">
-                        <label for="nombre">Nombre</label>
-                        <input type="text" class="form-control" id="nombre" name="nombre" value="{{ old('nombre', $periodo->nombre) }}" required>
-                    </div>
+    <label for="año">Año</label>
+    <input 
+        type="number" 
+        name="año" 
+        id="año" 
+        class="form-control" 
+        value="{{ old('año', $periodo->año) }}" 
+        required
+    >
+</div>
 
-                    <div class="form-group">
-    <label for="periodo">Periodo:</label>
+<div class="form-group">
+    <label for="nombre">Nombre</label>
+    <input 
+        type="text" 
+        name="nombre" 
+        id="nombre" 
+        class="form-control" 
+        value="{{ old('nombre', $periodo->nombre) }}" 
+        required
+    >
+</div>
+
+<div class="form-group">
+    <label for="periodo">Periodo</label>
     <select name="periodo" id="periodo" class="form-control" required>
         <option value="SEMESTRE-1" {{ old('periodo', $periodo->periodo) == 'SEMESTRE-1' ? 'selected' : '' }}>SEMESTRE-1</option>
         <option value="SEMESTRE-2" {{ old('periodo', $periodo->periodo) == 'SEMESTRE-2' ? 'selected' : '' }}>SEMESTRE-2</option>
@@ -50,16 +79,21 @@
     </select>
 </div>
 
-                    <div class="form-group">
-                        <label for="descripcion">Descripción</label>
-                        <textarea class="form-control" id="descripcion" name="descripcion" rows="3">{{ old('descripcion', $periodo->descripcion) }}</textarea>
-                    </div>
+<div class="form-group">
+    <label for="descripcion">Descripción</label>
+    <textarea 
+        name="descripcion" 
+        id="descripcion" 
+        class="form-control" 
+        rows="4"
+    >{{ old('descripcion', $periodo->descripcion) }}</textarea>
+</div>
 
-                    <button type="submit" class="btn btn-success mt-3">Actualizar</button>
-                    <a href="{{ route('periodos.index') }}" class="btn btn-secondary mt-3">Cancelar</a>
+                    <button type="submit" class="btn btn-primary">Actualizar Periodo</button>
                 </form>
             </div>
         </div>
     </div>
 </body>
 </html>
+

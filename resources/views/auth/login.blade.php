@@ -9,7 +9,7 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background: url('/img/verdx.avif') no-repeat center center fixed;
+            /* background: url('/img/verdx.avif') no-repeat center center fixed; */
             background-size: cover;
             margin: 0;
             padding: 0;
@@ -80,7 +80,7 @@
                     <div class="logo-container">
                         <img src="/img/uteis.png" ">
                     </div>
-                    <h2 class="login-title">Zenthic</h2>
+                    <h2 class="login-title">Gestor Cursos de Ingles</h2>
                     
                     
 

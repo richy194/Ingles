@@ -31,17 +31,16 @@
                 <h3>Detalles del Estudiante</h3>
             </div>
             <div class="card-body">
-                <p><strong>Nombre:</strong> {{ $estudiante->nombre }}</p>
-                <p><strong>Email:</strong> {{ $estudiante->email }}</p>
-                <p><strong>Documento:</strong> {{ $estudiante->documento }}</p>
-                <p><strong>Dirección:</strong> {{ $estudiante->direccion }}</p>
-                <p><strong>Teléfono:</strong> {{ $estudiante->telefono }}</p>
-
+                <ul class="list-group">
+                    <li class="list-group-item"><strong>Nombre:</strong> {{ $estudiante->nombre }}</li>
+                    <li class="list-group-item"><strong>Email:</strong> {{ $estudiante->email }}</li>
+                    <li class="list-group-item"><strong>Documento:</strong> {{ $estudiante->documento }}</li>
+                    <li class="list-group-item"><strong>Dirección:</strong> {{ $estudiante->direccion }}</li>
+                    <li class="list-group-item"><strong>Teléfono:</strong> {{ $estudiante->telefono }}</li>
+                </ul>
                 <a href="{{ route('estudiantes.index') }}" class="btn btn-secondary">Volver a la lista</a>
             </div>
         </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

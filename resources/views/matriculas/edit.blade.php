@@ -48,16 +48,17 @@
 
                     
                     <div class="form-group">
-                        <label for="grupo_id">curso</label>
-                        <select id="grupo_id" name="grupo_id" class="form-control" required>
-                            <option value="">Seleccionar curso</option>
-                            @foreach ($cursos as $curso)
-                                <option value="{{ $curso->id }}" @if ($curso->id == $matricula->grupo_id) selected @endif>
-                                    {{ $curso->nombre }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
+    <label for="grupo_id">Curso</label>
+    <select id="grupo_id" name="grupo_id" class="form-control" required>
+        <option value="">Seleccionar curso</option>
+        @foreach ($cursos as $curso)
+            <option value="{{ $curso->id }}" 
+                @if (old('grupo_id', $matricula->grupo_id) == $curso->id) selected @endif>
+                {{ $curso->nombre }}
+            </option>
+        @endforeach
+    </select>
+</div>
 
                     <div class="form-group">
                         <label for="teacher_id">Profesor</label>

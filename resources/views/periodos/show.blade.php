@@ -31,31 +31,16 @@
                 <h3>Detalles del Periodo Académico</h3>
             </div>
             <div class="card-body">
-                <div class="form-group">
-                    <label for="año">Año</label>
-                    <p>{{ $periodo->año }}</p>
-                </div>
-
-                <div class="form-group">
-                    <label for="nombre">Nombre</label>
-                    <p>{{ $periodo->nombre }}</p>
-                </div>
-
-                <div class="form-group">
-                    <label for="periodo">Periodo</label>
-                    <p>{{ $periodo->periodo }}</p>
-                </div>
-
-                <div class="form-group">
-                    <label for="descripcion">Descripción</label>
-                    <p>{{ $periodo->descripcion }}</p>
-                </div>
-
-                <div class="form-group">
-                    <a href="{{ route('periodos.index') }}" class="btn btn-primary">Volver al Listado</a>
-                </div>
+                <ul class="list-group">
+                    <li class="list-group-item"><strong>Año:</strong> {{ $periodo->año }}</li>
+                    <li class="list-group-item"><strong>Nombre:</strong> {{ $periodo->nombre }}</li>
+                    <li class="list-group-item"><strong>Periodo:</strong> {{ $periodo->periodo }}</li>
+                    <li class="list-group-item"><strong>Descripción:</strong> {{ $periodo->descripcion }}</li>
+                </ul>
+                <a href="{{ route('periodos.index') }}" class="btn btn-secondary">Volver al Listado</a>
             </div>
         </div>
     </div>
 </body>
 </html>
+

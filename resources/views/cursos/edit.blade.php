@@ -6,7 +6,7 @@
     <title>Editar Curso</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
+          body {
             font-family: Arial, sans-serif;
             background-color: #f4f7fc;
         }
@@ -15,9 +15,11 @@
         }
         .btn {
             margin-top: 10px;
+            background-color: #a8e6cf;
+            color: #fff;
         }
-        .form-group label {
-            font-weight: bold;
+        .btn:hover {
+            background-color: #80e0bb;
         }
     </style>
 </head>
@@ -79,28 +81,48 @@
                         <input type="text" name="modalidad" id="modalidad" class="form-control" value="{{ old('modalidad', $curso->modalidad) }}" required>
                     </div>
 
-                    <!-- Campo para Semestre -->
-                    <label for="semestre_id">Semestre</label>
-                    <select name="semestre_id" id="semestre_id" class="form-control" required>
-                        @foreach ($semestres as $semestre)
-                            <option value="{{ $semestre->id }}" {{ old('semestre_id', $curso->semestre_id) == $semestre->id ? 'selected' : '' }}>
-                                {{ $semestre->nombre }}
-                            </option>
-                        @endforeach
-                    </select>
+                    <!-- Campo para periodo academico -->
+                    <div class="form-group">
+    <label for="periodo_id">Periodo Académico</label>
+    <select id="periodo_id" name="periodo_id" class="form-control" required>
+        <option value="">Seleccione un periodo</option>
+        @foreach($periodos as $periodo)
+            <option value="{{ $periodo->id }}" 
+                {{ old('periodo_id', $curso->periodo_id) == $periodo->id ? 'selected' : '' }}>
+                {{ $periodo->nombre }}
+            </option>
+        @endforeach
+    </select>
+</div>
+
+                    <div class="form-group">
+                    <label for="grupo_id">Grupos</label>
+                    <select id="grupo_id" name="grupo_id[]" class="form-control" multiple required>
+                    <option value="">Seleccione uno o más grupos</option>
+                   @foreach($grupos as $grupo)
+                    <option value="{{ $grupo->id }}" 
+                      @if(in_array($grupo->id, old('grupo_id', $curso->grupos->pluck('id')->toArray())))
+                     selected
+                  @endif
+                   >{{ $grupo->nombre }}</option>
+                  @endforeach
+                  </select>
+                </div>
 
                     <!-- Campo para Docente -->
-                    <label for="teacher_id">Docente</label>
-                    <select name="teacher_id" id="teacher_id" class="form-control" required>
-                        @foreach ($teachers as $teacher)
-                            <option value="{{ $teacher->id }}" {{ old('teacher_id', $curso->teacher_id) == $teacher->id ? 'selected' : '' }}>
-                                {{ $teacher->nombre }}
-                            </option>
-                        @endforeach
-                    </select>
+                    <div class="form-group">
+                        <label for="teacher_id">Docente</label>
+                        <select name="teacher_id" id="teacher_id" class="form-control" required>
+                            @foreach ($teachers as $teacher)
+                                <option value="{{ $teacher->id }}" {{ old('teacher_id') == $teacher->id ? 'selected' : '' }}>
+                                    {{ $teacher->nombre }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
 
-                    <button type="submit" class="btn btn-warning">Actualizar Curso</button>
-                    <a href="{{ route('cursos.index') }}" class="btn btn-secondary mt-3">Cancelar</a>
+                    <button type="submit" class="btn btn-primary">actualizar Grupo</button>
+                    <a href="{{ route('cursos.index') }}" class="btn btn-primary">Volver </a>
                 </form>
             </div>
         </div>

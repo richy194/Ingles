@@ -10,26 +10,35 @@ use Illuminate\Database\Eloquent\Relations\hasMany ;
 class Curso extends Model
 {
     use HasFactory, SoftDeletes;
-    protected $fillable = ['nombre', 'codigo', 'descripcion','nivel_curso', 'fecha_inicio', 'fecha_fin','requisito','modalidad', 'semestre_id', 'teacher_id'];
+    protected $fillable = ['nombre', 'codigo', 'descripcion','nivel_curso', 'fecha_inicio', 'fecha_fin','requisito','modalidad', 'periodo_id', 'teacher_id'];
 
-    public function semestre():belongsTo
+    public function periodo()
     {
-        return $this->belongsTo(Semestre::class);
+        return $this->belongsTo(PeriodoAcademico::class,'periodo_id');
     }
 
-    public function teacher():belongsTo
+    public function teacher()
     {
         return $this->belongsTo(Theacher::class, 'teacher_id');
     }
 
-    public function matriculas():hasMany
+   
+    
+
+    public function grupos()
     {
-        return $this->hasMany(Matricula::class, 'grupo_id');
+        return $this->hasMany(Group::class, 'curso_id');
     }
 
-    public function groups():hasMany
-    {
-// Suggested code may be subject to a license. Learn more: ~LicenseLog:876070114.
-        return $this->hasMany(group::class, 'curso_id');
-    }
+     // Relación con Matricula
+     public function matriculas()
+     {
+         return $this->hasMany(Matricula::class, 'grupo_id'); // Cambia 'grupo_id' por el nombre correcto de la columna
+     }
+ 
+     // Relación con FormularioInscripcion
+     public function formularios()
+     {
+         return $this->hasMany(FormularioInscripcion::class, 'grupo_id'); // Cambia 'grupo_id' por el nombre correcto de la columna
+        }
 }

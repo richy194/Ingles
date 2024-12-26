@@ -6,52 +6,25 @@
     <title>Crear Periodo Académico</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f7fc;
         }
+        
         .card {
             margin-top: 50px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
         }
-        .form-group label {
-            font-weight: bold;
-            margin-bottom: 5px;
+        .btn {
+            margin-top: 10px;
+            background-color: #a8e6cf;
+            color: #fff;
         }
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 15px;
-            border: 1px solid #ced4da;
-            border-radius: 4px;
+        .btn:hover {
+            background-color: #80e0bb;
         }
-        .btn-primario {
-            background-color: #007bff;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-        }
-        .btn-primario:hover {
-            background-color: #0056b3;
-        }
-        .btn-secundario {
-            background-color: #6c757d;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-        }
-        .btn-secundario:hover {
-            background-color: #5a6268;
-        }
-        .form-buttons {
-            display: flex;
-            gap: 10px;
-        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     </style>
 </head>
 
@@ -59,7 +32,7 @@
 <div class="container">
     <div class="card">
         <div class="card-header">
-            <h3>Crear periodo academico </h3>
+            <h3>nuevo periodo academico </h3>
         </div>
         <div class="card-body">
             <form action="{{ route('periodos.store') }}" method="POST" class="formulario">
@@ -88,8 +61,8 @@
                     <textarea name="descripcion" id="descripcion" class="form-control"></textarea>
                 </div>
                 <div class="form-buttons">
-                    <button type="submit" class="btn-primario">Guardar</button>
-                    <a href="{{ route('periodos.index') }}" class="btn-secundario">Cancelar</a>
+                    <button type="submit" class="btn btn-success mt-3">Guardar</button>
+                    <a href="{{ route('periodos.index') }}" class="btn btn-success mt-3">Cancelar</a>
                 </div>
             </form>
         </div> 

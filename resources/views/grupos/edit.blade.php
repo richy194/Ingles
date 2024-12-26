@@ -15,11 +15,14 @@
         }
         .btn {
             margin-top: 10px;
+            background-color: #a8e6cf;
+            color: #fff;
         }
-        .form-group label {
-            font-weight: bold;
+        .btn:hover {
+            background-color: #80e0bb;
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -31,53 +34,63 @@
                 <form action="{{ route('grupos.update', $grupo->id) }}" method="POST">
                     @csrf
                     @method('PUT')
-
-                    <div class="form-group">
-                        <label for="codigo">Código</label>
-                        <input type="text" name="codigo" id="codigo" class="form-control" value="{{ old('codigo', $grupo->codigo) }}" required>
-                    </div>
-
                     <div class="form-group">
                         <label for="curso_id">Curso</label>
-                        <select name="curso_id" id="curso_id" class="form-control" required>
+                        <select id="curso_id" name="curso_id" class="form-control" required>
                             @foreach($cursos as $curso)
-                                <option value="{{ $curso->id }}" {{ old('curso_id', $grupo->curso_id) == $curso->id ? 'selected' : '' }}>{{ $curso->nombre }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="periodo_id">Periodo Académico</label>
-                        <select name="periodo_id" id="periodo_id" class="form-control" required>
-                            @foreach($periodos as $periodo)
-                                <option value="{{ $periodo->id }}" {{ old('periodo_id', $grupo->periodo_id) == $periodo->id ? 'selected' : '' }}>{{ $periodo->nombre }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="cantidad">Cantidad</label>
-                        <input type="number" name="cantidad" id="cantidad" class="form-control" value="{{ old('cantidad', $grupo->cantidad) }}" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="teacher_id">Docente</label>
-                        <select name="teacher_id" id="teacher_id" class="form-control" required>
-                            @foreach ($teachers as $teacher)
-                                <option value="{{ $teacher->id }}" {{ old('teacher_id') == $teacher->id ? 'selected' : '' }}>
-                                    {{ $teacher->nombre }}
+                                <option value="{{ $curso->id }}" {{ $curso->id == $grupo->curso_id ? 'selected' : '' }}>
+                                    {{ $curso->nombre }}
                                 </option>
                             @endforeach
                         </select>
                     </div>
 
-                    <button type="submit" class="btn btn-warning">Actualizar Grupo</button>
-                    <a href="{{ route('grupos.index') }}" class="btn btn-secondary mt-3">Cancelar</a>
+                    <div class="form-group">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" id="nombre" name="nombre" class="form-control" value="{{ $grupo->nombre }}" required>
+                    </div>
+
+                    <div class="form-group">
+    <label for="periodo_id">Periodo Académico</label>
+    <select id="periodo_id" name="periodo_id" class="form-control" required>
+        <option value="">Seleccione un periodo</option>
+        @foreach($periodos as $periodo)
+            <option value="{{ $periodo->id }}" 
+                {{ old('periodo_id', $grupo->periodo_id) == $periodo->id ? 'selected' : '' }}>
+                {{ $periodo->nombre }}
+            </option>
+        @endforeach
+    </select>
+</div>
+
+<div class="form-group">
+    <label for="teacher_id">Profesor</label>
+    <select id="teacher_id" name="teacher_id" class="form-control" required>
+        <option value="">Seleccione un profesor</option>
+        @foreach($teachers as $teacher)
+            <option value="{{ $teacher->id }}" 
+                {{ old('teacher_id', $grupo->teacher_id) == $teacher->id ? 'selected' : '' }}>
+                {{ $teacher->nombre }}
+            </option>
+        @endforeach
+    </select>
+</div>
+
+                    <div class="form-group">
+                        <label for="cantidad">Cantidad</label>
+                        <input type="number" id="cantidad" name="cantidad" class="form-control" value="{{ $grupo->cantidad }}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="horario">Horario</label>
+                        <input type="text" id="horario" name="horario" class="form-control" value="{{ $grupo->horario }}" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Actualizar Grupo</button>
+                    <a href="{{ route('grupos.index') }}" class="btn btn-primary">Volver </a>
                 </form>
             </div>
         </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

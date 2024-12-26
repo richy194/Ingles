@@ -240,8 +240,8 @@
                                 <td>{{ $matricula->fecha_matricula }}</td>
                                 <td>{{ $matricula->curso->nombre ?? 'No asignado' }}</td>
                                 <td>{{ $matricula->teacher->nombre ?? 'No asignado' }}</td>
-                                <td>{{ $matricula->estado }}</td>
-                                <td>{{ $matricula->nota_final }}</td>
+                                <td>{{ $matricula->estado?? 'No asignado' }}</td>
+                                <td>{{ $matricula->nota_final?? 'No asignado' }}</td>
                                 
                                 <td class="acciones">
                                     @can('view', $matricula)

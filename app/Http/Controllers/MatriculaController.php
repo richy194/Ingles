@@ -60,7 +60,7 @@ class MatriculaController extends Controller
             'estado' => 'nullable|string|max:255',
             'nota_final' => 'nullable|numeric',
             'teacher_id' => 'required|exists:theachers,id', // Valida que el teacher exista
-            'grupo_id' => 'required|exists:groups,id', // Valida que el grupo exista
+            'grupo_id' => 'required|exists:cursos,id', // Valida que el grupo exista
             'student_id' => 'required|exists:students,id',
         ]);
 
@@ -88,7 +88,7 @@ class MatriculaController extends Controller
             'estado' => 'nullable|string|max:255',
             'nota_final' => 'nullable|numeric',
             'teacher_id' => 'required|exists:theachers,id',
-            'grupo_id' => 'required|exists:groups,id',
+            'grupo_id' => 'required|exists:cursos,id',
         ]);
 
         $matricula = Matricula::findOrFail($id);

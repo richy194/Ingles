@@ -89,16 +89,16 @@
                             @foreach ($formularios as $formulario)
                                 <tr>
                                     <td class="text-center">{{ $loop->iteration }}</td>
-                                    <td>{{ $formulario->name }}</td>  <!-- Nombre del estudiante -->
-                                    <td>{{ $formulario->email }}</td> <!-- Email -->
-                                    <td>{{ $formulario->Documento }}</td> <!-- Documento -->
-                                    <td>{{ $formulario->direccion }}</td> <!-- Dirección -->
-                                    <td>{{ $formulario->telefono }}</td> <!-- Teléfono -->
-                                    <td class="text-center">{{ $formulario->fecha_matricula }}</td> 
-                                    <td class="text-center">{{ $formulario->estado }}</td> 
-                                    <td class="text-center">{{ $formulario->nota_final }}</td> 
-                                    <td>{{ $formulario->curso->nombre ?? 'Sin curso' }}</td> 
-                                    <td>{{ $formulario->teacher->nombre ?? 'Sin pofee' }}</td>
+                                    <td>{{ $formulario->name?? 'No asignado' }}</td>  <!-- Nombre del estudiante -->
+                                    <td>{{ $formulario->email?? 'No asignado' }}</td> <!-- Email -->
+                                    <td>{{ $formulario->Documento?? 'No asignado' }}</td> <!-- Documento -->
+                                    <td>{{ $formulario->direccion ?? 'No asignado'}}</td> <!-- Dirección -->
+                                    <td>{{ $formulario->telefono?? 'No asignado' }}</td> <!-- Teléfono -->
+                                    <td class="text-center">{{ $formulario->fecha_matricula?? 'No asignado' }}</td> 
+                                    <td class="text-center">{{ $formulario->estado?? 'No asignado' }}</td> 
+                                    <td class="text-center">{{ $formulario->nota_final?? 'No asignado' }}</td> 
+                                    <td>{{ $formulario->curso->nombre?? 'No asignado' }}</td> 
+                                    <td>{{ $formulario->teacher->nombre?? 'No asignado' }}</td>
                                     <td class="acciones">
                                         @can('view', $formulario)
                                             <a href="{{ route('formularios.show', $formulario->id) }}" class="btn btn-info btn-sm">Ver</a>

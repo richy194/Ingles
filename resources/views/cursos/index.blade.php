@@ -151,11 +151,7 @@
             </div>
         </div>
 
-        <!-- Formulario de búsqueda -->
-        <form action="{{ route('cursos.index') }}" method="GET" class="search-form">
-            <input type="text" name="query" placeholder="Buscar por nombre o código" value="{{ request('query') }}">
-            <button type="submit" class="btn btn-primary">Buscar</button>
-        </form>
+       
 
         <!-- Tabla de Cursos -->
         <div class="table-responsive">
@@ -166,8 +162,9 @@
                         <th>Nombre</th>
                         <th>Código</th>
                         <th>Descripción</th>
-                        <th>Nivel</th>
-                        <th>Requisitos</th>
+                        <th>Nivel</th> 
+                        <th>grupos</th>
+                        <th>periodo</th>
                         <th>Modalidad</th>
                         <th>Docente</th>
                         <th>Acciones</th>
@@ -181,7 +178,14 @@
                             <td>{{ $curso->codigo }}</td>
                             <td>{{ $curso->descripcion }}</td>
                             <td>{{ $curso->nivel_curso }}</td>
-                            <td>{{ $curso->requisito }}</td>
+                            <td>
+    @if($curso->grupos->isNotEmpty())
+        {{ $curso->grupos->pluck('nombre')->join(', ') }}
+    @else
+        no asignado
+    @endif
+</td>
+                            <td>{{ $curso->periodo->nombre }}</td>
                             <td>{{ $curso->modalidad }}</td>
                             <td>{{ $curso->teacher->nombre ?? 'no asignado' }}</td>
                             <td class="acciones">

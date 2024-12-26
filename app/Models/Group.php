@@ -11,7 +11,7 @@ class Group extends Model
     use HasFactory;
 
     protected $fillable = [
-        'codigo', 'curso_id', 'periodo_id', 'cantidad', 'teacher_id'
+        'horario', 'nombre' ,'curso_id', 'periodo_id', 'cantidad', 'teacher_id'
     ];
 
     public function curso():belongsTo

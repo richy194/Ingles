@@ -91,17 +91,8 @@
                 </div>
 
                 <div class="form-group text-center">
-                    <a href="{{ route('matriculas.index') }}" class="btn btn-primary">Volver al Listado</a>
-                    @can('update', $matricula)
-                        <a href="{{ route('matriculas.edit', $matricula->id) }}" class="btn btn-warning">Editar Matrícula</a>
-                    @endcan
-                    @can('delete', $matricula)
-                        <form action="{{ route('matriculas.destroy', $matricula->id) }}" method="POST" style="display:inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger" onclick="return confirm('¿Deseas eliminar esta matrícula?')">Eliminar</button>
-                        </form>
-                    @endcan
+                    <a href="{{ route('matriculas.index') }}" class="btn btn-primary">Volver </a>
+                   
                 </div>
             </div>
         </div>

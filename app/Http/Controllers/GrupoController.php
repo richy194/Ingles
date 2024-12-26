@@ -37,8 +37,9 @@ class GrupoController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'codigo' => 'required|string|unique:groups,codigo',
-            'curso_id' => 'required|exists:cursos,id',
+            'horario' => 'required|string|max:255',
+            'nombre' => 'required|string|max:100|unique:groups,nombre',
+            'curso_id' => 'nullable|exists:cursos,id',
             'periodo_id' => 'required|exists:periodo_academicos,id',
             'cantidad' => 'required|integer|min:1',
             'teacher_id' => 'required|exists:theachers,id',
@@ -60,20 +61,21 @@ class GrupoController extends Controller
 
     // Actualizar un grupo
     public function update(Request $request, $id)
-    {
-        $grupo = Group::findOrFail($id);
+{
+    $grupo = Group::findOrFail($id);
 
-        $validated = $request->validate([
-            'codigo' => "required|string|unique:groups,codigo,$id",
-            'curso_id' => 'required|exists:cursos,id',
-            'periodo_id' => 'required|exists:periodo_academicos,id',
-            'cantidad' => 'required|integer|min:1',
-            'teacher_id' => 'required|exists:theachers,id',
-        ]);
+    $validated = $request->validate([
+        'horario' => 'required|string|max:255',
+        'nombre' => 'required|string|max:100|unique:groups,nombre,' . $id,
+        'curso_id' => 'nullable|exists:cursos,id',
+        'periodo_id' => 'required|exists:periodo_academicos,id',
+        'cantidad' => 'required|integer|min:1',
+        'teacher_id' => 'required|exists:theachers,id',
+    ]);
 
-        $grupo->update($validated);
-        return redirect()->route('grupos.index');
-    }
+    $grupo->update($validated);
+    return redirect()->route('grupos.index');
+}
 
     // Eliminar un grupo
     public function destroy($id)

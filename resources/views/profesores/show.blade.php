@@ -31,18 +31,18 @@
                 <h3>Detalles del Profesor</h3>
             </div>
             <div class="card-body">
-                <p><strong>Nombre:</strong> {{ $profesor->nombre }}</p>
-                <p><strong>Email:</strong> {{ $profesor->email }}</p>
-                <p><strong>documento:</strong> {{ $profesor->Documento }}</p>
-                <p><strong>Teléfono:</strong> {{ $profesor->telefono }}</p>
-                <p><strong>Dirección:</strong> {{ $profesor->direccion }}</p>
-                
-
+                <ul class="list-group">
+                    <li class="list-group-item"><strong>Nombre:</strong> {{ $profesor->nombre }}</li>
+                    <li class="list-group-item"><strong>Email:</strong> {{ $profesor->email }}</li>
+                    <li class="list-group-item"><strong>Documento:</strong> {{ $profesor->Documento }}</li>
+                    <li class="list-group-item"><strong>Teléfono:</strong> {{ $profesor->telefono }}</li>
+                    <li class="list-group-item"><strong>Dirección:</strong> {{ $profesor->direccion }}</li>
+                </ul>
                 <a href="{{ route('profesores.index') }}" class="btn btn-secondary">Volver a la lista</a>
             </div>
         </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
+

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalles de Matrícula</title>
+    <title>Detalles del Formulario</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -28,62 +28,22 @@
     <div class="container">
         <div class="card">
             <div class="card-header">
-                <h3>Detalles del formulario</h3>
+                <h3>Detalles del Formulario</h3>
             </div>
             <div class="card-body">
-                <div class="form-group">
-                    <label for="name">Nombre</label>
-                    <p>{{ $formulario->name }}</p>
-                </div>
-
-                <div class="form-group">
-                    <label for="email">Correo Electrónico</label>
-                    <p>{{ $formulario->email }}</p>
-                </div>
-
-                <div class="form-group">
-                    <label for="Documento">Documento</label>
-                    <p>{{ $formulario->Documento }}</p>
-                </div>
-
-                <div class="form-group">
-                    <label for="direccion">Dirección</label>
-                    <p>{{ $formulario->direccion }}</p>
-                </div>
-
-                <div class="form-group">
-                    <label for="telefono">Teléfono</label>
-                    <p>{{ $formulario->telefono }}</p>
-                </div>
-
-                <div class="form-group">
-                    <label for="fecha_matricula">Fecha de Matrícula</label>
-                    <p>{{ $formulario->fecha_matricula }}</p>
-                </div>
-
-                <div class="form-group">
-                    <label for="estado">Estado</label>
-                    <p>{{ $formulario->estado }}</p>
-                </div>
-
-                <div class="form-group">
-                    <label for="nota_final">Nota Final</label>
-                    <p>{{ $formulario->nota_final }}</p>
-                </div>
-
-                <div class="form-group">
-                    <label for="grupo_id">Curso</label>
-                    <p>{{ $formulario->curso->nombre }}</p>
-                </div>
-
-                <div class="form-group">
-                    <label for="teacher_id">Profesor</label>
-                    <p>{{ $formulario->teacher->nombre }}</p>
-                </div>
-
-                <div class="form-group">
-                    <a href="{{ route('formularios.index') }}" class="btn btn-primary">Volver al Listado</a>
-                </div>
+                <ul class="list-group">
+                    <li class="list-group-item"><strong>Nombre:</strong> {{ $formulario->name }}</li>
+                    <li class="list-group-item"><strong>Correo Electrónico:</strong> {{ $formulario->email }}</li>
+                    <li class="list-group-item"><strong>Documento:</strong> {{ $formulario->Documento }}</li>
+                    <li class="list-group-item"><strong>Dirección:</strong> {{ $formulario->direccion }}</li>
+                    <li class="list-group-item"><strong>Teléfono:</strong> {{ $formulario->telefono }}</li>
+                    <li class="list-group-item"><strong>Fecha de Matrícula:</strong> {{ $formulario->fecha_matricula }}</li>
+                    <li class="list-group-item"><strong>Estado:</strong> {{ $formulario->estado }}</li>
+                    <li class="list-group-item"><strong>Nota Final:</strong> {{ $formulario->nota_final }}</li>
+                    <li class="list-group-item"><strong>Curso:</strong> {{ $formulario->curso->nombre }}</li>
+                    <li class="list-group-item"><strong>Profesor:</strong> {{ $formulario->teacher->nombre }}</li>
+                </ul>
+                <a href="{{ route('formularios.index') }}" class="btn btn-secondary">Volver al Listado</a>
             </div>
         </div>
     </div>

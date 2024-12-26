@@ -47,7 +47,7 @@ class FormularioController extends Controller
             'estado' => 'nullable|string|max:255',
             'nota_final' => 'nullable|numeric|min:0|max:100',
             'teacher_id' => 'nullable|exists:theachers,id',
-            'grupo_id' => 'nullable|exists:groups,id',  // Se asume que `groups` es la tabla correcta
+            'grupo_id' => 'nullable|exists:cursos,id',  // Se asume que `groups` es la tabla correcta
         ]);
 
         FormularioInscripcion::create($request->all());
@@ -74,7 +74,7 @@ class FormularioController extends Controller
             'estado' => 'nullable|string|max:255',
             'nota_final' => 'nullable|numeric|min:0|max:100',
             'teacher_id' => 'nullable|exists:theachers,id',
-            'grupo_id' => 'nullable|exists:groups,id',
+            'grupo_id' => 'nullable|exists:cursos,id',
         ]);
 
         $formulario->update($request->all());

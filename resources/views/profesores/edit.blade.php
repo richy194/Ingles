@@ -15,11 +15,14 @@
         }
         .btn {
             margin-top: 10px;
+            background-color: #a8e6cf;
+            color: #fff;
         }
-        .form-group label {
-            font-weight: bold;
+        .btn:hover {
+            background-color: #80e0bb;
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -34,36 +37,33 @@
 
                     <div class="form-group">
                         <label for="nombre">Nombre</label>
-                        <input type="text" name="nombre" id="nombre" class="form-control" value="{{ old('nombre', $profesor->nombre) }}" required>
+                        <input type="text" id="nombre" name="nombre" class="form-control" value="{{ old('nombre', $profesor->nombre) }}" required>
                     </div>
 
                     <div class="form-group">
                         <label for="email">Correo Electrónico</label>
-                        <input type="email" name="email" id="email" class="form-control" value="{{ old('email', $profesor->email) }}" required>
+                        <input type="email" id="email" name="email" class="form-control" value="{{ old('email', $profesor->email) }}" required>
                     </div>
 
                     <div class="form-group">
                         <label for="Documento">Documento</label>
-                        <input type="text" name="Documento" id="Documento" class="form-control" value="{{ old('Documento', $profesor->Documento) }}" required>
+                        <input type="text" id="Documento" name="Documento" class="form-control" value="{{ old('documento', $profesor->documento) }}" required>
                     </div>
 
                     <div class="form-group">
                         <label for="direccion">Dirección</label>
-                        <input type="text" name="direccion" id="direccion" class="form-control" value="{{ old('direccion', $profesor->direccion) }}" required>
+                        <input type="text" id="direccion" name="direccion" class="form-control" value="{{ old('direccion', $profesor->direccion) }}" required>
                     </div>
 
                     <div class="form-group">
                         <label for="telefono">Teléfono</label>
-                        <input type="text" name="telefono" id="telefono" class="form-control" value="{{ old('telefono', $profesor->telefono) }}" required>
+                        <input type="text" id="telefono" name="telefono" class="form-control" value="{{ old('telefono', $profesor->telefono) }}" required>
                     </div>
 
-                    <button type="submit" class="btn btn-warning">Actualizar Profesor</button>
-                    <a href="{{ route('profesores.index') }}" class="btn btn-secondary mt-3">Cancelar</a>
+                    <button type="submit" class="btn btn-primary">Actualizar Profesor</button>
                 </form>
             </div>
         </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
