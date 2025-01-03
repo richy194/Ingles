@@ -91,7 +91,7 @@
                                     <td class="text-center">{{ $loop->iteration }}</td>
                                     <td>{{ $formulario->name?? 'No asignado' }}</td>  <!-- Nombre del estudiante -->
                                     <td>{{ $formulario->email?? 'No asignado' }}</td> <!-- Email -->
-                                    <td>{{ $formulario->Documento?? 'No asignado' }}</td> <!-- Documento -->
+                                    <td>{{ $formulario->documento?? 'No asignado' }}</td> <!-- Documento -->
                                     <td>{{ $formulario->direccion ?? 'No asignado'}}</td> <!-- Dirección -->
                                     <td>{{ $formulario->telefono?? 'No asignado' }}</td> <!-- Teléfono -->
                                     <td class="text-center">{{ $formulario->fecha_matricula?? 'No asignado' }}</td> 

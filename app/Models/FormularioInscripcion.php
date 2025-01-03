@@ -14,7 +14,7 @@ class FormularioInscripcion extends Model
     protected $fillable = [
         'name',
         'email',
-        'Documento',
+        'documento',
         'direccion',
         'telefono',
         'fecha_matricula',

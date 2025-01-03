@@ -21,8 +21,8 @@ class StudentsImport implements ToModel, WithHeadingRow, WithValidation
             'nombre'   => $row['nombre'],     // Asegúrate de que coincida con el encabezado del Excel
             'email'    => $row['email'],      // Debe estar en el Excel
             'documento'=> $row['documento'],  // Campo opcional o validado
-            'direccion'=> $row['direccion'],  // Dirección
-            'telefono' => $row['telefono'],   // Teléfono
+            'direccion'=> $row['direccion']?? null,  // Dirección
+            'telefono' => $row['telefono']?? null,   // Teléfono
         ]);
     }
 

@@ -302,17 +302,31 @@
 
                 <!-- Sección Inscripciones -->
                 <div class="col-md-3">
-                    <div class="card">
-                        <div class="card-header">
-                            <i class="fas fa-user-plus"></i> Inscripciones
-                        </div>
-                        <div class="card-body text-center">
-                            <p>Realiza inscripciones rápidamente.</p>
-                            <a href="/inscripcion" class="btn btn-outline-success">Inscribir</a>
-                        </div>
-                    </div>
-                </div>
+                <div class="card">
+    <div class="card-header">
+        <i class="fas fa-user-plus"></i> Inscripciones
+    </div>
+    <div class="card-body text-center">
+        <p>Importa datos de inscripciones rápidamente.</p>
+        <form action="{{ route('formularios.import') }}" method="POST" enctype="multipart/form-data">
+    @csrf
+    <div class="mb-3">
+        <input type="file" name="file" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-outline-primary">Importar Inscripciones</button>
+</form>
 
+        <!-- Mostrar mensajes de éxito o error -->
+        @if(session('success'))
+            <div class="alert alert-success mt-3">{{ session('success') }}</div>
+        @endif
+
+        @if(session('error'))
+            <div class="alert alert-danger mt-3">{{ session('error') }}</div>
+        @endif
+    </div>
+</div>
+</div>
                 <!-- Sección Profesores -->
                 <div class="col-md-3">
                     <div class="card">

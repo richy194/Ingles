@@ -163,10 +163,8 @@
                         <th>Código</th>
                         <th>Descripción</th>
                         <th>Nivel</th> 
-                        <th>grupos</th>
                         <th>periodo</th>
                         <th>Modalidad</th>
-                        <th>Docente</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -178,16 +176,9 @@
                             <td>{{ $curso->codigo }}</td>
                             <td>{{ $curso->descripcion }}</td>
                             <td>{{ $curso->nivel_curso }}</td>
-                            <td>
-    @if($curso->grupos->isNotEmpty())
-        {{ $curso->grupos->pluck('nombre')->join(', ') }}
-    @else
-        no asignado
-    @endif
-</td>
                             <td>{{ $curso->periodo->nombre }}</td>
                             <td>{{ $curso->modalidad }}</td>
-                            <td>{{ $curso->teacher->nombre ?? 'no asignado' }}</td>
+                           
                             <td class="acciones">
                                 @can('view', $curso)
                                     <a href="{{ route('cursos.show', $curso->id) }}" class="btn btn-regresar">Ver</a>

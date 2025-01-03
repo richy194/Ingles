@@ -41,7 +41,7 @@ class MatriculaController extends Controller
     // Crea una nueva matrícula (vista para admins)
     public function create()
     {
-        $this->authorize('create', Matricula::class); // Verifica permisos
+       
 
         $cursos = Curso::all();
         $teachers = Theacher::all();
@@ -53,7 +53,10 @@ class MatriculaController extends Controller
     // Guarda una nueva matrícula
     public function store(Request $request)
     {
-        $this->authorize('create', Matricula::class); // Verifica permisos
+       
+
+        // Llama a la lógica centralizada para matricular al estudiante
+        return $this->matricularEstudiante($request->student_id, $request->grupo_id);
 
         $validated = $request->validate([
             'fecha_matricula' => 'required|date',
@@ -91,9 +94,12 @@ class MatriculaController extends Controller
             'grupo_id' => 'required|exists:cursos,id',
         ]);
 
-        $matricula = Matricula::findOrFail($id);
-        $matricula->update($validated);
+       
 
+        // Encuentra la matrícula existente
+        $matricula = Matricula::findOrFail($id);
+        
+        $this->matricularEstudiante($request->student_id, $request->grupo_id, $matricula);
         return redirect()->route('matriculas.index')->with('success', 'Matrícula actualizada correctamente.');
     }
 
@@ -118,10 +124,25 @@ class MatriculaController extends Controller
         'file' => 'required|mimes:xlsx,csv'
     ]);
 
-    Excel::import(new MatriculasImport, $request->file('file'));
+    $import = new MatriculasImport;
+    Excel::import($import, $request->file('file'));
+
+    // Validar requisitos para cada matrícula importada
+    foreach ($import->getMatriculas() as $matricula) {
+        // Llamamos al método matricularEstudiante para hacer la validación de los requisitos
+        $response = $this->matricularEstudiante($matricula['student_id'], $matricula['grupo_id'], null);
+        
+        if (isset($response->original['error'])) {
+            // Si hay error, se puede marcar la matrícula como inválida o eliminarla
+            // También podrías guardar un log del error o mostrarlo de alguna manera
+            // Para este ejemplo, lo marcaré en un mensaje.
+            return back()->with('error', $response->original['error']);
+        }
+    }
 
     return back()->with('success', 'Matrículas importadas exitosamente.');
 }
+
 
 
 
@@ -155,4 +176,68 @@ class MatriculaController extends Controller
     
         return redirect()->route('matriculas.index')->with('success', 'matriculas  eliminados correctamente.');
     }
+
+
+    public function matricularEstudiante($estudianteId, $cursoId, $matricula = null )
+{
+    // Obtener el curso actual
+    $curso = Curso::findOrFail($cursoId);
+
+    // Verificar si el curso tiene un requisito
+    if ($curso->requisito) {
+        $cursoRequisito = Curso::find($curso->requisito);
+
+        if (!$cursoRequisito) {
+            return response()->json([
+                'error' => 'El curso requerido no existe en el sistema.'
+            ], 400);
+        }
+
+        // Verificar si el estudiante completó el curso requerido
+        $matriculaRequisito = Matricula::where('student_id', $estudianteId)
+            ->where('grupo_id', $cursoRequisito->id)
+            ->where('estado', 'Aprobado')
+            ->first();
+
+        if (!$matriculaRequisito) {
+            return response()->json([
+                'error' => "No puedes matricularte en este curso. Debes completar primero el curso requerido: {$cursoRequisito->nombre}."
+            ], 400);
+        }
+    }
+
+    // Verificar si el estudiante ya está matriculado en este curso
+    $matriculaExistente = Matricula::where('student_id', $estudianteId)
+        ->where('grupo_id', $cursoId)
+        ->first();
+
+    if ($matriculaExistente && (!$matricula || $matriculaExistente->id !== $matricula->id)) {
+        return response()->json([
+            'error' => 'Ya estás matriculado en este curso.'
+        ], 400);
+    }
+
+    // Obtener el docente asignado al curso
+    $teacherId = $curso->teacher_id;
+
+    // Crear o actualizar matrícula
+    $data = [
+        'student_id' => $estudianteId,
+        'grupo_id' => $cursoId,
+        'teacher_id' => $teacherId,
+        'fecha_matricula' => now(),
+        'estado' => request()->input('estado', $matricula ? $matricula->estado : 'en progreso'),
+        'nota_final' => request()->input('nota_final', $matricula ? $matricula->nota_final : null),
+    ];
+
+    if ($matricula) {
+        $matricula->update($data);
+    } else {
+        Matricula::create($data);
+    }
+
+    return redirect()->route('matriculas.index')->with('success', 'Estudiante matriculado con éxito.');
+}
+
+
 }

@@ -68,16 +68,18 @@
 </div>
 
 <div class="form-group">
-    <label for="periodo">Periodo</label>
-    <select name="periodo" id="periodo" class="form-control" required>
-        <option value="SEMESTRE-1" {{ old('periodo', $periodo->periodo) == 'SEMESTRE-1' ? 'selected' : '' }}>SEMESTRE-1</option>
-        <option value="SEMESTRE-2" {{ old('periodo', $periodo->periodo) == 'SEMESTRE-2' ? 'selected' : '' }}>SEMESTRE-2</option>
-        <option value="TRIMESTRE-1" {{ old('periodo', $periodo->periodo) == 'TRIMESTRE-1' ? 'selected' : '' }}>TRIMESTRE-1</option>
-        <option value="TRIMESTRE-2" {{ old('periodo', $periodo->periodo) == 'TRIMESTRE-2' ? 'selected' : '' }}>TRIMESTRE-2</option>
-        <option value="TRIMESTRE-3" {{ old('periodo', $periodo->periodo) == 'TRIMESTRE-3' ? 'selected' : '' }}>TRIMESTRE-3</option>
-        <option value="TRIMESTRE-4" {{ old('periodo', $periodo->periodo) == 'TRIMESTRE-4' ? 'selected' : '' }}>TRIMESTRE-4</option>
-    </select>
-</div>
+                    <label for="periodo">Periodo:</label>
+                    <select name="periodo" id="periodo" class="form-control" required>
+                        <option value="SEMESTRE-1" {{ old('periodo') == 'SEMESTRE-1' ? 'selected' : '' }}>SEMESTRE-1</option>
+                        <option value="SEMESTRE-2" {{ old('periodo') == 'SEMESTRE-2' ? 'selected' : '' }}>SEMESTRE-2</option>
+                        <option value="TRIMESTRE-1" {{ old('periodo') == 'TRIMESTRE-1' ? 'selected' : '' }}>TRIMESTRE-1</option>
+                        <option value="TRIMESTRE-2" {{ old('periodo') == 'TRIMESTRE-2' ? 'selected' : '' }}>TRIMESTRE-2</option>
+                        <option value="TRIMESTRE-3" {{ old('periodo') == 'TRIMESTRE-3' ? 'selected' : '' }}>TRIMESTRE-3</option>
+                        <option value="TRIMESTRE-4" {{ old('periodo') == 'TRIMESTRE-4' ? 'selected' : '' }}>TRIMESTRE-4</option>
+                        <option value="TRIMESTRE-5" {{ old('periodo') == 'TRIMESTRE-5' ? 'selected' : '' }}>TRIMESTRE-5</option>
+                        <option value="TRIMESTRE-6" {{ old('periodo') == 'TRIMESTRE-6' ? 'selected' : '' }}>TRIMESTRE-6</option>
+                    </select>
+                </div>
 
 <div class="form-group">
     <label for="descripcion">Descripción</label>

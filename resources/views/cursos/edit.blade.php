@@ -52,34 +52,44 @@
                     <div class="form-group">
                    <label for="nivel_curso">Nivel del Curso</label>
                   <select name="nivel_curso" id="nivel_curso" class="form-control" required>
-                 <option value="A1" {{ old('nivel_curso') == 'A1' ? 'selected' : '' }}>A1</option>
-                 <option value="A2" {{ old('nivel_curso') == 'A2' ? 'selected' : '' }}>A2</option>
-                 <option value="B1" {{ old('nivel_curso') == 'B1' ? 'selected' : '' }}>B1</option>
-                 <option value="B2" {{ old('nivel_curso') == 'B2' ? 'selected' : '' }}>B2</option>
-                 <option value="C1" {{ old('nivel_curso') == 'C1' ? 'selected' : '' }}>C1</option>
-                 <option value="C2" {{ old('nivel_curso') == 'C2' ? 'selected' : '' }}>C2</option>
+                 <option value="IB1" {{ old('nivel_curso') == 'IB1' ? 'selected' : '' }}>IB1</option>
+                 <option value="IB2" {{ old('nivel_curso') == 'IB2' ? 'selected' : '' }}>IB2</option>
+                 <option value="IB3" {{ old('nivel_curso') == 'IB3' ? 'selected' : '' }}>IB3</option>
+                 <option value="IB4" {{ old('nivel_curso') == 'IB4' ? 'selected' : '' }}>IB4</option>
+                
                 </select>
                  </div>
 
-                    <div class="form-group">
-                        <label for="fecha_inicio">Fecha de Inicio</label>
-                        <input type="date" name="fecha_inicio" id="fecha_inicio" class="form-control" value="{{ old('fecha_inicio', $curso->fecha_inicio) }}" required>
+                 <div class="form-group">
+                        
+                        <input type="hidden" name="fecha_inicio" id="fecha_inicio" class="form-control" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="fecha_fin">Fecha de Fin</label>
-                        <input type="date" name="fecha_fin" id="fecha_fin" class="form-control" value="{{ old('fecha_fin', $curso->fecha_fin) }}" required>
+                        
+                        <input type="hidden" name="fecha_fin" id="fecha_fin" class="form-control" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="requisito">Requisitos</label>
-                        <input type="text" name="requisito" id="requisito" class="form-control" value="{{ old('requisito', $curso->requisito) }}" required>
-                    </div>
+    <label for="requisito">Requisitos</label>
+    <select name="requisito" id="requisito" class="form-control">
+        <option value="">Ninguno</option>
+        @foreach($cursos as $curso)
+            <option value="{{ $curso->id }}" 
+                {{ old('requisito', $curso->requisito) == $curso->id ? 'selected' : '' }}>
+                {{ $curso->nombre }}
+            </option>
+        @endforeach
+    </select>
+</div>
 
                     <div class="form-group">
-                        <label for="modalidad">Modalidad</label>
-                        <input type="text" name="modalidad" id="modalidad" class="form-control" value="{{ old('modalidad', $curso->modalidad) }}" required>
-                    </div>
+                   <label for="modalidad">Modalidad</label>
+                   <select name="modalidad" id="modalidad" class="form-control" required>
+                  <option value="presencial" {{ old('modalidad') == 'presencial' ? 'selected' : '' }}>Presencial</option>
+                   <option value="virtual" {{ old('modalidad') == 'virtual' ? 'selected' : '' }}>Virtual</option>
+                     </select>
+                      </div>
 
                     <!-- Campo para periodo academico -->
                     <div class="form-group">
@@ -95,31 +105,10 @@
     </select>
 </div>
 
-                    <div class="form-group">
-                    <label for="grupo_id">Grupos</label>
-                    <select id="grupo_id" name="grupo_id[]" class="form-control" multiple required>
-                    <option value="">Seleccione uno o más grupos</option>
-                   @foreach($grupos as $grupo)
-                    <option value="{{ $grupo->id }}" 
-                      @if(in_array($grupo->id, old('grupo_id', $curso->grupos->pluck('id')->toArray())))
-                     selected
-                  @endif
-                   >{{ $grupo->nombre }}</option>
-                  @endforeach
-                  </select>
-                </div>
+                   
 
                     <!-- Campo para Docente -->
-                    <div class="form-group">
-                        <label for="teacher_id">Docente</label>
-                        <select name="teacher_id" id="teacher_id" class="form-control" required>
-                            @foreach ($teachers as $teacher)
-                                <option value="{{ $teacher->id }}" {{ old('teacher_id') == $teacher->id ? 'selected' : '' }}>
-                                    {{ $teacher->nombre }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
+                    
 
                     <button type="submit" class="btn btn-primary">actualizar Grupo</button>
                     <a href="{{ route('cursos.index') }}" class="btn btn-primary">Volver </a>

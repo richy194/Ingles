@@ -30,14 +30,17 @@ class GrupoController extends Controller
         $cursos = Curso::all();
         $periodos = PeriodoAcademico::all();
         $teachers = Theacher::all();
-        return view('grupos.create', compact('cursos', 'periodos','teachers'));
+        return view('grupos.create', compact('cursos', 'periodos', 'teachers'));
     }
 
     // Guardar un nuevo grupo
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'horario' => 'required|string|max:255',
+            'horario' => 'required|array', // Validar que sea un array
+            'horario.*.dia' => 'required|string', // Cada elemento debe tener un día
+            'horario.*.hora_inicio' => 'required|date_format:H:i',
+            'horario.*.hora_fin' => 'required|date_format:H:i|after:horarios.*.hora_inicio',
             'nombre' => 'required|string|max:100|unique:groups,nombre',
             'curso_id' => 'nullable|exists:cursos,id',
             'periodo_id' => 'required|exists:periodo_academicos,id',
@@ -45,37 +48,50 @@ class GrupoController extends Controller
             'teacher_id' => 'required|exists:theachers,id',
         ]);
 
+        $validated['horario'] = json_encode($validated['horario']); // Convertir a JSON para almacenar
+
         Group::create($validated);
         return redirect()->route('grupos.index');
     }
 
     // Formulario para editar un grupo
     public function edit($id)
-    {
-        $grupo = Group::findOrFail($id);
-        $cursos = Curso::all();
-        $periodos = PeriodoAcademico::all();
-        $teachers = Theacher::all();
-        return view('grupos.edit', compact('grupo', 'cursos', 'periodos','teachers'));
-    }
+{
+    $grupo = Group::findOrFail($id);
+    $grupo->horario = json_decode($grupo->horario, true); // Convertir JSON a array para edición
+
+    $cursos = Curso::all();
+    $periodos = PeriodoAcademico::all();
+    $teachers = Theacher::all();
+
+    // Define $horarios para pasarlo a la vista
+    $horarios = $grupo->horario ?? []; // Si no hay horarios, usa un array vacío
+
+    return view('grupos.edit', compact('grupo', 'cursos', 'periodos', 'teachers', 'horarios'));
+}
 
     // Actualizar un grupo
     public function update(Request $request, $id)
-{
-    $grupo = Group::findOrFail($id);
+    {
+        $grupo = Group::findOrFail($id);
 
-    $validated = $request->validate([
-        'horario' => 'required|string|max:255',
-        'nombre' => 'required|string|max:100|unique:groups,nombre,' . $id,
-        'curso_id' => 'nullable|exists:cursos,id',
-        'periodo_id' => 'required|exists:periodo_academicos,id',
-        'cantidad' => 'required|integer|min:1',
-        'teacher_id' => 'required|exists:theachers,id',
-    ]);
+        $validated = $request->validate([
+            'horario' => 'required|array',
+            'horario.*.dia' => 'required|string',
+            'horario.*.hora_inicio' => 'required|date_format:H:i',
+            'horario.*.hora_fin' => 'required|date_format:H:i|after:horarios.*.hora_inicio',
+            'nombre' => 'required|string|max:100|unique:groups,nombre,' . $id,
+            'curso_id' => 'nullable|exists:cursos,id',
+            'periodo_id' => 'required|exists:periodo_academicos,id',
+            'cantidad' => 'required|integer|min:1',
+            'teacher_id' => 'required|exists:theachers,id',
+        ]);
 
-    $grupo->update($validated);
-    return redirect()->route('grupos.index');
-}
+        $validated['horario'] = json_encode($validated['horario']); // Convertir a JSON para actualizar
+
+        $grupo->update($validated);
+        return redirect()->route('grupos.index');
+    }
 
     // Eliminar un grupo
     public function destroy($id)

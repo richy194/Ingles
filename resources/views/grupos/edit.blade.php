@@ -82,9 +82,31 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="horario">Horario</label>
-                        <input type="text" id="horario" name="horario" class="form-control" value="{{ $grupo->horario }}" required>
-                    </div>
+                    <div class="form-group">
+        <!-- Sección de Horarios -->
+        <div id="horarios-container">
+    @if(isset($horarios) && is_array($horarios) && count($horarios) > 0)
+        @foreach($horarios as $index => $horario)
+            <div class="horario-row">
+                <select name="horario[{{ $index }}][dia]" class="form-control" required>
+                    <option value="Lunes" {{ old('horario.' . $index . '.dia', $horario['dia']) == 'Lunes' ? 'selected' : '' }}>Lunes</option>
+                    <option value="Martes" {{ old('horario.' . $index . '.dia', $horario['dia']) == 'Martes' ? 'selected' : '' }}>Martes</option>
+                    <option value="Miércoles" {{ old('horario.' . $index . '.dia', $horario['dia']) == 'Miércoles' ? 'selected' : '' }}>Miércoles</option>
+                    <option value="Jueves" {{ old('horario.' . $index . '.dia', $horario['dia']) == 'Jueves' ? 'selected' : '' }}>Jueves</option>
+                    <option value="Viernes" {{ old('horario.' . $index . '.dia', $horario['dia']) == 'Viernes' ? 'selected' : '' }}>Viernes</option>
+                    <option value="Sábado" {{ old('horario.' . $index . '.dia', $horario['dia']) == 'Sábado' ? 'selected' : '' }}>Sábado</option>
+                    <option value="Domingo" {{ old('horario.' . $index . '.dia', $horario['dia']) == 'Domingo' ? 'selected' : '' }}>Domingo</option>
+                </select>
+                <input type="time" name="horario[{{ $index }}][hora_inicio]" class="form-control" value="{{ old('horario.' . $index . '.hora_inicio', $horario['hora_inicio']) }}" required>
+                <input type="time" name="horario[{{ $index }}][hora_fin]" class="form-control" value="{{ old('horario.' . $index . '.hora_fin', $horario['hora_fin']) }}" required>
+                <button type="button" class="btn btn-danger btn-sm eliminar-horario">Eliminar</button>
+            </div>
+        @endforeach
+    @else
+        <p>No hay horarios definidos.</p>
+    @endif
+</div>
+<button type="button" id="agregar-horario" class="btn btn-success btn-sm">Agregar Horario</button>
 
                     <button type="submit" class="btn btn-primary">Actualizar Grupo</button>
                     <a href="{{ route('grupos.index') }}" class="btn btn-primary">Volver </a>
@@ -93,4 +115,39 @@
         </div>
     </div>
 </body>
+<script>
+   document.addEventListener('DOMContentLoaded', () => {
+    const agregarButton = document.getElementById('agregar-horario');
+    const horariosContainer = document.getElementById('horarios-container');
+
+    let index = document.querySelectorAll('.horario-row').length; // Inicia con el número actual de filas
+
+    agregarButton.addEventListener('click', () => {
+        const horarioRow = document.createElement('div');
+        horarioRow.classList.add('horario-row');
+        horarioRow.innerHTML = `
+            <select name="horario[${index}][dia]" class="form-control" required>
+                <option value="Lunes">Lunes</option>
+                <option value="Martes">Martes</option>
+                <option value="Miércoles">Miércoles</option>
+                <option value="Jueves">Jueves</option>
+                <option value="Viernes">Viernes</option>
+                <option value="Sábado">Sábado</option>
+                <option value="Domingo">Domingo</option>
+            </select>
+            <input type="time" name="horario[${index}][hora_inicio]" class="form-control" required>
+            <input type="time" name="horario[${index}][hora_fin]" class="form-control" required>
+            <button type="button" class="btn btn-danger btn-sm eliminar-horario">Eliminar</button>
+        `;
+        horariosContainer.appendChild(horarioRow);
+        index++; // Incrementa el índice para la próxima fila
+    });
+
+    horariosContainer.addEventListener('click', (event) => {
+        if (event.target.classList.contains('eliminar-horario')) {
+            event.target.closest('.horario-row').remove();
+        }
+    });
+});
+</script>
 </html>

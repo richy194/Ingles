@@ -54,6 +54,8 @@
                         <option value="TRIMESTRE-2" {{ old('periodo') == 'TRIMESTRE-2' ? 'selected' : '' }}>TRIMESTRE-2</option>
                         <option value="TRIMESTRE-3" {{ old('periodo') == 'TRIMESTRE-3' ? 'selected' : '' }}>TRIMESTRE-3</option>
                         <option value="TRIMESTRE-4" {{ old('periodo') == 'TRIMESTRE-4' ? 'selected' : '' }}>TRIMESTRE-4</option>
+                        <option value="TRIMESTRE-5" {{ old('periodo') == 'TRIMESTRE-5' ? 'selected' : '' }}>TRIMESTRE-5</option>
+                        <option value="TRIMESTRE-6" {{ old('periodo') == 'TRIMESTRE-6' ? 'selected' : '' }}>TRIMESTRE-6</option>
                     </select>
                 </div>
                 <div class="form-group">

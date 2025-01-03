@@ -95,6 +95,7 @@
 </div>
 
                     <button type="submit" class="btn btn-primary">Guardar Matrícula</button>
+                    <a href="{{ route('matriculas.index') }}" class="btn btn-primary">Volver </a>
                 </form>
             </div>
         </div>

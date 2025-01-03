@@ -44,12 +44,22 @@
                         @endif
                     </li>
                     <li class="list-group-item"><strong>Periodo:</strong> {{ $curso->periodo->nombre }}</li>
-                    <li class="list-group-item"><strong>Fecha de Inicio:</strong> {{ $curso->fecha_inicio }}</li>
-                    <li class="list-group-item"><strong>Fecha de Fin:</strong> {{ $curso->fecha_fin }}</li>
-                    <li class="list-group-item"><strong>Requisitos:</strong> {{ $curso->requisito }}</li>
+                    <li class="list-group-item"><strong>Requisitos:</strong> 
+                        @if($curso->requisito)
+                            {{ $curso->requisito }}
+                        @else
+                            No especificado
+                        @endif
+                    </li>
                     <li class="list-group-item"><strong>Modalidad:</strong> {{ $curso->modalidad }}</li>
-                    <li class="list-group-item"><strong>Profesor:</strong> {{ $curso->teacher->nombre }}</li>
-                </ul>
+                    <ul class="list-group">
+                    @foreach ($curso->grupos as $grupo)
+                    <li class="list-group-item">
+                    <strong>Profesor:</strong> {{ $grupo->pofe ? $grupo->pofe->nombre : 'Sin asignar' }}
+                   </li>
+                   @endforeach
+                    </ul>
+                
                 <a href="{{ route('cursos.index') }}" class="btn btn-secondary">Volver a la lista</a>
             </div>
         </div>

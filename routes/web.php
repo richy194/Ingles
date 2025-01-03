@@ -59,6 +59,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
  Route::post('matriculas-import', [MatriculaController::class, 'import'])->name('matriculas.import');
  Route::get('estudiantes-export', [StudentController::class, 'export'])->name('estudiantes.export');
  Route::post('estudiantes-import', [StudentController::class, 'import'])->name('estudiantes.import');
+ Route::post('/formularios/import', [FormularioController::class, 'import'])->name('formularios.import');
 
 
 

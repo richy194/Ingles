@@ -146,7 +146,15 @@
         
                             <td>{{ $group->pofe->nombre ?? 'No asignado' }}</td>
                             <td>{{ $group->cantidad?? 'No asignado' }}</td>
-                            <td>{{ $group->horario?? 'No asignado' }}</td>
+                            <td>
+    @if (!is_null($group->horario) && is_array(json_decode($group->horario)))
+        @foreach (json_decode($group->horario) as $horario)
+            <p>Día: {{ $horario->dia }}, Hora: {{ $horario->hora_inicio }} - {{ $horario->hora_fin }}</p>
+        @endforeach
+    @else
+        <p>No hay horarios asignados</p>
+    @endif
+</td>
                             <td class="acciones">
                                 @can('view', $group)
                                     <a href="{{ route('grupos.show', $group->id) }}" class="btn btn-primary">Ver</a>

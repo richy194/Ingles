@@ -11,9 +11,12 @@ class Group extends Model
     use HasFactory;
 
     protected $fillable = [
-        'horario', 'nombre' ,'curso_id', 'periodo_id', 'cantidad', 'teacher_id'
+       'horario','nombre' ,'curso_id', 'periodo_id', 'cantidad', 'teacher_id'
     ];
-
+    
+    protected $casts = [
+        'horario' => 'array', // Convierte el campo JSON en un array automáticamente
+    ];
     public function curso():belongsTo
     {
         return $this->belongsTo(Curso::class, 'curso_id');

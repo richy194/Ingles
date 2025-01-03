@@ -73,16 +73,65 @@
                         <input type="number" id="cantidad" name="cantidad" class="form-control" required>
                     </div>
 
-                    <div class="form-group">
-                        <label for="horario">Horario</label>
-                        <input type="text" id="horario" name="horario" class="form-control" required>
-                    </div>
-
+<div id="horarios-container">
+    <div class="horario-row">
+        <select name="horario[0][dia]" class="form-control" required>
+            <option value="Lunes">Lunes</option>
+            <option value="Martes">Martes</option>
+            <option value="Miércoles">Miércoles</option>
+            <option value="Jueves">Jueves</option>
+            <option value="Viernes">Viernes</option>
+            <option value="Sábado">Sábado</option>
+            <option value="Domingo">Domingo</option>
+        </select>
+        <input type="time" name="horario[0][hora_inicio]" class="form-control" required>
+        <input type="time" name="horario[0][hora_fin]" class="form-control" required>
+        <button type="button" class="btn btn-danger btn-sm eliminar-horario">Eliminar</button>
+    </div>
+</div>
+<button type="button" id="agregar-horario" class="btn btn-success btn-sm">Agregar Horario</button>
                     <button type="submit" class="btn btn-primary">Guardar Grupo</button>
                     <a href="{{ route('grupos.index') }}" class="btn btn-primary">Volver </a>
                 </form>
             </div>
         </div>
     </div>
+
+    <script>
+       document.addEventListener('DOMContentLoaded', () => {
+    const agregarButton = document.getElementById('agregar-horario');
+    const horariosContainer = document.getElementById('horarios-container');
+
+    let index = document.querySelectorAll('.horario-row').length; // Inicia con el número actual de filas
+
+    agregarButton.addEventListener('click', () => {
+        const horarioRow = document.createElement('div');
+        horarioRow.classList.add('horario-row');
+        horarioRow.innerHTML = `
+            <select name="horario[${index}][dia]" class="form-control" required>
+                <option value="Lunes">Lunes</option>
+                <option value="Martes">Martes</option>
+                <option value="Miércoles">Miércoles</option>
+                <option value="Jueves">Jueves</option>
+                <option value="Viernes">Viernes</option>
+                <option value="Sábado">Sábado</option>
+                <option value="Domingo">Domingo</option>
+            </select>
+            <input type="time" name="horario[${index}][hora_inicio]" class="form-control" required>
+            <input type="time" name="horario[${index}][hora_fin]" class="form-control" required>
+            <button type="button" class="btn btn-danger btn-sm eliminar-horario">Eliminar</button>
+        `;
+        horariosContainer.appendChild(horarioRow);
+        index++; // Incrementa el índice para la próxima fila
+    });
+
+    horariosContainer.addEventListener('click', (event) => {
+        if (event.target.classList.contains('eliminar-horario')) {
+            event.target.closest('.horario-row').remove();
+        }
+    });
+});
+    </script>
 </body>
 </html>
+ 
