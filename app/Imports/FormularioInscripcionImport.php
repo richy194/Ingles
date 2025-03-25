@@ -17,6 +17,8 @@ class FormularioInscripcionImport implements ToModel, WithHeadingRow, WithValida
      */
     public function model(array $row)
     {
+
+       
         return new FormularioInscripcion([
             'name'             => $row['name'],             // Nombre del estudiante
             'email'            => $row['email'],            // Correo del estudiante

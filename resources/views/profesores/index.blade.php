@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Profesores</title>
+    <title>Listado de Profesores</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -27,14 +27,28 @@
 
         .card-header {
             margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
 
         .card-header h1 {
             font-size: 1.8rem;
-            margin: 0;
+            margin-bottom: 10px;
+        }
+
+        .custom-file-input {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .custom-file-input input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+            height: 100%;
+            width: 100%;
         }
 
         .btn {
@@ -47,6 +61,7 @@
             text-align: center;
             border-radius: 5px;
             transition: background-color 0.3s ease, transform 0.3s ease;
+            margin-right: 10px;
         }
 
         .btn-regresar {
@@ -107,34 +122,12 @@
             justify-content: center;
         }
 
-        .search-form {
-            margin-bottom: 20px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            justify-content: space-between;
+        .acciones form {
+            display: inline;
         }
 
-        .search-form input {
-            flex: 1;
-            min-width: 200px;
-            padding: 8px 15px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-
-        .search-form button {
-            padding: 8px 20px;
-            border-radius: 5px;
-            background-color: #007bff;
-            color: white;
-            font-size: 1rem;
-            cursor: pointer;
-            border: none;
-        }
-
-        .search-form button:hover {
-            background-color: #0056b3;
+        .botones-top {
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -142,16 +135,28 @@
 <div class="container">
     <div class="card">
         <div class="card-header">
-            <h1>Lista de Profesores</h1>
-            <div class="d-flex">
+            <h1>Listado de Profesores</h1>
+
+            <form action="{{ route('profesores.import') }}" method="POST" enctype="multipart/form-data" style="margin-bottom: 15px;">
+                @csrf
+                <label class="custom-file-input btn btn-regresar">
+                    Seleccionar archivo
+                    <input type="file" name="file">
+                </label>
+                <button class="btn btn-primary" type="submit"><i class="fa fa-file"></i> Importar</button>
+            </form>
+
+            <div class="botones-top">
+                <a href="{{ route('matriculas.export') }}" class="btn btn-regresar">Exportar</a>
                 <a href="/dashboard" class="btn btn-regresar">Regresar</a>
+
                 @can('create', App\Models\Theacher::class)
-                    <a href="{{ route('profesores.create') }}" class="btn btn-primary">Crear Profesor</a>
+                    <a href="{{ route('matriculas.create') }}" class="btn btn-primary">Crear Profesor</a>
                 @endcan
             </div>
         </div>
 
-        <!-- Tabla de Profesores -->
+        <!-- Tabla -->
         <div class="table-responsive">
             <table class="table">
                 <thead>
@@ -192,7 +197,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="text-center">No hay profesores disponibles</td>
+                            <td colspan="7">No hay profesores disponibles</td>
                         </tr>
                     @endforelse
                 </tbody>

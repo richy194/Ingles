@@ -34,13 +34,13 @@ class FormularioInscripcionController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string|max:255', // El nombre es obligatorio, debe ser texto y tiene un máximo de 255 caracteres.
     'email' => 'nullable|email|max:255', // El correo es opcional, debe ser un correo válido con un máximo de 255 caracteres.
-    'Documento' => 'required|string|max:255', // El documento es obligatorio, debe ser texto y tiene un máximo de 255 caracteres.
-    'direccion' => 'required|string|max:255', // La dirección es obligatoria, debe ser texto y tiene un máximo de 255 caracteres.
+    'Documento' => 'nullable|string|max:255', // El documento es obligatorio, debe ser texto y tiene un máximo de 255 caracteres.
+    'direccion' => 'nullable|string|max:255', // La dirección es obligatoria, debe ser texto y tiene un máximo de 255 caracteres.
     'telefono' => 'nullable|string|max:255', // El teléfono es opcional, debe ser texto y tiene un máximo de 255 caracteres.
     'fecha_matricula' => 'required|date', // La fecha de matrícula es obligatoria y debe ser una fecha válida.
     'estado' => 'nullable|in:aprobado,desaprobado,cancelado,no aprobado', // El estado es obligatorio y debe ser "activo" o "inactivo".
     'nota_final' => 'nullable|numeric|min:0|max:100', // La nota final es opcional, debe ser numérica y estar entre 0 y 100.
-    'teacher_id' => 'required|exists:theachers,id', // El ID del profesor es obligatorio y debe existir en la tabla "theachers".
+    'teacher_id' => 'nullable|exists:theachers,id', // El ID del profesor es obligatorio y debe existir en la tabla "theachers".
     'grupo_id' => 'nullable|exists:cursos,id', //
         ]);
 

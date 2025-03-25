@@ -7,15 +7,35 @@ use App\Models\Curso;
 use App\Models\Theacher;
 use App\Models\PeriodoAcademico;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 
 class GrupoController extends Controller
 {
     // Mostrar todos los grupos
     public function index()
     {
-        $grupos = Group::with(['curso', 'periodo_academicos'])->get();
+        $user = Auth::user();
+    
+        if ($user->hasRole('docente')) {
+            // Buscar el docente por el email del usuario autenticado
+            $teacher = Theacher::where('email', $user->email)->first();
+    
+            if ($teacher) {
+                $grupos = Group::with(['curso', 'periodo_academicos'])
+                    ->where('teacher_id', $teacher->id)
+                    ->get();
+            } else {
+                // Si no hay docente asociado al correo, devolver colección vacía
+                $grupos = collect();
+            }
+        } else {
+            $grupos = Group::with(['curso', 'periodo_academicos'])->get();
+        }
+    
         return view('grupos.index', compact('grupos'));
     }
+    
 
     // Mostrar un grupo específico
     public function show($id)

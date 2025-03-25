@@ -3,8 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Matrícula</title>
+    <title>Crear Matrícula</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <!-- Agrega jQuery antes de Select2 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- CSS y JS de Select2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -22,7 +33,6 @@
             background-color: #80e0bb;
         }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -35,30 +45,28 @@
                     @csrf
                     @method('PUT')
                     <div class="form-group">
-                        <label for="student_id">Estudiante</label>
+                        <label for="student_id">Cédula del estudiante</label>
                         <select id="student_id" name="student_id" class="form-control" required onchange="autoFillStudentData()">
                             <option value="">Seleccionar Estudiante</option>
                             @foreach ($students as $student)
                                 <option value="{{ $student->id }}" @if ($student->id == $matricula->student_id) selected @endif>
-                                    {{ $student->nombre }}
+                                    {{ $student->documento }}
                                 </option>
                             @endforeach
                         </select>
                     </div>
-
                     
                     <div class="form-group">
-    <label for="grupo_id">Curso</label>
-    <select id="grupo_id" name="grupo_id" class="form-control" required>
-        <option value="">Seleccionar curso</option>
-        @foreach ($cursos as $curso)
-            <option value="{{ $curso->id }}" 
-                @if (old('grupo_id', $matricula->grupo_id) == $curso->id) selected @endif>
-                {{ $curso->nombre }}
-            </option>
-        @endforeach
-    </select>
-</div>
+                        <label for="grupo_id">Curso</label>
+                        <select id="grupo_id" name="grupo_id" class="form-control" required>
+                            <option value="">Seleccionar curso</option>
+                            @foreach ($cursos as $curso)
+                                <option value="{{ $curso->id }}" @if (old('grupo_id', $matricula->grupo_id) == $curso->id) selected @endif>
+                                    {{ $curso->nombre }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
 
                     <div class="form-group">
                         <label for="teacher_id">Profesor</label>
@@ -77,26 +85,21 @@
                         <input type="date" id="fecha_matricula" name="fecha_matricula" class="form-control" value="{{ $matricula->fecha_matricula }}" required>
                     </div>
 
-                    <label for="estado">Estado</label>
-    <select class="form-control" id="estado" name="estado">
-        <option value="" {{ old('estado', $formularioInscripcion->estado ?? '') == '' ? 'selected' : '' }}>Seleccionar Estado</option>
-        <option value="aprobado" {{ old('estado', $formularioInscripcion->estado ?? '') == 'aprobado' ? 'selected' : '' }}>Aprobado</option>
-        <option value="desaprobado" {{ old('estado', $formularioInscripcion->estado ?? '') == 'desaprobado' ? 'selected' : '' }}>Desaprobado</option>
-        <option value="cancelado" {{ old('estado', $formularioInscripcion->estado ?? '') == 'cancelado' ? 'selected' : '' }}>Cancelado</option>
-        <option value="no aprobado" {{ old('estado', $formularioInscripcion->estado ?? '') == 'no aprobado' ? 'selected' : '' }}>No aprobado</option>
-    </select>
+                    <div class="form-group">
+                        <label for="estado">Estado</label>
+                        <select class="form-control" id="estado" name="estado">
+                            <option value="" {{ old('estado', $matricula->estado ?? '') == '' ? 'selected' : '' }}>Seleccionar Estado</option>
+                            <option value="aprobado" {{ old('estado', $matricula->estado ?? '') == 'aprobado' ? 'selected' : '' }}>Aprobado</option>
+                            <option value="desaprobado" {{ old('estado', $matricula->estado ?? '') == 'desaprobado' ? 'selected' : '' }}>Desaprobado</option>
+                            <option value="cancelado" {{ old('estado', $matricula->estado ?? '') == 'cancelado' ? 'selected' : '' }}>Cancelado</option>
+                            <option value="no aprobado" {{ old('estado', $matricula->estado ?? '') == 'no aprobado' ? 'selected' : '' }}>No aprobado</option>
+                        </select>
+                    </div>
 
-    <div class="form-group">
-    <label for="nota_final">Nota Final</label>
-    <input type="number" 
-           id="nota_final" 
-           name="nota_final" 
-           class="form-control" 
-           value="{{ $matricula->nota_final ?? '' }}" 
-           step="0.01" 
-           placeholder="No asignado" 
-           >
-</div>
+                    <div class="form-group">
+                        <label for="nota_final">Nota Final</label>
+                        <input type="number" id="nota_final" name="nota_final" class="form-control" value="{{ $matricula->nota_final ?? '' }}" step="0.01" placeholder="No asignado">
+                    </div>
 
                     <button type="submit" class="btn btn-primary">Guardar Matrícula</button>
                 </form>
@@ -105,43 +108,23 @@
     </div>
 
     <script>
-    function autoFillStudentData() {
-        const studentId = document.getElementById('student_id').value;
-        if (studentId) {
-            // Solicitud a la API para obtener los datos del estudiante
-            fetch(`/students/${studentId}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Error al obtener los datos del estudiante');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    // Rellenar los campos del formulario con los datos recibidos
-                    document.getElementById('name').value = data.name;
-                    document.getElementById('email').value = data.email;
-                    document.getElementById('documento').value = data.documento;
-                    document.getElementById('direccion').value = data.direccion;
-                    document.getElementById('telefono').value = data.telefono;
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    // Opcional: Limpiar los campos si ocurre un error
-                    document.getElementById('name').value = '';
-                    document.getElementById('email').value = '';
-                    document.getElementById('documento').value = '';
-                    document.getElementById('direccion').value = '';
-                    document.getElementById('telefono').value = '';
+        $(document).ready(function() {
+            // Inicializa Select2 en el campo de selección de estudiantes
+            $('#student_id').select2({
+                placeholder: "Buscar estudiante por cédula...",
+                allowClear: true,
+                width: '100%'
+            });
+
+            @if(session('error'))
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: '{{ session("error") }}',
+                    confirmButtonText: 'Entendido'
                 });
-        } else {
-            // Limpiar los campos si no hay un estudiante seleccionado
-            document.getElementById('name').value = '';
-            document.getElementById('email').value = '';
-            document.getElementById('documento').value = '';
-            document.getElementById('direccion').value = '';
-            document.getElementById('telefono').value = '';
-        }
-    }
-</script>
+            @endif
+        });
+    </script>
 </body>
 </html>

@@ -18,11 +18,37 @@ class CursoController extends Controller
     }
 
     // Mostrar todos los cursos
-    public function index()
-    {
-        $cursos = Curso::all(); // Obtiene todos los cursos
-        return view('cursos.index', compact('cursos'));
+   // Mostrar todos los cursos
+   public function index()
+{
+    $user = Auth::user();
+
+    if ($user->hasRole('docente')) {
+        // Buscar el ID del docente usando el correo del usuario
+        $teacher = Theacher::where('email', $user->email)->first();
+
+        if (!$teacher) {
+            $cursos = collect(); // Si no hay docente con ese correo, devolver vacío
+        } else {
+            // Obtener cursos donde el docente tenga al menos un grupo
+            $cursos = Curso::whereHas('grupos', function ($query) use ($teacher) {
+                    $query->where('teacher_id', $teacher->id);
+                })
+                ->with(['grupos' => function ($query) use ($teacher) {
+                    $query->where('teacher_id', $teacher->id);
+                }])
+                ->get();
+        }
+    } else {
+        // Para admin u otros roles: mostrar todos los cursos con todos los grupos
+        $cursos = Curso::with('grupos')->get();
     }
+
+    return view('cursos.index', compact('cursos'));
+}
+
+   
+
 
     // Mostrar un curso específico
     public function show($id)

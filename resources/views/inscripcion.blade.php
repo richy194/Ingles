@@ -169,20 +169,14 @@
                 <!-- Campo Documento -->
                 <div class="form-group">
                     <label for="Documento">Documento</label>
-                    <input type="text" name="Documento" class="form-control" required value="{{ old('Documento') }}">
+                    <input type="text" name="documento" class="form-control" required value="{{ old('Documento') }}">
                     @error('Documento')
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
 
                 <!-- Campo Dirección -->
-                <div class="form-group">
-                    <label for="direccion">Dirección</label>
-                    <input type="text" name="direccion" class="form-control" required value="{{ old('direccion') }}">
-                    @error('direccion')
-                        <span class="text-danger">{{ $message }}</span>
-                    @enderror
-                </div>
+                <input type="hidden" name="direccion" value="pendiente">
 
                 <!-- Campo Teléfono -->
                 <div class="form-group">

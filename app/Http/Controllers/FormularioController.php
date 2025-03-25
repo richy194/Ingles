@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\FormularioInscripcionImport;
+use Maatwebsite\Excel\Validators\ValidationException;
 
 class FormularioController extends Controller
 {
@@ -181,24 +182,32 @@ class FormularioController extends Controller
     {
         // Validación del archivo
         $request->validate([
-            'file' => 'required|mimes:xlsx,csv|max:2048', // Validar tipo de archivo y tamaño
+            'file' => 'required|mimes:xlsx,csv|max:2048',
         ]);
     
-        // Verifica si el archivo fue cargado
-        if ($request->hasFile('file')) {
-            // Aquí puedes hacer un dd() para ver el nombre y la información del archivo
-            dd($request->file('file'));
-        } else {
-            // Si no se encuentra el archivo
+        if (!$request->hasFile('file')) {
             return redirect()->route('formularios.index')->with('error', 'No se ha enviado ningún archivo.');
         }
     
-        // Si el archivo fue recibido correctamente, procesar la importación
         try {
             Excel::import(new FormularioInscripcionImport, $request->file('file'));
             return redirect()->route('formularios.index')->with('success', 'Inscripciones importadas exitosamente.');
-        } catch (\Exception $e) {
-            return redirect()->route('formularios.index')->with('error', 'Hubo un error al importar las inscripciones: ' . $e->getMessage());
+        } catch (ValidationException $e) {
+            // CAPTURA DE ERRORES DE VALIDACIÓN DE CADA FILA
+            $failures = $e->failures();
+    
+            foreach ($failures as $failure) {
+                dd([
+                    'Fila con error' => $failure->row(),
+                    'Columna con error' => $failure->attribute(),
+                    'Errores' => $failure->errors(),
+                    'Valores de la fila' => $failure->values(),
+                ]);
+            }
+    
+            return redirect()->route('formularios.index')->with('error', 'Error de validación en el archivo.');
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+            dd($e->errors()); // 👈 Esto te dirá qué filas fallaron y por qué
         }
     }
     

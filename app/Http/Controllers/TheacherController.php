@@ -4,27 +4,32 @@ namespace App\Http\Controllers;
 
 use App\Models\Theacher;
 use Illuminate\Http\Request;
+use App\Imports\TheacherImport;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\TheacherExport;
+
+
 
 class TheacherController extends Controller
 {
     // Muestra todos los profesores
     public function index()
     {
-        $profesores = Theacher::all(); // Obtén todos los profesores
-        return view('profesores.index', compact('profesores')); // Pasa los profesores a la vista
+        $profesores = Theacher::all(); 
+        return view('profesores.index', compact('profesores')); 
     }
 
     // Muestra un profesor específico
     public function show($id)
     {
-        $profesor = Theacher::findOrFail($id); // Encuentra al profesor por ID
-        return view('profesores.show', compact('profesor')); // Muestra la vista para ver al profesor
+        $profesor = Theacher::findOrFail($id); 
+        return view('profesores.show', compact('profesor')); 
     }
 
-    // Crea un nuevo profesor (solo para admins)
+    // Muestra el formulario para crear
     public function create()
     {
-        return view('profesores.create'); // Muestra la vista para crear un nuevo profesor
+        return view('profesores.create'); 
     }
 
     // Guarda un nuevo profesor
@@ -38,15 +43,15 @@ class TheacherController extends Controller
             'telefono' => 'required|string|max:255',
         ]);
 
-        Theacher::create($validated); // Crea el profesor
-        return redirect()->route('profesores.index'); // Redirige al índice de profesores
+        Theacher::create($validated); 
+        return redirect()->route('profesores.index'); 
     }
 
     // Edita un profesor
     public function edit($id)
     {
-        $profesor = Theacher::findOrFail($id); // Encuentra al profesor por ID
-        return view('profesores.edit', compact('profesor')); // Muestra la vista para editar al profesor
+        $profesor = Theacher::findOrFail($id); 
+        return view('profesores.edit', compact('profesor')); 
     }
 
     // Actualiza un profesor
@@ -60,16 +65,35 @@ class TheacherController extends Controller
             'telefono' => 'required|string|max:255',
         ]);
 
-        $profesor = Theacher::findOrFail($id); // Encuentra al profesor por ID
-        $profesor->update($validated); // Actualiza los campos
-        return redirect()->route('profesores.index'); // Redirige al índice de profesores
+        $profesor = Theacher::findOrFail($id); 
+        $profesor->update($validated); 
+        return redirect()->route('profesores.index'); 
     }
 
     // Elimina un profesor
     public function destroy($id)
     {
-        $profesor = Theacher::findOrFail($id); // Encuentra al profesor por ID
-        $profesor->delete(); // Elimina al profesor
-        return redirect()->route('profesores.index'); // Redirige al índice de profesores
+        $profesor = Theacher::findOrFail($id); 
+        $profesor->delete(); 
+        return redirect()->route('profesores.index'); 
     }
+
+    // 🆕 Método para importar profesores desde Excel
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,xls',
+        ]);
+
+        Excel::import(new TheacherImport, $request->file('file'));
+
+        return redirect()->route('profesores.index')->with('success', 'Profesores importados exitosamente.');
+    }
+
+    // 🆕 Método para exportar profesores a Excel
+public function export()
+{
+    return Excel::download(new TheacherExport, 'profesores.xlsx');
+}
+
 }

@@ -178,19 +178,18 @@ class MatriculaController extends Controller
     }
 
 
-    public function matricularEstudiante($estudianteId, $cursoId, $matricula = null )
+    public function matricularEstudiante($estudianteId, $cursoId, $matricula = null)
 {
-    // Obtener el curso actual
+    // Obtener el curso actual y el estudiante
     $curso = Curso::findOrFail($cursoId);
+    $estudiante = Student::findOrFail($estudianteId); // Obtener el estudiante
 
     // Verificar si el curso tiene un requisito
     if ($curso->requisito) {
         $cursoRequisito = Curso::find($curso->requisito);
 
         if (!$cursoRequisito) {
-            return response()->json([
-                'error' => 'El curso requerido no existe en el sistema.'
-            ], 400);
+            return redirect()->back()->with('error', 'El curso requerido no existe en el sistema.');
         }
 
         // Verificar si el estudiante completó el curso requerido
@@ -200,9 +199,7 @@ class MatriculaController extends Controller
             ->first();
 
         if (!$matriculaRequisito) {
-            return response()->json([
-                'error' => "No puedes matricularte en este curso. Debes completar primero el curso requerido: {$cursoRequisito->nombre}."
-            ], 400);
+            return redirect()->back()->with('error', "No puedes matricular al estudiante: {$estudiante->nombre} en el curso de {$curso->nombre}. Debe completar primero el curso requerido {$cursoRequisito->nombre}.");
         }
     }
 
@@ -212,9 +209,7 @@ class MatriculaController extends Controller
         ->first();
 
     if ($matriculaExistente && (!$matricula || $matriculaExistente->id !== $matricula->id)) {
-        return response()->json([
-            'error' => 'Ya estás matriculado en este curso.'
-        ], 400);
+        return redirect()->back()->with('error', "El estudiante {$estudiante->nombre} ya está matriculado en el curso: {$curso->nombre}.");
     }
 
     // Obtener el docente asignado al curso
@@ -236,8 +231,10 @@ class MatriculaController extends Controller
         Matricula::create($data);
     }
 
-    return redirect()->route('matriculas.index')->with('success', 'Estudiante matriculado con éxito.');
+    return redirect()->route('matriculas.index')->with('success', "El estudiante {$estudiante->nombre} se ha matriculado con éxito en el curso: {$curso->nombre}.");
 }
+
+    
 
 
 }
