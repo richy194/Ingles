@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('modalidad');
             $table->foreignId('periodo_id')->constrained('periodo_academicos')->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('teacher_id')->constrained('theachers')->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignId('grupo_id')->constrained('groups')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('grupo_id')->nullable()->constrained('groups')->cascadeOnUpdate()->cascadeOnDelete();
             $table->softDeletes();
             $table->timestamps();
         });
