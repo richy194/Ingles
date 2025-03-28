@@ -105,4 +105,10 @@ class FormularioInscripcionPolicy
     {
         return $user->can('reorder_formulario::inscripcion');
     }
+    
+    public function inscribir(User $user, FormularioInscripcion $formulario)
+       {
+    // Lógica para determinar si el usuario puede inscribir
+    return $user->can('inscribir'); // Ejemplo, puedes ajustar la lógica según sea necesario
+     }
 }
