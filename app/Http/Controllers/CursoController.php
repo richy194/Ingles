@@ -8,6 +8,7 @@ use App\Models\Theacher;
 use App\Models\Group;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Traits\HasRoles;
 
 class CursoController extends Controller
 {

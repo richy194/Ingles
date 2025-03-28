@@ -242,7 +242,7 @@ form {
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $estudiante->nombre }}</td>
                                 <td>{{ $estudiante->email }}</td>
-                                <td>{{ $estudiante->documento }}</td>
+                                <td>{{ $estudiante->Documento }}</td>
                                 <td>{{ $estudiante->direccion }}</td>
                                 <td>{{ $estudiante->telefono }}</td>
                                 <td class="acciones">

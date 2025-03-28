@@ -147,11 +147,11 @@
             </form>
 
             <div class="botones-top">
-                <a href="{{ route('matriculas.export') }}" class="btn btn-regresar">Exportar</a>
+                <a href="{{ route('profesores.export') }}" class="btn btn-regresar">Exportar</a>
                 <a href="/dashboard" class="btn btn-regresar">Regresar</a>
 
                 @can('create', App\Models\Theacher::class)
-                    <a href="{{ route('matriculas.create') }}" class="btn btn-primary">Crear Profesor</a>
+                    <a href="{{ route('profesores.create') }}" class="btn btn-primary">Crear Profesor</a>
                 @endcan
             </div>
         </div>

@@ -67,9 +67,8 @@
         }
 
         .btn-link {
-            color: #28a74w;
-            font-weight: bold;
-        }
+    color: #28a745; /* Error tipográfico, debería ser #28a745 */
+}
 
         .btn-link:hover {
             text-decoration: underline;

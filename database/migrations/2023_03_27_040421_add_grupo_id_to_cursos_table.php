@@ -11,10 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('roles', function (Blueprint $table) {
-            $table->id();
-            $table->string('guard_name');
-            $table->timestamps();
+        Schema::table('cursos', function (Blueprint $table) {
+            //
+            $table->foreignId('grupo_id')->nullable()->constrained('groups')->cascadeOnUpdate()->cascadeOnDelete();
         });
     }
 
@@ -23,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('roles');
+        Schema::table('cursos', function (Blueprint $table) {
+            //
+        });
     }
 };
