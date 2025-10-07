@@ -57,7 +57,7 @@
                         <input type="text" name="direccion" id="direccion" class="form-control" required>
                     </div>
 
-                    <button type="submit" class="btn btn-success mt-3">Crear formulario</button>
+                    <button type="submit" class="btn btn-success mt-3">Crear </button>
                     <a href="{{ route('profesores.index') }}" class="btn btn-success mt-3">Cancelar</a>
                 </form>
             </div>
