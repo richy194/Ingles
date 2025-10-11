@@ -33,7 +33,7 @@
             <div class="card-body">
                 <ul class="list-group">
                     <li class="list-group-item"><strong>Nombre:</strong> {{ $curso->nombre }}</li>
-                    <li class="list-group-item"><strong>Código del curso:</strong> {{ $curso->codigo }}</li>
+                    <li class="list-group-item"><strong>Código del curso:</strong> {{ $curso->codigo?? 'No asignado'   }}</li>
                     <li class="list-group-item"><strong>Descripción:</strong> {{ $curso->descripcion }}</li>
                     <li class="list-group-item"><strong>Nivel:</strong> {{ $curso->nivel_curso }}</li>
                     <li class="list-group-item"><strong>Grupos:</strong>
@@ -43,15 +43,15 @@
                             No asignado
                         @endif
                     </li>
-                    <li class="list-group-item"><strong>Periodo:</strong> {{ $curso->periodo->nombre }}</li>
+                    <li class="list-group-item"><strong>Periodo:</strong> {{ $curso->periodo->nombre?? 'No asignado'   }}</li>
                     <li class="list-group-item"><strong>Requisitos:</strong> 
                         @if($curso->requisito)
-                            {{ $curso->requisito }}
+                            {{ $curso->requisito?? 'No asignado'   }}
                         @else
                             No especificado
                         @endif
                     </li>
-                    <li class="list-group-item"><strong>Modalidad:</strong> {{ $curso->modalidad }}</li>
+                    <li class="list-group-item"><strong>Modalidad:</strong> {{ $curso->modalidad?? 'No asignado'   }}</li>
                     <ul class="list-group">
                     @foreach ($curso->grupos as $grupo)
                     <li class="list-group-item">

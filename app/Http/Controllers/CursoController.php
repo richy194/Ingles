@@ -80,14 +80,14 @@ class CursoController extends Controller
         // Validación de la entrada
         $validated = $request->validate([
             'nombre' => 'required|string',
-            'codigo' => 'required|string',
+            'codigo' => 'nullable|string',
             'descripcion' => 'required|string',
             'nivel_curso' => 'required|string',
             'fecha_inicio' => 'nullable|date',
             'fecha_fin' => 'nullable|date',
             'requisito' => 'nullable|exists:cursos,id',  // El requisito puede ser un curso existente o nulo
             'modalidad' => 'required|string',
-            'periodo_id' => 'required|exists:periodo_academicos,id',
+            'periodo_id' => 'nullable|exists:periodo_academicos,id',
             'teacher_id' => 'nullable|exists:theachers,id',
             'grupo_id.*' => 'exists:groups,id',  // Asegurándonos de que los IDs de grupos son válidos
         ]);
@@ -128,14 +128,14 @@ class CursoController extends Controller
         // Validación de la entrada
         $validated = $request->validate([
             'nombre' => 'required|string',
-            'codigo' => 'required|string',
+            'codigo' => 'nullable|string',
             'descripcion' => 'required|string',
             'nivel_curso' => 'required|string',
             'fecha_inicio' => 'nullable|date',
             'fecha_fin' => 'nullable|date',
             'requisito' => 'nullable|exists:cursos,id', // Si es un requisito, puede ser otro curso o nulo
             'modalidad' => 'required|string',
-            'periodo_id' => 'required|exists:periodo_academicos,id',
+            'periodo_id' => 'nullable|exists:periodo_academicos,id',
             'teacher_id' => 'nullable|exists:theachers,id',
             'grupo_id.*' => 'exists:groups,id',  // Asegurándonos de que los IDs de grupos son válidos
         ]);

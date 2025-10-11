@@ -7,124 +7,162 @@ use Illuminate\Http\Request;
 use App\Exports\StudentsExport;
 use App\Imports\StudentsImport;
 use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Validators\ValidationException;
 
 class StudentController extends Controller
 {
-    // Muestra todos los estudiantes con la posibilidad de filtrarlos por nombre y documento
+    /**
+     * Muestra todos los estudiantes con opción de búsqueda.
+     */
     public function index(Request $request)
     {
         $query = $request->get('query');
-        $estudiantes = Student::when($query, function($queryBuilder) use ($query) {
+
+        $estudiantes = Student::when($query, function ($queryBuilder) use ($query) {
             return $queryBuilder->where('nombre', 'like', '%' . $query . '%')
                                 ->orWhere('documento', 'like', '%' . $query . '%');
         })->get();
-    
+
         return view('estudiantes.index', compact('estudiantes'));
     }
 
-    // Muestra un estudiante específico
+    /**
+     * Muestra un estudiante específico.
+     */
     public function show($id)
     {
-        $estudiante = Student::findOrFail($id); // Encuentra al estudiante por ID
-        return view('estudiantes.show', compact('estudiante')); // Muestra la vista para ver al estudiante
+        $estudiante = Student::findOrFail($id);
+        return view('estudiantes.show', compact('estudiante'));
     }
 
-    // Crea un nuevo estudiante (solo para admins)
+    /**
+     * Muestra el formulario para crear un nuevo estudiante.
+     */
     public function create()
     {
-        return view('estudiantes.create'); // Muestra la vista para crear un nuevo estudiante
+        return view('estudiantes.create');
     }
 
-    // Guarda un nuevo estudiante
+    /**
+     * Guarda un nuevo estudiante manualmente.
+     */
     public function store(Request $request)
     {
         $validated = $request->validate([
             'nombre' => 'required|string|max:255',
             'email' => 'required|email|max:255',
-            'documento' => 'required|string|max:255',
-            'direccion' => 'required|string|max:255',
-            'telefono' => 'required|string|max:255',
+            'documento' => 'nullable|string|max:255',
+            'direccion' => 'nullable|string|max:255',
+            'telefono' => 'nullable|string|max:255',
         ]);
 
-        Student::create($validated); // Crea el estudiante
-        return redirect()->route('estudiantes.index'); // Redirige al índice de estudiantes
+        Student::create($validated);
+
+        return redirect()->route('estudiantes.index')->with('success', 'Estudiante creado correctamente.');
     }
 
+    /**
+     * Muestra el formulario para editar un estudiante.
+     */
     public function edit($id)
-{
-    // Intenta encontrar el estudiante con el ID proporcionado
-    $estudiante = Student::find($id);
+    {
+        $estudiante = Student::find($id);
 
-    // Verifica si el estudiante existe
-    if (!$estudiante) {
-        return redirect()->route('estudiantes.index')->with('error', 'Estudiante no encontrado.');
+        if (!$estudiante) {
+            return redirect()->route('estudiantes.index')->with('error', 'Estudiante no encontrado.');
+        }
+
+        return view('estudiantes.edit', compact('estudiante'));
     }
 
-    // Retorna la vista con los datos del estudiante
-    return view('estudiantes.edit', compact('estudiante'));
-}
-
-
-
-    // Actualiza un estudiante
+    /**
+     * Actualiza un estudiante.
+     */
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
             'nombre' => 'required|string|max:255',
             'email' => 'required|email|max:255',
-            'documento' => 'required|string|max:255',
-            'direccion' => 'required|string|max:255',
-            'telefono' => 'required|string|max:255',
+            'documento' => 'nullable|string|max:255',
+            'direccion' => 'nullable|string|max:255',
+            'telefono' => 'nullable|string|max:255',
         ]);
 
         $estudiante = Student::findOrFail($id);
-         // Encuentra al estudiante por ID
-        $estudiante->update($validated); // Actualiza los campos
-        return redirect()->route('estudiantes.index'); // Redirige al índice de estudiantes
+        $estudiante->update($validated);
+
+        return redirect()->route('estudiantes.index')->with('success', 'Estudiante actualizado correctamente.');
     }
 
-    // Elimina un estudiante
+    /**
+     * Elimina un estudiante.
+     */
     public function destroy($id)
     {
-        $estudiante = Student::findOrFail($id); // Encuentra al estudiante por ID
-        $estudiante->delete(); // Elimina al estudiante
-        return redirect()->route('estudiantes.index'); // Redirige al índice de estudiantes
+        $estudiante = Student::findOrFail($id);
+        $estudiante->delete();
+
+        return redirect()->route('estudiantes.index')->with('success', 'Estudiante eliminado correctamente.');
     }
 
+    /**
+     * Exporta todos los estudiantes a Excel.
+     */
     public function export()
     {
-        // Utilizamos el método download de Excel para exportar los datos.
         return Excel::download(new StudentsExport, 'students.xlsx');
     }
 
+    /**
+     * Importa estudiantes desde un archivo Excel o CSV.
+     */
     public function import(Request $request)
     {
-        // Validación de archivo
         $request->validate([
             'file' => 'required|mimes:xlsx,csv',
         ]);
 
-        // Importar los datos del archivo Excel
-        Excel::import(new StudentsImport, $request->file('file'));
+        try {
+            // Crear instancia del import
+            $import = new StudentsImport;
+            Excel::import($import, $request->file('file'));
 
-        // Redirigir con mensaje de éxito
-        return redirect()->back()->with('success', 'Estudiantes importados correctamente.');
+            $insertedCount = $import->getInsertedCount();
+
+            if ($insertedCount === 0) {
+                return redirect()->back()->with('warning', 'No se importó ningún estudiante (todos eran duplicados o inválidos).');
+            }
+
+            return redirect()->back()->with('success', "Se importaron {$insertedCount} estudiantes correctamente.");
+
+        } catch (ValidationException $e) {
+            // Captura errores de validación del Excel
+            $failures = $e->failures();
+            $errores = [];
+
+            foreach ($failures as $failure) {
+                $errores[] = "Fila {$failure->row()}: " . implode(', ', $failure->errors());
+            }
+
+            return redirect()->back()->with('error', 'Error al importar: ' . implode(' | ', $errores));
+        } catch (\Exception $e) {
+            // Captura cualquier otro error
+            return redirect()->back()->with('error', 'Hubo un problema al importar el archivo: ' . $e->getMessage());
+        }
     }
 
+    /**
+     * Elimina múltiples estudiantes seleccionados.
+     */
     public function destroyMultiple(Request $request)
-{
-    // Validar que se han enviado IDs
-    $request->validate([
-        'ids' => 'required|array|min:1',
-        'ids.*' => 'exists:students,id',
-    ]);
+    {
+        $request->validate([
+            'ids' => 'required|array|min:1',
+            'ids.*' => 'exists:students,id',
+        ]);
 
-    // Eliminar los estudiantes seleccionados
-    Student::whereIn('id', $request->ids)->delete();
+        Student::whereIn('id', $request->ids)->delete();
 
-    return redirect()->route('estudiantes.index')->with('success', 'Estudiantes eliminados correctamente.');
+        return redirect()->route('estudiantes.index')->with('success', 'Estudiantes eliminados correctamente.');
+    }
 }
-}
-
-
-

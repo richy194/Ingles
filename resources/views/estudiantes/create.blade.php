@@ -74,17 +74,17 @@
                     
                     <div class="form-group">
                         <label for="documento">Documento</label>
-                        <input type="text" name="documento" id="documento" class="form-control" required>
+                        <input type="text" name="documento" id="documento" class="form-control" >
                     </div>
 
                     <div class="form-group">
                         <label for="telefono">Teléfono</label>
-                        <input type="text" name="telefono" id="telefono" class="form-control" required>
+                        <input type="text" name="telefono" id="telefono" class="form-control" >
                     </div>
 
                     <div class="form-group">
                         <label for="direccion">Dirección</label>
-                        <input type="text" name="direccion" id="direccion" class="form-control" required>
+                        <input type="text" name="direccion" id="direccion" class="form-control" >
                     </div>
 
                     

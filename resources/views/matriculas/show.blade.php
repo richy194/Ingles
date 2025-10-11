@@ -45,24 +45,24 @@
                 </div>
                 <div class="form-group">
                     <label class="details-label">nombre :</label>
-                    <p class="details-value">{{ $matricula->student->nombre }}</p>
+                    <p class="details-value">{{ $matricula->student->nombre  ?? 'Sin asignar' }}</p>
                 </div>
                 <div class="form-group">
                     <label class="details-label">correo estudiantil:</label>
-                    <p class="details-value">{{ $matricula->student->email }}</p>
+                    <p class="details-value">{{ $matricula->student->email  ?? 'Sin asignar' }}</p>
                 </div>
                 <div class="form-group">
                     <label class="details-label">Documento :</label>
-                    <p class="details-value">{{ $matricula->student->documento }}</p>
+                    <p class="details-value">{{ $matricula->student->documento ?? 'Sin asignar'  }}</p>
                 </div> 
               
                 <div class="form-group">
                     <label class="details-label">direccion:</label>
-                    <p class="details-value">{{ $matricula->student->direccion }}</p>
+                    <p class="details-value">{{ $matricula->student->direccion?? 'Sin asignar'   }}</p>
                 </div>
                 <div class="form-group">
                     <label class="details-label">telefono:</label>
-                    <p class="details-value">{{ $matricula->student->telefono }}</p>
+                    <p class="details-value">{{ $matricula->student->telefono  ?? 'Sin asignar' }}</p>
                 </div>
 
                 <div class="form-group">
@@ -77,12 +77,12 @@
 
                 <div class="form-group">
                     <label class="details-label">Fecha de Matrícula:</label>
-                    <p class="details-value">{{ $matricula->fecha_matricula }}</p>
+                    <p class="details-value">{{ $matricula->fecha_matricula ?? 'Sin asignar'  }}</p>
                 </div>
 
                 <div class="form-group">
                     <label class="details-label">Estado:</label>
-                    <p class="details-value">{{ $matricula->estado }}</p>
+                    <p class="details-value">{{ $matricula->estado?? 'Sin asignar' }}</p>
                 </div>
 
                 <div class="form-group">

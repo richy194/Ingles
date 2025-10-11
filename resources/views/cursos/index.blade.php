@@ -163,7 +163,7 @@
                         <th>Código</th>
                         <th>Descripción</th>
                         <th>Nivel</th> 
-                        <th>periodo</th>
+                        <th>periodo</th> 
                         <th>Modalidad</th>
                         <th>Acciones</th>
                     </tr>
@@ -173,10 +173,10 @@
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $curso->nombre }}</td>
-                            <td>{{ $curso->codigo }}</td>
-                            <td>{{ $curso->descripcion }}</td>
+                            <td>{{ $curso->codigo?? 'No asignado'   }}</td>
+                            <td>{{ $curso->descripcion ?? 'No asignado'  }}</td>
                             <td>{{ $curso->nivel_curso }}</td>
-                            <td>{{ $curso->periodo->nombre }}</td>
+                            <td>{{ $curso->periodo->nombre?? 'No asignado'  }}</td>
                             <td>{{ $curso->modalidad }}</td>
                            
                             <td class="acciones">

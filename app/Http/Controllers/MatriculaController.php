@@ -10,231 +10,244 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 use App\Exports\MatriculasExport;
 use App\Imports\MatriculasImport;
-
+use Illuminate\Support\Facades\Log;
 
 class MatriculaController extends Controller
 {
-    // Muestra todas las matrículas
+    /** 🧾 LISTAR MATRÍCULAS */
     public function index(Request $request)
     {
         $query = $request->get('query');
-    
-        $matriculas = Matricula::with(['student', 'curso', 'teacher']) // Carga relaciones necesarias
-            ->when($query, function ($queryBuilder) use ($query) {
-                return $queryBuilder->whereHas('student', function ($subQuery) use ($query) {
-                    $subQuery->where('nombre', 'like', '%' . $query . '%')
-                             ->orWhere('documento', 'like', '%' . $query . '%');
+
+        $matriculas = Matricula::with(['student', 'curso', 'teacher'])
+            ->when($query, function ($q) use ($query) {
+                return $q->whereHas('student', function ($sub) use ($query) {
+                    $sub->where('nombre', 'like', "%$query%")
+                        ->orWhere('documento', 'like', "%$query%")
+                        ->orWhere('email', 'like', "%$query%");
                 });
             })
             ->get();
-    
+
         return view('matriculas.index', compact('matriculas'));
     }
 
-    // Muestra una matrícula específica
+    /** 📄 MOSTRAR DETALLE DE MATRÍCULA */
     public function show($id)
     {
-        $matricula = Matricula::with(['curso', 'teacher'])->findOrFail($id); // Incluimos relaciones
+        $matricula = Matricula::with(['curso', 'teacher'])->findOrFail($id);
         return view('matriculas.show', compact('matricula'));
     }
 
-    // Crea una nueva matrícula (vista para admins)
+    /** 🧑‍🏫 FORMULARIO DE CREACIÓN */
     public function create()
     {
-       
-
         $cursos = Curso::all();
         $teachers = Theacher::all();
-        $students = Student::all(); // Obtenemos los estudiantes registrados previamente
-        
-        return view('matriculas.create', compact('cursos', 'teachers', 'students')); // Pasamos los datos a la vista
+        $students = Student::all();
+
+        return view('matriculas.create', compact('cursos', 'teachers', 'students'));
     }
 
-    // Guarda una nueva matrícula
+    /** 💾 GUARDAR NUEVA MATRÍCULA */
     public function store(Request $request)
     {
-       
-
-        // Llama a la lógica centralizada para matricular al estudiante
-        return $this->matricularEstudiante($request->student_id, $request->grupo_id);
-
         $validated = $request->validate([
-            'fecha_matricula' => 'required|date',
-            'estado' => 'nullable|string|max:255',
-            'nota_final' => 'nullable|numeric',
-            'teacher_id' => 'required|exists:theachers,id', // Valida que el teacher exista
-            'grupo_id' => 'required|exists:cursos,id', // Valida que el grupo exista
             'student_id' => 'required|exists:students,id',
+            'grupo_id' => 'required|exists:cursos,id',
+            'teacher_id' => 'nullable|exists:theachers,id',
+            'fecha_matricula' => 'nullable|date',
+            'estado' => 'nullable|string|max:255',
+            'nota_final' => 'nullable|numeric|min:0|max:100',
         ]);
 
-        Matricula::create($validated); // Creamos la matrícula
-        return redirect()->route('matriculas.index')->with('success', 'Matrícula creada correctamente.');
+        return $this->matricularEstudiante(
+            $validated['student_id'],
+            $validated['grupo_id']
+        );
     }
 
-    // Edita una matrícula (vista para admins)
+    /** ✏️ EDITAR MATRÍCULA */
     public function edit($id)
     {
-        $matricula = Matricula::findOrFail($id); // Encuentra la matrícula
+        $matricula = Matricula::findOrFail($id);
         $cursos = Curso::all(); 
         $teachers = Theacher::all();
-        $students = Student::all(); // Obtenemos los estudiantes registrados previamente
-        
+        $students = Student::all();
+
         return view('matriculas.edit', compact('matricula', 'cursos', 'teachers', 'students'));
     }
 
-    // Actualiza una matrícula
+    /** 🔄 ACTUALIZAR MATRÍCULA */
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'student_id' => 'required|exists:students,id', // Validamos el estudiante relacionado
-            'fecha_matricula' => 'required|date',
-            'estado' => 'nullable|string|max:255',
-            'nota_final' => 'nullable|numeric',
-            'teacher_id' => 'required|exists:theachers,id',
+            'student_id' => 'required|exists:students,id',
             'grupo_id' => 'required|exists:cursos,id',
+            'teacher_id' => 'nullable|exists:theachers,id',
+            'fecha_matricula' => 'nullable|date',
+            'estado' => 'nullable|string|max:255',
+            'nota_final' => 'nullable|numeric|min:0|max:100',
         ]);
 
-       
-
-        // Encuentra la matrícula existente
         $matricula = Matricula::findOrFail($id);
-        
-        $this->matricularEstudiante($request->student_id, $request->grupo_id, $matricula);
-        return redirect()->route('matriculas.index')->with('success', 'Matrícula actualizada correctamente.');
+
+        return $this->matricularEstudiante(
+            $validated['student_id'],
+            $validated['grupo_id'],
+            $matricula
+        );
     }
 
-    // Elimina una matrícula
+    /** ❌ ELIMINAR MATRÍCULA */
     public function destroy($id)
     {
-        $matricula = Matricula::findOrFail($id);
-        $matricula->delete();
+        Matricula::findOrFail($id)->delete();
         return redirect()->route('matriculas.index')->with('success', 'Matrícula eliminada correctamente.');
     }
 
-    // Exporta las matrículas a un archivo Excel
-    public function export() 
+    /** 📤 EXPORTAR A EXCEL */
+    public function export()
     {
-        return Excel::download(new MatriculasExport, 'matriculas.xlsx'); // Exporta como archivo Excel
+        return Excel::download(new MatriculasExport, 'matriculas.xlsx');
     }
 
-    // Importa matrículas desde un archivo Excel
+    /** 📥 IMPORTAR DESDE EXCEL */
     public function import(Request $request)
-{
-    $request->validate([
-        'file' => 'required|mimes:xlsx,csv'
-    ]);
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,csv'
+        ]);
 
-    $import = new MatriculasImport;
-    Excel::import($import, $request->file('file'));
+        try {
+            $import = new MatriculasImport;
+            Excel::import($import, $request->file('file'));
 
-    // Validar requisitos para cada matrícula importada
-    foreach ($import->getMatriculas() as $matricula) {
-        // Llamamos al método matricularEstudiante para hacer la validación de los requisitos
-        $response = $this->matricularEstudiante($matricula['student_id'], $matricula['grupo_id'], null);
-        
-        if (isset($response->original['error'])) {
-            // Si hay error, se puede marcar la matrícula como inválida o eliminarla
-            // También podrías guardar un log del error o mostrarlo de alguna manera
-            // Para este ejemplo, lo marcaré en un mensaje.
-            return back()->with('error', $response->original['error']);
+            // ⚠️ Si hubo fallas de validación
+            if ($import->failures()->isNotEmpty()) {
+                return back()->with([
+                    'warning' => 'Algunos registros fallaron en la validación del archivo.',
+                    'failures' => $import->failures(),
+                ]);
+            }
+
+            // 📊 Obtener resumen del import
+            $resumen = $import->getResumen();
+            $matriculas = $import->getMatriculas();
+
+            // 💾 Guardar las matrículas nuevas
+            foreach ($matriculas as $matricula) {
+                try {
+                    $existe = Matricula::where('student_id', $matricula->student_id)
+                        ->where('grupo_id', $matricula->grupo_id)
+                        ->exists();
+
+                    if (!$existe) {
+                        $matricula->save();
+                    }
+                } catch (\Throwable $e) {
+                    Log::warning('Error guardando matrícula durante importación', [
+                        'error' => $e->getMessage(),
+                        'matricula' => $matricula
+                    ]);
+                }
+            }
+
+            // 📋 Preparar mensaje final
+            $mensajeFinal = "✅ Se importaron {$resumen['insertadas']} matrículas correctamente.";
+            if ($resumen['ignoradas'] > 0) {
+                $mensajeFinal .= " ⚠️ {$resumen['ignoradas']} registros fueron ignorados.";
+            }
+
+            return back()->with([
+                'success' => $mensajeFinal,
+                'detalles' => $resumen['mensajes'],
+            ]);
+
+        } catch (\Throwable $e) {
+            Log::error('Error al importar matrículas: '.$e->getMessage());
+            return back()->with('error', '❌ Error al procesar el archivo. Verifique el formato o los encabezados.');
         }
     }
 
-    return back()->with('success', 'Matrículas importadas exitosamente.');
-}
-
-
-
-
-
-    // Método para obtener los datos del estudiante
+    /** 🔍 OBTENER DATOS DE UN ESTUDIANTE */
     public function getStudentDataForMatricula($id)
     {
-        // Encuentra al estudiante por ID
         $student = Student::findOrFail($id);
 
-        // Devuelve los datos del estudiante en formato JSON
         return response()->json([
             'nombre' => $student->nombre,
             'email' => $student->email,
-            'documento' => $student->Documento,
+            'documento' => $student->documento,
             'direccion' => $student->direccion,
             'telefono' => $student->telefono
         ]);
     }
 
+    /** 🗑️ ELIMINAR VARIAS MATRÍCULAS */
     public function destroyMultiple(Request $request)
     {
-        // Validar que se han enviado IDs
         $request->validate([
             'ids' => 'required|array|min:1',
-            'ids.*' => 'exists:students,id',
+            'ids.*' => 'exists:matriculas,id',
         ]);
-    
-        // Eliminar los estudiantes seleccionados
+
         Matricula::whereIn('id', $request->ids)->delete();
-    
-        return redirect()->route('matriculas.index')->with('success', 'matriculas  eliminados correctamente.');
+
+        return redirect()->route('matriculas.index')->with('success', 'Matrículas eliminadas correctamente.');
     }
 
-
+    /** 🎓 VALIDAR Y CREAR/ACTUALIZAR MATRÍCULA */
     public function matricularEstudiante($estudianteId, $cursoId, $matricula = null)
-{
-    // Obtener el curso actual y el estudiante
-    $curso = Curso::findOrFail($cursoId);
-    $estudiante = Student::findOrFail($estudianteId); // Obtener el estudiante
+    {
+        $curso = Curso::findOrFail($cursoId);
+        $estudiante = Student::findOrFail($estudianteId);
 
-    // Verificar si el curso tiene un requisito
-    if ($curso->requisito) {
-        $cursoRequisito = Curso::find($curso->requisito);
+        // 🔹 Verificar curso requisito
+        if ($curso->requisito) {
+            $cursoRequisito = Curso::find($curso->requisito);
 
-        if (!$cursoRequisito) {
-            return redirect()->back()->with('error', 'El curso requerido no existe en el sistema.');
+            if (!$cursoRequisito) {
+                return redirect()->back()->with('error', 'El curso requerido no existe.');
+            }
+
+            $matriculaRequisito = Matricula::where('student_id', $estudianteId)
+                ->where('grupo_id', $cursoRequisito->id)
+                ->where('estado', 'Aprobado')
+                ->first();
+
+            if (!$matriculaRequisito) {
+                return redirect()->back()->with('error', "El estudiante {$estudiante->nombre} no cumple el requisito {$cursoRequisito->nombre}.");
+            }
         }
 
-        // Verificar si el estudiante completó el curso requerido
-        $matriculaRequisito = Matricula::where('student_id', $estudianteId)
-            ->where('grupo_id', $cursoRequisito->id)
-            ->where('estado', 'Aprobado')
+        // 🔹 Evitar duplicados
+        $matriculaExistente = Matricula::where('student_id', $estudianteId)
+            ->where('grupo_id', $cursoId)
             ->first();
 
-        if (!$matriculaRequisito) {
-            return redirect()->back()->with('error', "No puedes matricular al estudiante: {$estudiante->nombre} en el curso de {$curso->nombre}. Debe completar primero el curso requerido {$cursoRequisito->nombre}.");
+        if ($matriculaExistente && (!$matricula || $matriculaExistente->id !== $matricula->id)) {
+            return redirect()->back()->with('error', "El estudiante {$estudiante->nombre} ya está matriculado en {$curso->nombre}.");
         }
+
+        // 🔹 Datos de la matrícula
+        $data = [
+            'student_id' => $estudianteId,
+            'grupo_id' => $cursoId,
+            'teacher_id' => $curso->teacher_id,
+            'fecha_matricula' => now(),
+            'estado' => request()->input('estado', $matricula ? $matricula->estado : 'En progreso'),
+            'nota_final' => request()->input('nota_final', $matricula ? $matricula->nota_final : null),
+        ];
+
+        // 🔹 Crear o actualizar
+        if ($matricula) {
+            $matricula->update($data);
+        } else {
+            Matricula::create($data);
+        }
+
+        return redirect()->route('matriculas.index')
+            ->with('success', "✅ El estudiante {$estudiante->nombre} se ha matriculado correctamente en {$curso->nombre}.");
     }
-
-    // Verificar si el estudiante ya está matriculado en este curso
-    $matriculaExistente = Matricula::where('student_id', $estudianteId)
-        ->where('grupo_id', $cursoId)
-        ->first();
-
-    if ($matriculaExistente && (!$matricula || $matriculaExistente->id !== $matricula->id)) {
-        return redirect()->back()->with('error', "El estudiante {$estudiante->nombre} ya está matriculado en el curso: {$curso->nombre}.");
-    }
-
-    // Obtener el docente asignado al curso
-    $teacherId = $curso->teacher_id;
-
-    // Crear o actualizar matrícula
-    $data = [
-        'student_id' => $estudianteId,
-        'grupo_id' => $cursoId,
-        'teacher_id' => $teacherId,
-        'fecha_matricula' => now(),
-        'estado' => request()->input('estado', $matricula ? $matricula->estado : 'en progreso'),
-        'nota_final' => request()->input('nota_final', $matricula ? $matricula->nota_final : null),
-    ];
-
-    if ($matricula) {
-        $matricula->update($data);
-    } else {
-        Matricula::create($data);
-    }
-
-    return redirect()->route('matriculas.index')->with('success', "El estudiante {$estudiante->nombre} se ha matriculado con éxito en el curso: {$curso->nombre}.");
-}
-
-    
-
-
 }

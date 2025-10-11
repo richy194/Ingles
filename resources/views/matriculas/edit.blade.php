@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear Matrícula</title>
+    <title>Editar Matrícula</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
-    <!-- Agrega jQuery antes de Select2 -->
+    <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <!-- CSS y JS de Select2 -->
+    <!-- Select2 -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
 
@@ -45,12 +45,12 @@
                     @csrf
                     @method('PUT')
                     <div class="form-group">
-                        <label for="student_id">Cédula del estudiante</label>
+                        <label for="student_id">Correo del estudiante</label>
                         <select id="student_id" name="student_id" class="form-control" required onchange="autoFillStudentData()">
                             <option value="">Seleccionar Estudiante</option>
                             @foreach ($students as $student)
                                 <option value="{{ $student->id }}" @if ($student->id == $matricula->student_id) selected @endif>
-                                    {{ $student->documento }}
+                                    {{ $student->email }}
                                 </option>
                             @endforeach
                         </select>
@@ -58,7 +58,7 @@
                     
                     <div class="form-group">
                         <label for="grupo_id">Curso</label>
-                        <select id="grupo_id" name="grupo_id" class="form-control" required>
+                        <select id="grupo_id" name="grupo_id" class="form-control" >
                             <option value="">Seleccionar curso</option>
                             @foreach ($cursos as $curso)
                                 <option value="{{ $curso->id }}" @if (old('grupo_id', $matricula->grupo_id) == $curso->id) selected @endif>
@@ -70,7 +70,7 @@
 
                     <div class="form-group">
                         <label for="teacher_id">Profesor</label>
-                        <select id="teacher_id" name="teacher_id" class="form-control" required>
+                        <select id="teacher_id" name="teacher_id" class="form-control" >
                             <option value="">Seleccionar Profesor</option>
                             @foreach ($teachers as $teacher)
                                 <option value="{{ $teacher->id }}" @if ($teacher->id == $matricula->teacher_id) selected @endif>
@@ -82,7 +82,7 @@
 
                     <div class="form-group">
                         <label for="fecha_matricula">Fecha de Matrícula</label>
-                        <input type="date" id="fecha_matricula" name="fecha_matricula" class="form-control" value="{{ $matricula->fecha_matricula }}" required>
+                        <input type="date" id="fecha_matricula" name="fecha_matricula" class="form-control" value="{{ $matricula->fecha_matricula }}" >
                     </div>
 
                     <div class="form-group">
@@ -111,7 +111,7 @@
         $(document).ready(function() {
             // Inicializa Select2 en el campo de selección de estudiantes
             $('#student_id').select2({
-                placeholder: "Buscar estudiante por cédula...",
+                placeholder: "Buscar estudiante por correo...",
                 allowClear: true,
                 width: '100%'
             });

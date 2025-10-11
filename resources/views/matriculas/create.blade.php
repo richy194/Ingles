@@ -7,10 +7,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
-    <!-- Agrega jQuery antes de Select2 -->
+    <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <!-- CSS y JS de Select2 -->
+    <!-- Select2 -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
 
@@ -44,11 +44,11 @@
                 <form action="{{ route('matriculas.store') }}" method="POST">
                     @csrf
                     <div class="form-group">
-                        <label for="student_id">Cédula del estudiante</label>
+                        <label for="student_id">Correo del estudiante</label>
                         <select id="student_id" name="student_id" class="form-control" required>
                             <option value="">Seleccionar Estudiante</option>
                             @foreach ($students as $student)
-                                <option value="{{ $student->id }}">{{ $student->Documento }}</option>
+                                <option value="{{ $student->id }}">{{ $student->email }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -63,7 +63,7 @@
                     </div>
                     <div class="form-group">
                         <label for="teacher_id">Profesor</label>
-                        <select id="teacher_id" name="teacher_id" class="form-control" required>
+                        <select id="teacher_id" name="teacher_id" class="form-control" >
                             <option value="">Seleccionar Profesor</option>
                             @foreach ($teachers as $teacher)
                                 <option value="{{ $teacher->id }}">{{ $teacher->nombre }}</option>
@@ -95,7 +95,7 @@
         $(document).ready(function() {
             // Inicializa Select2 en el campo de selección de estudiantes
             $('#student_id').select2({
-                placeholder: "Buscar estudiante por cédula...",
+                placeholder: "Buscar estudiante por correo...",
                 allowClear: true,
                 width: '100%'
             });
@@ -112,4 +112,3 @@
     </script>
 </body>
 </html>
-

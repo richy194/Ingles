@@ -41,7 +41,7 @@
 
                     <div class="form-group">
                         <label for="codigo">Código</label>
-                        <input type="text" name="codigo" id="codigo" class="form-control" value="{{ old('codigo', $curso->codigo) }}" required>
+                        <input type="text" name="codigo" id="codigo" class="form-control" value="{{ old('codigo', $curso->codigo) }}" >
                     </div>
 
                     <div class="form-group">
@@ -62,12 +62,12 @@
 
                  <div class="form-group">
                         
-                        <input type="hidden" name="fecha_inicio" id="fecha_inicio" class="form-control" required>
+                        <input type="hidden" name="fecha_inicio" id="fecha_inicio" class="form-control" >
                     </div>
 
                     <div class="form-group">
                         
-                        <input type="hidden" name="fecha_fin" id="fecha_fin" class="form-control" required>
+                        <input type="hidden" name="fecha_fin" id="fecha_fin" class="form-control" >
                     </div>
 
                     <div class="form-group">
@@ -91,10 +91,28 @@
                      </select>
                       </div>
 
+
+ <div class="form-group">
+                        <label for="teacher_id">Docente</label>
+                        <select name="teacher_id" id="teacher_id" class="form-control" >
+                            <option value="">Seleccionar docente</option>
+                            @foreach($teachers as $teacher)
+                                <option value="{{ $teacher->id }}">{{ $teacher->nombre }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+
+
+
+
+
+
+
                     <!-- Campo para periodo academico -->
                     <div class="form-group">
     <label for="periodo_id">Periodo Académico</label>
-    <select id="periodo_id" name="periodo_id" class="form-control" required>
+    <select id="periodo_id" name="periodo_id" class="form-control" >
         <option value="">Seleccione un periodo</option>
         @foreach($periodos as $periodo)
             <option value="{{ $periodo->id }}" 
