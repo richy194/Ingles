@@ -60,7 +60,83 @@
                    @endforeach
                     </ul>
                 
-                <a href="{{ route('cursos.index') }}" class="btn btn-secondary">Volver a la lista</a>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalles del Curso</title>
+    <link rel="icon" type="image/png" href="{{ asset('img/uteis.png') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Sora:wght@500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/modern-admin.css') }}">
+</head>
+<body>
+    <div class="page-shell">
+        <section class="hero">
+            <div>
+                <h1>Detalles del Curso</h1>
+                <p>Información completa del curso y configuración.</p>
+            </div>
+            <div class="actions">
+                <a href="{{ route('cursos.index') }}" class="btn btn-neutral">Volver</a>
+                @can('update', $curso)
+                    <a href="{{ route('cursos.edit', $curso->id) }}" class="btn btn-warning">Editar</a>
+                @endcan
+                @can('delete', $curso)
+                    <form action="{{ route('cursos.destroy', $curso->id) }}" method="POST" style="display:inline;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('¿Eliminar este curso?')">Eliminar</button>
+                    </form>
+                @endcan
+            </div>
+        </section>
+
+        <section class="card">
+            <div class="card-body">
+                <h2 style="margin: 0 0 20px; font-family: 'Sora', sans-serif; color: var(--ink-2); font-size: 1.2rem;">Información General</h2>
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <label>Nombre del Curso</label>
+                        <div class="value">{{ $curso->nombre }}</div>
+                    </div>
+                    <div class="detail-item">
+                        <label>Código</label>
+                        <div class="value">{{ $curso->codigo ?? 'No asignado' }}</div>
+                    </div>
+                    <div class="detail-item">
+                        <label>Nivel</label>
+                        <div class="value">{{ $curso->nivel_curso }}</div>
+                    </div>
+                    <div class="detail-item">
+                        <label>Modalidad</label>
+                        <div class="value">{{ $curso->modalidad ?? 'No asignado' }}</div>
+                    </div>
+                    <div class="detail-item">
+                        <label>Descripción</label>
+                        <div class="value">{{ $curso->descripcion }}</div>
+                    </div>
+                    <div class="detail-item">
+                        <label>Período</label>
+                        <div class="value">{{ $curso->periodo->nombre ?? 'No asignado' }}</div>
+                    </div>
+                </div>
+
+                <hr style="border: none; border-top: 1px solid var(--line); margin: 28px 0;">
+
+                <div class="form-actions">
+                    <a href="{{ route('cursos.index') }}" class="btn btn-neutral">Volver al Listado</a>
+                    @can('update', $curso)
+                        <a href="{{ route('cursos.edit', $curso->id) }}" class="btn btn-warning">Editar Curso</a>
+                    @endcan
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>
             </div>
         </div>
     </div>
