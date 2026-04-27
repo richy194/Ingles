@@ -105,4 +105,11 @@ class FormularioInscripcionPolicy
     {
         return $user->can('reorder_formulario::inscripcion');
     }
+
+ public function inscribir(User $user, FormularioInscripcion $formulario): bool
+{
+    return $user->can('inscribir_formulario::inscripcion');
+}
+
+
 }

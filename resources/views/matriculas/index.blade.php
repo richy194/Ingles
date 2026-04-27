@@ -227,8 +227,6 @@
                             <th>Documento</th>
                             <th>Fecha matrícula</th>
                             <th>Curso</th>
-                            <th>Profesor</th>
-                            <th>Estado</th>
                             <th>Nota final</th>
                             <th>Acciones</th>
                         </tr>
@@ -242,8 +240,6 @@
                                 <td>{{ $matricula->student->documento ?? 'No asignado' }}</td>
                                 <td>{{ $matricula->fecha_matricula }}</td>
                                 <td>{{ $matricula->curso->nombre ?? 'No asignado' }}</td>
-                                <td>{{ $matricula->teacher->nombre ?? 'No asignado' }}</td>
-                                <td>{{ $matricula->estado ?? 'No asignado' }}</td>
                                 <td>{{ $matricula->nota_final ?? 'No asignado' }}</td>
                                 <td class="acciones">
                                     @can('view', $matricula)

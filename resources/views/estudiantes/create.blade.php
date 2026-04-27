@@ -73,7 +73,7 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="documento">Documento</label>
+                        <label for="documento">documento</label>
                         <input type="text" name="documento" id="documento" class="form-control" >
                     </div>
 

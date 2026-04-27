@@ -108,7 +108,7 @@
 
                     <div class="form-group">
                         <label for="teacher_id">Profesor</label>
-                        <select class="form-control" id="teacher_id" name="teacher_id" required>
+                        <select class="form-control" id="teacher_id" name="teacher_id" >
                             <option value="">Seleccionar Profesor</option>
                             @foreach ($teachers as $teacher)
                                 <option value="{{ $teacher->id }}" {{ old('teacher_id') == $teacher->id ? 'selected' : '' }}>

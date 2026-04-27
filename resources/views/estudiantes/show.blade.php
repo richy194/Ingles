@@ -34,7 +34,7 @@
                 <ul class="list-group">
                     <li class="list-group-item"><strong>Nombre:</strong> {{ $estudiante->nombre }}</li>
                     <li class="list-group-item"><strong>Email:</strong> {{ $estudiante->email }}</li>
-                    <li class="list-group-item"><strong>Documento:</strong> {{ $estudiante->documento }}</li>
+                    <li class="list-group-item"><strong>documento:</strong> {{ $estudiante->documento }}</li>
                     <li class="list-group-item"><strong>Dirección:</strong> {{ $estudiante->direccion }}</li>
                     <li class="list-group-item"><strong>Teléfono:</strong> {{ $estudiante->telefono }}</li>
                 </ul>

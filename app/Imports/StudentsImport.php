@@ -3,87 +3,97 @@
 namespace App\Imports;
 
 use App\Models\Student;
-use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Maatwebsite\Excel\Concerns\WithValidation;
-use Maatwebsite\Excel\Concerns\SkipsOnFailure;
-use Maatwebsite\Excel\Concerns\SkipsFailures;
+use Illuminate\Support\Collection;
 
-class StudentsImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFailure
+class StudentsImport implements ToCollection, WithHeadingRow
 {
-    use SkipsFailures;
+    protected $inserted = 0;
+    protected $updated = 0;
+    protected $ignored = 0;
+    protected $messages = [];
 
-    /**
-     * Contador de registros insertados correctamente.
-     */
-    private int $insertedCount = 0;
-
-    /**
-     * Crea un nuevo registro de Student a partir de los datos de una fila del Excel.
-     */
-    public function model(array $row)
+    public function collection(Collection $rows)
     {
-        $nombre = trim($row['nombre'] ?? '');
-        $email  = trim($row['email'] ?? '');
+        foreach ($rows as $row) {
+            $nombre = trim($row['nombre'] ?? '');
+            $email = trim($row['email'] ?? '');
+            $documento = trim($row['documento'] ?? '');
 
-        // Verifica que no exista otro estudiante con el mismo correo
-        if (Student::where('email', $email)->exists()) {
-            return null; // No insertar duplicado
+            // Si no hay nombre, ignorar
+            if (!$nombre) {
+                $this->ignored++;
+                $this->messages[] = "Fila ignorada (sin nombre)";
+                continue;
+            }
+
+            // 🟢 Si NO hay email ni documento → crear directamente (solo nombre)
+            if (!$email && !$documento) {
+                Student::create([
+                    'nombre' => $nombre,
+                    'email' => null,
+                    'documento' => null,
+                ]);
+                $this->inserted++;
+                $this->messages[] = "Insertado (solo nombre): {$nombre}";
+                continue;
+            }
+
+            // 🔎 Buscar por email o documento si existen
+            $query = Student::query();
+
+            if ($email) {
+                $query->whereRaw('LOWER(TRIM(email)) = ?', [strtolower($email)]);
+            }
+
+            if ($documento) {
+                $query->orWhereRaw('TRIM(documento) = ?', [$documento]);
+            }
+
+            $student = $query->first();
+
+            if ($student) {
+                // Si ya existe, actualiza si hay cambios
+                $changed = false;
+
+                if ($student->nombre !== $nombre) {
+                    $student->nombre = $nombre;
+                    $changed = true;
+                }
+
+                if ($documento && $student->documento !== $documento) {
+                    $student->documento = $documento;
+                    $changed = true;
+                }
+
+                if ($email && $student->email !== $email) {
+                    $student->email = $email;
+                    $changed = true;
+                }
+
+                if ($changed) {
+                    $student->save();
+                    $this->updated++;
+                } else {
+                    $this->ignored++;
+                }
+            } else {
+                // Crear nuevo si no existe por email/documento
+                Student::create([
+                    'nombre' => $nombre,
+                    'email' => $email ?: null,
+                    'documento' => $documento ?: null,
+                ]);
+
+                $this->inserted++;
+            }
         }
-
-        // Incrementa el contador si se inserta
-        $this->insertedCount++;
-
-        return new Student([
-            'nombre'    => $nombre,
-            'email'     => $email,
-            'documento' => null,
-            'direccion' => null,
-            'telefono'  => null,
-        ]);
     }
 
-    /**
-     * Reglas de validación del archivo Excel.
-     */
-    public function rules(): array
-    {
-        return [
-            'nombre' => [
-                'required',
-                'string',
-                'max:255',
-            ],
-            'email' => [
-                'required',
-                'email',
-                'distinct',           // evita emails repetidos dentro del mismo archivo
-                'unique:students,email', // evita emails repetidos ya existentes en BD
-            ],
-        ];
-    }
-
-    /**
-     * Mensajes personalizados de validación.
-     */
-    public function customValidationMessages()
-    {
-        return [
-            'nombre.required'  => 'El campo nombre es obligatorio.',
-            'nombre.string'    => 'El nombre debe ser una cadena válida.',
-            'email.required'   => 'El campo email es obligatorio.',
-            'email.email'      => 'El email no tiene un formato válido.',
-            'email.unique'     => 'El email ":input" ya existe en la base de datos.',
-            'email.distinct'   => 'El email ":input" está repetido dentro del archivo Excel.',
-        ];
-    }
-
-    /**
-     * Devuelve la cantidad de registros insertados exitosamente.
-     */
-    public function getInsertedCount(): int
-    {
-        return $this->insertedCount;
-    }
+    public function getInsertedCount() { return $this->inserted; }
+    public function getUpdatedCount() { return $this->updated; }
+    public function getIgnoredCount() { return $this->ignored; }
+    public function getMessages() { return $this->messages; }
 }
 

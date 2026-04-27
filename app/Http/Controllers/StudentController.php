@@ -19,8 +19,8 @@ class StudentController extends Controller
         $query = $request->get('query');
 
         $estudiantes = Student::when($query, function ($queryBuilder) use ($query) {
-            return $queryBuilder->where('nombre', 'like', '%' . $query . '%')
-                                ->orWhere('documento', 'like', '%' . $query . '%');
+            return $queryBuilder->where('nombre', 'like', "%{$query}%")
+                                ->orWhere('documento', 'like', "%{$query}%");
         })->get();
 
         return view('estudiantes.index', compact('estudiantes'));
@@ -49,11 +49,11 @@ class StudentController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nombre' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
+            'nombre'    => 'required|string|max:255',
+            'email'     => 'required|email|max:255|unique:students,email',
             'documento' => 'nullable|string|max:255',
             'direccion' => 'nullable|string|max:255',
-            'telefono' => 'nullable|string|max:255',
+            'telefono'  => 'nullable|string|max:255',
         ]);
 
         Student::create($validated);
@@ -80,15 +80,16 @@ class StudentController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $estudiante = Student::findOrFail($id);
+
         $validated = $request->validate([
-            'nombre' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
+            'nombre'    => 'required|string|max:255',
+            'email'     => 'required|email|max:255|unique:students,email,' . $estudiante->id,
             'documento' => 'nullable|string|max:255',
             'direccion' => 'nullable|string|max:255',
-            'telefono' => 'nullable|string|max:255',
+            'telefono'  => 'nullable|string|max:255',
         ]);
 
-        $estudiante = Student::findOrFail($id);
         $estudiante->update($validated);
 
         return redirect()->route('estudiantes.index')->with('success', 'Estudiante actualizado correctamente.');
@@ -116,40 +117,55 @@ class StudentController extends Controller
     /**
      * Importa estudiantes desde un archivo Excel o CSV.
      */
-    public function import(Request $request)
-    {
-        $request->validate([
-            'file' => 'required|mimes:xlsx,csv',
-        ]);
+   public function import(Request $request)
+{
+    $request->validate([
+        'file' => 'required|mimes:xlsx,csv,txt' // permitir csv/txt por si guardas como .txt
+    ]);
 
-        try {
-            // Crear instancia del import
-            $import = new StudentsImport;
-            Excel::import($import, $request->file('file'));
+    try {
+        $import = new \App\Imports\StudentsImport;
+        \Maatwebsite\Excel\Facades\Excel::import($import, $request->file('file'));
 
-            $insertedCount = $import->getInsertedCount();
+        $inserted = $import->getInsertedCount();
+        $updated = $import->getUpdatedCount();
+        $ignored = $import->getIgnoredCount();
+        $messages = $import->getMessages();
 
-            if ($insertedCount === 0) {
-                return redirect()->back()->with('warning', 'No se importó ningún estudiante (todos eran duplicados o inválidos).');
-            }
+        $summary = [];
+        if ($inserted) $summary[] = "{$inserted} estudiantes insertados";
+        if ($updated)  $summary[] = "{$updated} estudiantes actualizados";
+        if ($ignored)  $summary[] = "{$ignored} filas ignoradas";
 
-            return redirect()->back()->with('success', "Se importaron {$insertedCount} estudiantes correctamente.");
+        $flash = 'Importación completada. ' . (count($summary) ? implode(', ', $summary) . '.' : 'No se realizaron cambios.');
 
-        } catch (ValidationException $e) {
-            // Captura errores de validación del Excel
-            $failures = $e->failures();
-            $errores = [];
-
-            foreach ($failures as $failure) {
-                $errores[] = "Fila {$failure->row()}: " . implode(', ', $failure->errors());
-            }
-
-            return redirect()->back()->with('error', 'Error al importar: ' . implode(' | ', $errores));
-        } catch (\Exception $e) {
-            // Captura cualquier otro error
-            return redirect()->back()->with('error', 'Hubo un problema al importar el archivo: ' . $e->getMessage());
+        // incluir mensajes específicos (limitado para no explotar la sesión)
+        if (!empty($messages)) {
+            // guardar máximo 30 mensajes para mostrar
+            $short = array_slice($messages, 0, 30);
+            return redirect()->back()->with([
+                'success' => $flash,
+                'import_messages' => $short
+            ]);
         }
+
+        return redirect()->back()->with('success', $flash);
+
+    } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+        $failures = $e->failures();
+        $errores = [];
+
+        foreach ($failures as $failure) {
+            $errores[] = "Fila {$failure->row()}: " . implode(', ', $failure->errors());
+        }
+
+        return redirect()->back()->with('error', 'Errores de validación: ' . implode(' | ', $errores));
+    } catch (\Throwable $e) {
+        \Log::error('Students import error: '.$e->getMessage());
+        return redirect()->back()->with('error', 'Error al procesar el archivo: ' . $e->getMessage());
     }
+}
+
 
     /**
      * Elimina múltiples estudiantes seleccionados.
@@ -157,7 +173,7 @@ class StudentController extends Controller
     public function destroyMultiple(Request $request)
     {
         $request->validate([
-            'ids' => 'required|array|min:1',
+            'ids'   => 'required|array|min:1',
             'ids.*' => 'exists:students,id',
         ]);
 

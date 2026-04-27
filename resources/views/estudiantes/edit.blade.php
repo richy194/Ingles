@@ -45,18 +45,18 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="documento">Documento</label>
-                        <input type="text" name="documento" id="documento" class="form-control" value="{{ old('documento', $estudiante->documento) }}" required>
+                        <label for="documento">documento</label>
+                        <input type="text" name="documento" id="documento" class="form-control" value="{{ old('documento', $estudiante->documento) }}" >
                     </div>
 
                     <div class="form-group">
                         <label for="direccion">Dirección</label>
-                        <input type="text" name="direccion" id="direccion" class="form-control" value="{{ old('direccion', $estudiante->direccion) }}" required>
+                        <input type="text" name="direccion" id="direccion" class="form-control" value="{{ old('direccion', $estudiante->direccion) }}" >
                     </div>
 
                     <div class="form-group">
                         <label for="telefono">Teléfono</label>
-                        <input type="text" name="telefono" id="telefono" class="form-control" value="{{ old('telefono', $estudiante->telefono) }}" required>
+                        <input type="text" name="telefono" id="telefono" class="form-control" value="{{ old('telefono', $estudiante->telefono) }}" >
                     </div>
 
                     <button type="submit" class="btn btn-warning">Actualizar Estudiante</button>
