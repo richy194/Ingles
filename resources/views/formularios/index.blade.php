@@ -3,131 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Formularios de Inscripción</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f7fc;
-        }
-
-        .card {
-            margin-top: 30px;
-        }
-
-        .table th, .table td {
-            vertical-align: middle;
-        }
-
-        .table th {
-            text-align: center;
-            background-color: #f1f1f1;
-        }
-
-        .acciones {
-            display: flex;
-            gap: 5px;
-            justify-content: center;
-        }
-
-        .btn-regresar {
-            background-color: #28a745; /* Verde brillante */
-            color: #fff;
-            border: none;
-            font-size: 0.9rem;
-            font-weight: bold;
-            border-radius: 5px;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
-
-        .btn-regresar:hover {
-            background-color: #218838;
-            transform: scale(1.05);
-        }
-
-        .btn-regresar:focus {
-            outline: none;
-        }
-
-        .table-responsive {
-            margin-top: 20px;
-        }
-    </style>
+    <title>Formularios de Inscripcion</title>
+    <link rel="icon" type="image/png" href="{{ asset('img/uteis.png') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Sora:wght@500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/modern-admin.css') }}">
 </head>
 <body>
-    <div class="container">
-        <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h3>Lista de Formularios de Inscripción</h3>
-                <div class="d-flex">
-                    <a href="/dashboard" class="btn btn-regresar">Regresar</a>
-                    @can('create', App\Models\FormularioInscripcion::class)
-                        <a href="{{ route('formularios.create') }}" class="btn btn-primary ms-2">Crear Formulario</a>
-                    @endcan
-                </div>
+    <div class="page-shell">
+        <section class="hero">
+            <div>
+                <h1>Formularios de Inscripcion</h1>
+                <p>Supervisa solicitudes, estado academico y conversion a matricula desde un panel unificado.</p>
             </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped align-middle">
-                        <thead>
+            <div class="actions">
+                <a href="{{ route('dashboard') }}" class="btn btn-neutral">Regresar</a>
+                @can('create', App\Models\FormularioInscripcion::class)
+                    <a href="{{ route('formularios.create') }}" class="btn btn-brand">Crear formulario</a>
+                @endcan
+            </div>
+        </section>
+
+        <section class="card">
+            <div class="card-header">
+                <h2 class="card-title">Listado de formularios</h2>
+            </div>
+            <div class="table-wrap">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Nombre</th>
+                            <th>Email</th>
+                            <th>Documento</th>
+                            <th>Direccion</th>
+                            <th>Telefono</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                            <th>Nota final</th>
+                            <th>Curso</th>
+                            <th>Profesor</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($formularios as $formulario)
                             <tr>
-                                <th>#</th>
-                                <th>Nombre</th>
-                                <th>Email</th>
-                                <th>Documento</th>
-                                <th>Dirección</th>
-                                <th>Teléfono</th>
-                                <th>Fecha de Matrícula</th>
-                                <th>Estado</th>
-                                <th>nota final</th>
-                                 <th>Curso</th>
-                                <th>Profesor</th>      
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($formularios as $formulario)
-                                <tr>
-                                    <td class="text-center">{{ $loop->iteration }}</td>
-                                    <td>{{ $formulario->name?? 'No asignado' }}</td>  <!-- Nombre del estudiante -->
-                                    <td>{{ $formulario->email?? 'No asignado' }}</td> <!-- Email -->
-                                    <td>{{ $formulario->documento?? 'No asignado' }}</td> <!-- Documento -->
-                                    <td>{{ $formulario->direccion ?? 'No asignado'}}</td> <!-- Dirección -->
-                                    <td>{{ $formulario->telefono?? 'No asignado' }}</td> <!-- Teléfono -->
-                                    <td class="text-center">{{ $formulario->fecha_matricula?? 'No asignado' }}</td> 
-                                    <td class="text-center">{{ $formulario->estado?? 'No asignado' }}</td> 
-                                    <td class="text-center">{{ $formulario->nota_final?? 'No asignado' }}</td> 
-                                    <td>{{ $formulario->curso->nombre?? 'No asignado' }}</td> 
-                                    <td>{{ $formulario->teacher->nombre?? 'No asignado' }}</td>
-                                    <td class="acciones">
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $formulario->name ?? 'No asignado' }}</td>
+                                <td>{{ $formulario->email ?? 'No asignado' }}</td>
+                                <td>{{ $formulario->documento ?? 'No asignado' }}</td>
+                                <td>{{ $formulario->direccion ?? 'No asignado' }}</td>
+                                <td>{{ $formulario->telefono ?? 'No asignado' }}</td>
+                                <td>{{ $formulario->fecha_matricula ?? 'No asignado' }}</td>
+                                <td><span class="badge badge-soft">{{ $formulario->estado ?? 'No asignado' }}</span></td>
+                                <td>{{ $formulario->nota_final ?? 'No asignado' }}</td>
+                                <td>{{ $formulario->curso->nombre ?? 'No asignado' }}</td>
+                                <td>{{ $formulario->teacher->nombre ?? 'No asignado' }}</td>
+                                <td>
+                                    <div class="actions-cell">
                                         @can('view', $formulario)
-                                            <a href="{{ route('formularios.show', $formulario->id) }}" class="btn btn-info btn-sm">Ver</a>
+                                            <a href="{{ route('formularios.show', $formulario->id) }}" class="btn btn-info">Ver</a>
                                         @endcan
                                         @can('update', $formulario)
-                                            <a href="{{ route('formularios.edit', $formulario->id) }}" class="btn btn-warning btn-sm">Editar</a>
+                                            <a href="{{ route('formularios.edit', $formulario->id) }}" class="btn btn-warning">Editar</a>
                                         @endcan
                                         @can('delete', $formulario)
-                                            <form action="{{ route('formularios.destroy', $formulario->id) }}" method="POST" style="display:inline;">
+                                            <form action="{{ route('formularios.destroy', $formulario->id) }}" method="POST">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar esta inscripción?')">Eliminar</button>
+                                                <button type="submit" class="btn btn-danger" onclick="return confirm('¿Eliminar esta inscripcion?')">Eliminar</button>
                                             </form>
                                         @endcan
                                         @can('inscribir', $formulario)
-    <form action="{{ route('formularios.inscribir', $formulario->id) }}" method="POST" style="display:inline;">
-        @csrf
-        <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('¿Inscribir al estudiante?')">Inscribir</button>
-    </form>
-@endcan
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                                            <form action="{{ route('formularios.inscribir', $formulario->id) }}" method="POST">
+                                                @csrf
+                                                <button type="submit" class="btn btn-success" onclick="return confirm('¿Inscribir al estudiante?')">Inscribir</button>
+                                            </form>
+                                        @endcan
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="12" class="empty">No hay formularios registrados.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
-        </div>
+            @if ($formularios->hasPages())
+                <div class="pager">{{ $formularios->onEachSide(1)->links() }}</div>
+            @endif
+            <p class="footer-note">Total formularios: {{ $formularios->total() }}</p>
+        </section>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

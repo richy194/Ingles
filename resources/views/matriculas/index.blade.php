@@ -3,221 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Matrículas</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f7fc;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .card {
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-        }
-        .card-header h1 {
-            font-size: 1.8rem;
-            margin: 0;
-        }
-        .custom-file-input {
-            position: relative;
-            width: 100%;
-            height: 50px;
-            margin-bottom: 15px;
-            background-color: #f9f9f7;
-            text-align: center;
-            cursor: pointer;
-            font-size: 16px;
-            color: #4CAF50;
-            transition: all 0.3s ease-in-out;
-        }
-        .custom-file-input:hover {
-            background-color: #e8f5e9;
-            border-color: #388E3C;
-            color: #388E3C;
-        }
-        .custom-file-input input[type="file"] {
-            opacity: 0;
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-            cursor: pointer;
-        }
-        .btn {
-            display: inline-block;
-            padding: 8px 16px;
-            font-weight: bold;
-            color: #fff;
-            border-radius: 5px;
-            text-decoration: none;
-            text-align: center;
-            transition: 0.3s;
-            border: none;
-            cursor: pointer;
-        }
-        .btn-regresar { background-color: #28a745; }
-        .btn-regresar:hover { background-color: #218838; }
-        .btn-primary { background-color: #007bff; }
-        .btn-primary:hover { background-color: #0056b3; }
-        .btn-warning { background-color: #ffc107; color: #000; }
-        .btn-warning:hover { background-color: #e0a800; }
-        .btn-danger { background-color: #dc3545; }
-        .btn-danger:hover { background-color: #c82333; }
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            background: #fff;
-        }
-        .table th, .table td {
-            padding: 12px 15px;
-            text-align: center;
-            border: 1px solid #ddd;
-        }
-        .table th {
-            background-color: #f1f1f1;
-            font-weight: bold;
-            position: sticky;
-            top: 0;
-            z-index: 2;
-        }
-        .acciones { display: flex; gap: 5px; justify-content: center; }
-        .search-form {
-            margin-bottom: 20px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            justify-content: space-between;
-        }
-        .search-form input {
-            flex: 1;
-            min-width: 200px;
-            padding: 8px 15px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-        .search-form button {
-            padding: 8px 20px;
-            border-radius: 5px;
-            background-color: #007bff;
-            color: white;
-            cursor: pointer;
-            border: none;
-        }
-        .search-form button:hover { background-color: #0056b3; }
-
-        /* Estilos de alertas */
-        .alert {
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 6px;
-            position: relative;
-            animation: fadeIn 0.4s ease-in-out;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .alert-danger { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-        .alert-warning { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
-
-        .alert button.close {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            background: none;
-            border: none;
-            font-size: 18px;
-            font-weight: bold;
-            color: inherit;
-            cursor: pointer;
-        }
-    </style>
+    <title>Matriculas</title>
+    <link rel="icon" type="image/png" href="{{ asset('img/uteis.png') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Sora:wght@500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/modern-admin.css') }}">
 </head>
 <body>
-<div class="container">
-    <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h1>Listado de Matrículas</h1>
-
-            <div class="d-flex">
-                <form action="{{ route('matriculas.import') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <label class="custom-file-input">
-                        <input type="file" name="file" required onchange="mostrarNombreArchivo(this)">
-                        <span class="btn btn-regresar">Seleccionar archivo</span>
-                    </label>
-                    <p id="nombre-archivo" style="font-size:14px; color:#555;"></p>
-                    <button class="btn btn-primary"><i class="fa fa-file"></i> Importar</button>
-                </form>
-
-                <a href="/dashboard" class="btn btn-warning">Regresar</a>
+    <div class="page-shell">
+        <section class="hero">
+            <div>
+                <h1>Gestion de Matriculas</h1>
+                <p>Controla importaciones, busquedas y acciones por lote en un flujo profesional y robusto.</p>
+            </div>
+            <div class="actions">
+                <a href="{{ route('dashboard') }}" class="btn btn-neutral">Regresar</a>
                 <a href="{{ route('matriculas.export') }}" class="btn btn-success">Exportar</a>
-
                 @can('create', App\Models\Matricula::class)
-                    <a href="{{ route('matriculas.create') }}" class="btn btn-primary ms-2">Crear matrícula</a>
+                    <a href="{{ route('matriculas.create') }}" class="btn btn-brand">Crear matricula</a>
                 @endcan
             </div>
-        </div>
+        </section>
 
-        {{-- ✅ Mensajes de estado del import --}}
-        @if(session('success'))
-            <div class="alert alert-success">
-                <button class="close" onclick="this.parentElement.style.display='none';">&times;</button>
-                <strong>✅ {{ session('success') }}</strong>
+        <section class="card">
+            <div class="card-header">
+                <div class="toolbar">
+                    <h2 class="card-title">Listado de matriculas</h2>
+                    <form action="{{ route('matriculas.import') }}" method="POST" enctype="multipart/form-data" class="inline-row">
+                        @csrf
+                        <div class="file-picker">
+                            <label class="file-picker-label">
+                                <input type="file" name="file" accept=".xlsx,.csv" class="file-picker-input" required>
+                                <span>Seleccionar archivo</span>
+                            </label>
+                            <span class="file-picker-name">Ningun archivo seleccionado</span>
+                        </div>
+                        <button class="btn btn-brand" type="submit">Importar archivo</button>
+                    </form>
+                </div>
             </div>
-        @endif
 
-        @if(session('info'))
-            <div class="alert alert-warning">
-                <button class="close" onclick="this.parentElement.style.display='none';">&times;</button>
-                <i class="fa fa-info-circle"></i> {{ session('info') }}
+            @if(session('success'))
+                <div class="alert alert-success">{{ session('success') }}</div>
+            @endif
+            @if(session('info'))
+                <div class="alert alert-warning">{{ session('info') }}</div>
+            @endif
+            @if(session('error'))
+                <div class="alert alert-danger">{{ session('error') }}</div>
+            @endif
+            @if(session('failures'))
+                <div class="alert alert-warning">
+                    <strong>Algunos registros no se pudieron importar:</strong>
+                    <ul>
+                        @foreach (session('failures') as $failure)
+                            <li>Fila {{ $failure->row() }}: {{ $failure->errors()[0] }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <div class="card-header">
+                <div class="toolbar">
+                    <form action="{{ route('matriculas.index') }}" method="GET" class="search">
+                        <input class="input" type="text" name="query" placeholder="Buscar por nombre o documento" value="{{ request('query') }}">
+                        <button type="submit" class="btn btn-neutral">Buscar</button>
+                    </form>
+
+                    <form id="bulk-delete-matriculas" action="{{ route('matriculas.destroyMultiple') }}" method="POST" class="inline-row">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('¿Eliminar las matriculas seleccionadas?')">Eliminar seleccionados</button>
+                    </form>
+                </div>
             </div>
-        @endif
 
-        @if(session('error'))
-            <div class="alert alert-danger">
-                <button class="close" onclick="this.parentElement.style.display='none';">&times;</button>
-                <strong>❌ {{ session('error') }}</strong>
-            </div>
-        @endif
-
-        @if(session('failures'))
-            <div class="alert alert-warning">
-                <button class="close" onclick="this.parentElement.style.display='none';">&times;</button>
-                <strong>⚠️ Algunos registros no se pudieron importar:</strong>
-                <ul>
-                    @foreach (session('failures') as $failure)
-                        <li>
-                            <strong>Fila {{ $failure->row() }}:</strong>
-                            {{ $failure->errors()[0] }}
-                        </li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
-        {{-- Buscador --}}
-        <form action="{{ route('matriculas.index') }}" method="GET" class="search-form">
-            <input type="text" name="query" placeholder="Buscar por nombre o documento" value="{{ request('query') }}">
-            <button type="submit" class="btn btn-primary">Buscar</button>
-        </form>
-
-        {{-- Tabla --}}
-        <form action="{{ route('matriculas.destroyMultiple') }}" method="POST">
-            @csrf
-            @method('DELETE')
-            <div class="table-responsive">
+            <div class="table-wrap">
                 <table class="table">
                     <thead>
                         <tr>
@@ -225,69 +87,76 @@
                             <th>#</th>
                             <th>Nombre</th>
                             <th>Documento</th>
-                            <th>Fecha matrícula</th>
+                            <th>Fecha matricula</th>
                             <th>Curso</th>
                             <th>Nota final</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($matriculas as $matricula)
+                        @forelse ($matriculas as $matricula)
                             <tr>
-                                <td><input type="checkbox" name="ids[]" value="{{ $matricula->id }}"></td>
+                                <td><input type="checkbox" name="ids[]" value="{{ $matricula->id }}" form="bulk-delete-matriculas"></td>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $matricula->student->nombre ?? 'No asignado' }}</td>
                                 <td>{{ $matricula->student->documento ?? 'No asignado' }}</td>
-                                <td>{{ $matricula->fecha_matricula }}</td>
+                                <td>{{ $matricula->fecha_matricula ?? 'No asignado' }}</td>
                                 <td>{{ $matricula->curso->nombre ?? 'No asignado' }}</td>
                                 <td>{{ $matricula->nota_final ?? 'No asignado' }}</td>
-                                <td class="acciones">
-                                    @can('view', $matricula)
-                                        <a href="{{ route('matriculas.show', $matricula->id) }}" class="btn btn-primary">Ver</a>
-                                    @endcan
-                                    @can('update', $matricula)
-                                        <a href="{{ route('matriculas.edit', $matricula->id) }}" class="btn btn-warning">Editar</a>
-                                    @endcan
-                                    @can('delete', $matricula)
-                                        <form action="{{ route('matriculas.destroy', $matricula->id) }}" method="POST" style="display:inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger" onclick="return confirm('¿Eliminar esta matrícula?')">Eliminar</button>
-                                        </form>
-                                    @endcan
+                                <td>
+                                    <div class="actions-cell">
+                                        @can('view', $matricula)
+                                            <a href="{{ route('matriculas.show', $matricula->id) }}" class="btn btn-info">Ver</a>
+                                        @endcan
+                                        @can('update', $matricula)
+                                            <a href="{{ route('matriculas.edit', $matricula->id) }}" class="btn btn-warning">Editar</a>
+                                        @endcan
+                                        @can('delete', $matricula)
+                                            <form action="{{ route('matriculas.destroy', $matricula->id) }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger" onclick="return confirm('¿Eliminar esta matricula?')">Eliminar</button>
+                                            </form>
+                                        @endcan
+                                    </div>
                                 </td>
                             </tr>
-                        @endforeach
+                        @empty
+                            <tr>
+                                <td colspan="8" class="empty">No hay matriculas registradas.</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
-            <button type="submit" class="btn btn-danger">Eliminar seleccionados</button>
-        </form>
+
+            @include('components.pager', ['paginator' => $matriculas])
+            <p class="footer-note">Total matriculas: {{ $matriculas->total() }}</p>
+        </section>
     </div>
-</div>
 
-<script>
-    // Seleccionar todos los checkboxes
-    document.getElementById('select-all').addEventListener('change', function() {
-        const checkboxes = document.querySelectorAll('input[name="ids[]"]');
-        checkboxes.forEach(checkbox => checkbox.checked = this.checked);
-    });
+    <script>
+        const selectAll = document.getElementById('select-all');
+        if (selectAll) {
+            selectAll.addEventListener('change', function () {
+                document.querySelectorAll('input[name="ids[]"]').forEach((checkbox) => {
+                    checkbox.checked = this.checked;
+                });
+            });
+        }
 
-    // Mostrar nombre del archivo seleccionado
-    function mostrarNombreArchivo(input) {
-        const fileName = input.files[0]?.name || "Ningún archivo seleccionado";
-        document.getElementById('nombre-archivo').textContent = "Archivo: " + fileName;
-    }
+        document.querySelectorAll('.file-picker').forEach((picker) => {
+            const input = picker.querySelector('.file-picker-input');
+            const name = picker.querySelector('.file-picker-name');
+            if (!input || !name) {
+                return;
+            }
 
-    // Cerrar automáticamente las alertas después de 6 segundos
-    setTimeout(() => {
-        document.querySelectorAll('.alert').forEach(alert => {
-            alert.style.transition = "opacity 0.5s";
-            alert.style.opacity = "0";
-            setTimeout(() => alert.remove(), 500);
+            input.addEventListener('change', function () {
+                name.textContent = this.files && this.files.length ? this.files[0].name : 'Ningun archivo seleccionado';
+            });
         });
-    }, 6000);
-</script>
+    </script>
 </body>
 </html>
 

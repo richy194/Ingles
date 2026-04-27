@@ -15,7 +15,7 @@ class TheacherController extends Controller
     // Muestra todos los profesores
     public function index()
     {
-        $profesores = Theacher::all(); 
+        $profesores = Theacher::paginate(20); 
         return view('profesores.index', compact('profesores')); 
     }
 

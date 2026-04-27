@@ -22,15 +22,14 @@ class GrupoController extends Controller
             $teacher = Theacher::where('email', $user->email)->first();
     
             if ($teacher) {
-                $grupos = Group::with(['curso', 'periodo_academicos'])
+                $grupos = Group::with(['curso', 'periodo_academicos', 'pofe'])
                     ->where('teacher_id', $teacher->id)
-                    ->get();
+                    ->paginate(20);
             } else {
-                // Si no hay docente asociado al correo, devolver colección vacía
-                $grupos = collect();
+                $grupos = Group::whereRaw('1 = 0')->paginate(20);
             }
         } else {
-            $grupos = Group::with(['curso', 'periodo_academicos'])->get();
+            $grupos = Group::with(['curso', 'periodo_academicos', 'pofe'])->paginate(20);
         }
     
         return view('grupos.index', compact('grupos'));

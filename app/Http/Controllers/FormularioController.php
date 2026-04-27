@@ -19,10 +19,10 @@ class FormularioController extends Controller
 {
     public function index()
     {
-        $formularios = FormularioInscripcion::with(['teacher', 'curso'])->get();
-        $teachers = Theacher::all();
-        $grupos = Group::all();
-        return view('formularios.index', compact('formularios', 'teachers', 'grupos'));
+        $formularios = FormularioInscripcion::with(['teacher', 'curso'])
+            ->paginate(20);
+
+        return view('formularios.index', compact('formularios'));
     }
 
     public function show($id)

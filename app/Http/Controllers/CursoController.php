@@ -26,23 +26,20 @@ class CursoController extends Controller
 
     if ($user->hasRole('docente')) {
         // Buscar el ID del docente usando el correo del usuario
-        $teacher = Theacher::where('email', $user->email)->first();
+            $teacher = Theacher::where('email', $user->email)->first();
 
         if (!$teacher) {
-            $cursos = collect(); // Si no hay docente con ese correo, devolver vacío
+                $cursos = Curso::whereRaw('1 = 0')->paginate(20);
         } else {
-            // Obtener cursos donde el docente tenga al menos un grupo
+                // Obtener cursos del docente con relaciones estrictamente necesarias.
             $cursos = Curso::whereHas('grupos', function ($query) use ($teacher) {
                     $query->where('teacher_id', $teacher->id);
                 })
-                ->with(['grupos' => function ($query) use ($teacher) {
-                    $query->where('teacher_id', $teacher->id);
-                }])
-                ->get();
+                ->with('periodo')
+                ->paginate(20);
         }
     } else {
-        // Para admin u otros roles: mostrar todos los cursos con todos los grupos
-        $cursos = Curso::with('grupos')->get();
+            $cursos = Curso::with('periodo')->paginate(20);
     }
 
     return view('cursos.index', compact('cursos'));

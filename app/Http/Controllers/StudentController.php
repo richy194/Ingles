@@ -21,7 +21,7 @@ class StudentController extends Controller
         $estudiantes = Student::when($query, function ($queryBuilder) use ($query) {
             return $queryBuilder->where('nombre', 'like', "%{$query}%")
                                 ->orWhere('documento', 'like', "%{$query}%");
-        })->get();
+        })->paginate(20)->withQueryString();
 
         return view('estudiantes.index', compact('estudiantes'));
     }

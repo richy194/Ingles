@@ -12,7 +12,7 @@ class PeriodoAcademicoController extends Controller
     // Mostrar todos los periodos académicos
     public function index()
     {
-        $periodos = PeriodoAcademico::all();
+        $periodos = PeriodoAcademico::paginate(20);
         return view('periodos.index', compact('periodos'));
     }
 

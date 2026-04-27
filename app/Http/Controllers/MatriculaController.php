@@ -27,7 +27,8 @@ class MatriculaController extends Controller
                         ->orWhere('email', 'like', "%$query%");
                 });
             })
-            ->get();
+            ->paginate(20)
+            ->withQueryString();
 
         return view('matriculas.index', compact('matriculas'));
     }
